@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html class="theme-light" style="scroll-padding-top:var(--bulma-navbar-height)" >
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>class IO::Handle</title>
+<link rel="icon" href="https://irclogs.raku.org/favicon.ico">
+<style>/*! Vanilla CSS */span.basis{font-weight:800}span.important{font-style:italic}span.unusual{text-decoration:underline}span.code{font-weight:500;background-color:linen;display:inline-block;margin:2px;padding:2px}span.overstrike{text-decoration:line-through}span.high{vertical-align:super}span.junior{vertical-align:sub}span.replace{font-style:small-caps;text-shadow:-1px 1px}span.indexed{text-shadow:1px 1px orange}span.indexed:hover::before{content:attr(data-index-text);translate:0 -1.5em;position:absolute;opacity:75%;background-color:#40e0d0;color:indigo}span.keyboard{text-shadow:1px 1px}span.terminal{text-decoration:overline underline}span.footnote{vertical-align:super}span.developer-version{display:none;color:red}span.developer-version span.developer-note{font-family:"Brush Script MT",cursive}span.developer-version:hover{display:inline-block;transform:translate(50px, 100px);z-index:5}span.bad-markdown{text-shadow:1px 1px red}pre.code-block{background-color:#eee;margin:1rem;padding:0 1rem 1rem 1rem}pre.input-block{background-color:#eee;margin:1rem;padding:0 1rem 1rem 1rem}pre.input-block::before{content:"--- input ---";display:block;text-shadow:-2px -2px 4px #000;color:#fff;padding-bottom:1rem}pre.output-block{background-color:#eee;margin:1rem;padding:0 1rem 1rem 1rem}pre.output-block::before{content:"--- output ---";display:block;text-shadow:2px 2px 4px #000;color:#fff;padding-bottom:1rem}div.defn-text{margin-left:1rem}div.defn-term{font-weight:bold;font-style:italic}div.id-target{display:none}div.nested{margin-left:5rem}div.toc .toc-item{margin-left:calc(var(--level)*1rem)}div.toc .toc-item::before{content:attr(data-bullet)}div.toc .toc-item a{padding-left:.4rem}div.index-section{margin-left:calc((var(--level) - 1)*1rem)}div.index-section[data-index-level="1"]{text-shadow:1px 1px orange}div.index-section>a.index-ref{white-space:nowrap;display:inline-block;width:1em}div.index-section>a.index-ref+span{display:none;width:0}div.index-section>a.index-ref:hover+span{display:inline-block;position:absolute;width:auto;z-index:5;background-color:#fff5ee}span.developer-note{display:none;width:0;color:blue;text-shadow:2px 2px 5px green}span.developer-version{display:none;width:0;color:red;text-shadow:2px 2px 5px green}.delta::before,span.developer-text::before{content:"ℹ";vertical-align:super}.delta:hover .developer-version,span.developer-text:hover .developer-version{display:inline-block;position:absolute;width:100%;z-index:5;transform:translate(0.5rem, -1rem)}.delta:hover .developer-note,span.developer-text:hover .developer-note{display:inline-block;position:absolute;width:auto;z-index:5;margin-left:1rem}span.developer-text:hover{text-decoration:overline}div.footer{border-top:2px dashed;margin:1rem 0;padding:2rem}div.footer .footer-field{display:inline-block}div.footer .footer-line{display:block}.heading>a{color:maroon;text-decoration:none}h.title{font-size:larger}table,th,td{border:1px solid;border-collapse:collapse}tbody.procedural tr.procedural .procedural-cell-left{text-align:left}tbody.procedural tr.procedural .procedural-cell-centre{text-align:center}tbody.procedural tr.procedural .procedural-cell-center{text-align:center}tbody.procedural tr.procedural .procedural-cell-right{text-align:right}tbody.procedural tr.procedural .procedural-cell-top{vertical-align:text-top}tbody.procedural tr.procedural .procedural-cell-middle{vertical-align:baseline}tbody.procedural tr.procedural .procedural-cell-bottom{vertical-align:text-bottom}tbody.procedural tr.procedural .procedural-cell-label{font-weight:bold}li.item{padding-left:.4rem;margin-left:calc(var(--level)*1rem)}li.item::marker{content:attr(data-bullet)}div.rakudoc-image-placement{display:flex;flex-direction:column;align-items:center}.rakudoc-placement-error{display:flex;justify-content:sapace-around;align-items:center;color:red;font-weight:bold}.raku-anchor{font-size:.9em;text-decoration:none;visibility:hidden}.heading:hover .raku-anchor{visibility:visible;padding-left:5px}
+</style>
+<style>/* bulma */
+#page-nav{width:25%;position:fixed}#page-nav .panel-block .toc{overflow-y:scroll;height:65vh}#page-nav .panel-block .index{overflow-y:scroll;height:65vh}.main-footer{z-index:1;position:relative}.toc-item:hover{background:var(--bulma-background)}.toc-item a{text-decoration:none;color:var(--bulma-text)}
+</style>
+<style>/* bulma */
+.content p+ul.item-list{margin-top:0}.content p+ol.item-list{margin-top:0}.delta:hover{border:var(--bulma-border-hover) 1px solid}.navbar-start{margin-bottom:1rem}
+</style>
+<style>/* bulma */
+label.chyronToggle input#navbar-toc-toggle{opacity:0;height:0;width:0}label.chyronToggle span.checkmark{top:1rem;position:relative;cursor:pointer}label.chyronToggle input[type=checkbox]{position:absolute;opacity:0;cursor:pointer;height:0;width:0}label.chyronToggle span.checkmark::before{content:"[⇨";color:gray;font-weight:800;line-height:.5rem;font-size:1.75rem;margin-right:.25rem}label.chyronToggle:hover span.checkmark::before{content:"[ ⇨"}label.chyronToggle input[type=checkbox]:checked+.checkmark::before{content:"[ ⇦"}label.chyronToggle:hover input[type=checkbox]:checked+.checkmark::before{content:"[⇦"}
+</style>
+<style>/* graphviz */
+div.graphviz{display:flex;justify-content:space-around;align-items:center;margin:auto;margin-bottom:1rem}.graphviz-error{display:flex;justify-content:space-around;align-items:center;color:red;font-weight:bold}.graphviz-error span.data{color:green}
+</style>
+<style>/* hilite */
+.raku-code{position:relative;margin:1rem 0}.raku-code button.copy-code{cursor:pointer;opacity:0;padding:0 .25rem .25rem .25rem;position:absolute}.raku-code:hover button.copy-code{opacity:.5}.raku-code label{float:right;font-size:xx-small;font-style:italic;height:auto;padding-right:50px}.raku-code pre.browser-hl{padding:7px}.raku-code .code-name{padding-top:.75rem;padding-left:1.25rem;font-weight:500}.raku-code pre{display:inline-block;overflow:scroll;width:96%}.raku-code .rakudoc-in-code{padding:1.25rem 1.5rem}.raku-code .section{padding:0rem}.raku-code .rainbow-name_scalar{color:var(--bulma-link-40);font-weight:500}.raku-code .rainbow-name_array{color:var(--bulma-link);font-weight:500}.raku-code .rainbow-name_hash{color:var(--bulma-link-60);font-weight:500}.raku-code .rainbow-name_code{color:var(--bulma-info);font-weight:500}.raku-code .rainbow-keyword{color:var(--bulma-primary);font-weight:500}.raku-code .rainbow-operator{color:var(--bulma-success);font-weight:500}.raku-code .rainbow-type{color:var(--bulma-danger-60);font-weight:500}.raku-code .rainbow-routine{color:var(--bulma-info-30);font-weight:500}.raku-code .rainbow-string{color:var(--bulma-info-40);font-weight:500}.raku-code .rainbow-string_delimiter{color:var(--bulma-primary-40);font-weight:500}.raku-code .rainbow-escape{color:var(--bulma-black-60);font-weight:500}.raku-code .rainbow-text{color:var(--bulma-black);font-weight:500}.raku-code .rainbow-comment{color:var(--bulma-success-30);font-weight:500}.raku-code .rainbow-regex_special{color:var(--bulma-success-60);font-weight:500}.raku-code .rainbow-regex_literal{color:var(--bulma-black-60);font-weight:500}.raku-code .rainbow-regex_delimiter{color:var(--bulma-primary-60);font-weight:500}.raku-code .rainbow-rakudoc_text{color:var(--bulma-success-40);font-weight:500}.raku-code .rainbow-rakudoc_markup{color:var(--bulma-danger-40);font-weight:500}
+</style>
+<style>/* latexformula */
+div.latex-equation{display:flex;justify-content:space-around;align-items:center}div.latex-equation a.logo{align-self:flex-last}span.latex-formula{display:inline-block;cursor:crosshair}span.latex-formula a{display:none}span.latex-formula:hover>a{display:inline-block;position:absolute;transform:translate(-3rem, -2rem);background:#faebd7}.latex-render-error{color:red;font-weight:bold}
+</style>
+<style>/* listfiles */
+.listf-container{display:flex;flex-direction:column;margin-bottom:1.25rem;font-size:1rem;font-weight:500;line-height:1.5;border:1px solid #ccc;border-bottom:5px solid #d9d9d9;box-shadow:0 2px 3px 0 rgba(0,0,0,.07)}.listf-container .listf-caption{display:flex;justify-content:center;background:#f2f2f2;border-bottom:1px solid #ccc;color:#83858d}.listf-container .listf-file{display:inline-block;border-top:1px solid #ccc;border-bottom:1px solid #ccc;break-inside:avoid}.listf-container .listf-file .listf-link{display:inline-block;width:100%;text-align:center;padding-top:.25rem}.listf-container .listf-file p{padding-left:.5rem;padding-right:.5rem;margin-bottom:.25rem}.listf-error{color:red;font-size:xlarge}
+</style>
+<style>/* leafletmap */
+.leaflet-map-rakudoc{margin-bottom:1rem}.leaflet-map-rakudoc div{margin:auto}
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""
+/>
+
+<script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+<script src="https://rawgit.com/farzher/fuzzysort/master/fuzzysort.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""
+></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/haskell.min.js"></script>
+<script src="https://unpkg.com/leaflet-providers@latest/leaflet-providers.js"
+></script>
+
+<script>    // Hilite-helper.js
+    document.addEventListener('DOMContentLoaded', function () {
+        // trigger the highlighter for non-Raku code
+        hljs.highlightAll();
+
+        // copy code block to clipboard adapted from solution at
+        // https://stackoverflow.com/questions/34191780/javascript-copy-string-to-clipboard-as-text-html
+        // if behaviour problems with different browsers add stylesheet code from that solution.
+        const copyButtons = Array.from(document.querySelectorAll('.copy-code'));
+        copyButtons.forEach( function( button ) {
+        var codeElement = button.nextElementSibling.nextElementSibling; // skip the label and get the div
+        button.addEventListener( 'click', function(insideButton) {
+            var container = document.createElement('div');
+            container.innerHTML = codeElement.innerHTML;
+                container.style.position = 'fixed';
+                container.style.pointerEvents = 'none';
+                container.style.opacity = 0;
+                document.body.appendChild(container);
+                window.getSelection().removeAllRanges();
+                var range = document.createRange();
+                range.selectNode(container);
+                window.getSelection().addRange(range);
+                document.execCommand("copy", false);
+                document.body.removeChild(container);
+            });
+        });
+    });
+</script>
+<script>/* UISwitcher generated vars */
+var dictionary = {
+  "en": {
+    "NoIndex": "No Index for this page",
+    "Time": "Rendered at 15:34 UTC on 2025-01-04",
+    "langName": "English",
+    "Index": "Index",
+    "ChangeTheme": "Change Theme",
+    "UI_Switch": "Switch UI",
+    "LangName": "English",
+    "NoTOC": "No Table of contents for this page",
+    "FileSource": "Source file: ",
+    "TOC": "Table of Contents",
+    "SourceModified": "Source last modified: "
+  },
+  "ua": {
+    "Time": "Виведено о 15:34 UTC на 2025-01-04",
+    "NoIndex": "Немає індексу для цієї сторінки",
+    "SourceModified": "Джерело востаннє змінено: ",
+    "NoTOC": "Немає змісту цієї сторінки",
+    "FileSource": "SВихідний файл: ",
+    "langName": "Українська",
+    "UI_Switch": "Інтерфейс користувача",
+    "ChangeTheme": "Змінити тему",
+    "Index": "Індекс",
+    "TOC": "Зміст"
+  },
+  "cy": {
+    "ChangeTheme": "Newid Thema",
+    "NoIndex": "Dim Mynegai ar gyfer y dudalen hon",
+    "FileSource": "Ffeil ffynhonnell: ",
+    "NoTOC": "Dim Tabl cynnwys ar gyfer y dudalen hon",
+    "SourceModified": "Ffynhonnell a addaswyd ddiwethaf: ",
+    "langName": "Cymraeg",
+    "UI_Switch": "Newid UI",
+    "Index": "Mynegai",
+    "TOC": "Tabl Cynnwys",
+    "Time": "Wedi'i rendro am 15:34 UTC ar 2025-01-04"
+  },
+  "fr": {
+    "NoIndex": "Aucun index pour cette page",
+    "FileSource": "Fichier source: ",
+    "Time": "Rendu à 15:34 UTC à 2025-01-04",
+    "UI_Switch": "Changer d'IU",
+    "TOC": "Table des matières",
+    "Index": "Index",
+    "langName": "Français",
+    "NoTOC": "Aucune table des matières pour cette page",
+    "SourceModified": "Source dernière modification: ",
+    "ChangeTheme": "Changer de thème"
+  },
+  "nl": {
+    "ChangeTheme": "Thema wijzigen",
+    "Time": "Gerenderd at 15:34 UTC on 2025-01-04",
+    "Index": "Index",
+    "UI_Switch": "Switch UI",
+    "NoTOC": "Geen inhoudsopgave voor deze pagina",
+    "TOC": "Inhoudsopgave",
+    "SourceModified": "Bron laatst gewijzigd:",
+    "langName": "Nederlands",
+    "NoIndex": "Geen index voor deze pagina",
+    "FileSource": "Bronbestand: "
+  }
+};
+var def_canon = 'en';
+</script>
+<script>/* UISwitcher */
+var UILang;
+var uiselectors;
+var uilang_persisted = function () { return localStorage.getItem('ui_lang');};
+var persist_uilang = function ( uilang ) { localStorage.setItem( 'ui_lang', uilang );};
+document.addEventListener('DOMContentLoaded', function () {
+    UILang = uilang_persisted();
+    if ( UILang == null ) {
+        UILang = def_canon;
+    }
+    makeUISelector( UILang ); // comes before setUI as it has a label that needs setting
+    uiselectors = document.querySelectorAll('.UISelection'); // uiselectors used in setUI
+    setUI( UILang );
+    uiselectors.forEach( function (elem) {
+        elem.addEventListener('click', function( event ) {
+            newLang = event.target.getAttribute('data-lang');
+            setUI( newLang );
+            persist_uilang( newLang );
+        })
+    })
+});
+function setUI( newLang ) {
+    var spans = document.querySelectorAll('.Elucid8-ui');
+    spans.forEach( function (elem) {
+        token = elem.getAttribute('data-UIToken');
+        elem.innerHTML = dictionary[newLang][token];
+    });
+    uiselectors.forEach( function (rem) {
+        if ( rem.getAttribute('data-UIToken') == newLang ) {
+            rem.classList.add('is-selected')
+        }
+        else {
+            rem.classList.remove('is-selected');
+        }
+    })
+};
+function makeUISelector( initial ) {
+    elem = document.getElementById('Elucid8_choice');
+    label = elem.innerHTML;
+    var options = '';
+    Object.keys(dictionary).forEach(function(key) {
+        isSel = key == def_canon ? ' is-selected' : '';
+        options = options +
+            '<a class="navbar-item UISelection' + isSel + '"' +
+            'data-lang="' + key + '">' + dictionary[key]['langName'] + '</a>';
+    });
+    elem.innerHTML = '<a class="navbar-link">' + label + '</a>' +
+        '<div class="navbar-dropdown">' +
+        options +
+        '</div>';
+};
+</script>
+<script>// BulmaHelper.js
+var change_theme = function (theme) {
+    document.querySelector('html').className = '';
+    document.querySelector('html').classList.add('theme-' + theme);
+};
+var persisted_theme = function () { return localStorage.getItem('theme') };
+var persist_theme = function (theme) { localStorage.setItem('theme', theme) };
+
+var persisted_tocState = function () { return localStorage.getItem('tocOpen') };
+var persist_tocState = function (tocState) { localStorage.setItem('tocOpen', tocState ) };
+
+var originalIndex;
+var originalTOC;
+
+document.addEventListener('DOMContentLoaded', function () {
+    // set up functions needing document variables.
+    var matchTocState = function ( state ) {
+        if ( state ) {
+            document.getElementById("TOC").classList.remove('is-hidden');
+            document.getElementById("page-nav").classList.remove('is-hidden');
+            document.getElementById("mobile-nav").classList.remove('is-hidden');
+            document.getElementById("MainText").classList.add('is-three-quarters');
+            document.getElementById("MainText").classList.add('column');
+            document.getElementById("MainText").classList.remove('px-5');
+            persist_tocState( 'open');
+        }
+        else {
+            document.getElementById("TOC").classList.add('is-hidden');
+            document.getElementById("page-nav").classList.add('is-hidden');
+            document.getElementById("mobile-nav").classList.add('is-hidden');
+            document.getElementById("MainText").classList.remove('is-three-quarters');
+            document.getElementById("MainText").classList.remove('column');
+            document.getElementById("MainText").classList.add('px-5');
+            persist_tocState( 'closed' );
+        }
+    }
+    var setTocState = function ( state ) {
+        if ( state === 'closed') {
+            document.getElementById("TOC").classList.add('is-hidden');
+            document.getElementById("page-nav").classList.add('is-hidden');
+            document.getElementById("mobile-nav").classList.add('is-hidden');
+            document.getElementById("MainText").classList.remove('is-three-quarters');
+            document.getElementById("MainText").classList.remove('column');
+            document.getElementById("MainText").classList.add('px-5');
+            document.getElementById("navbar-toc-toggle").checked = false;
+        }
+        else {
+            document.getElementById("TOC").classList.remove('is-hidden');
+            document.getElementById("page-nav").classList.remove('is-hidden');
+            document.getElementById("mobile-nav").classList.remove('is-hidden');
+            document.getElementById("MainText").classList.add('is-three-quarters');
+            document.getElementById("MainText").classList.add('column');
+            document.getElementById("MainText").classList.remove('px-5');
+            document.getElementById("navbar-toc-toggle").checked = true;
+        }
+    };
+    // initialise if localStorage is set
+    let theme = persisted_theme();
+    if ( theme ) {
+        theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        change_theme(theme);
+        persist_theme(theme);
+    }
+    let tocState = persisted_tocState();
+    if ( tocState ) {
+        setTocState( tocState );
+        persist_tocState( tocState );
+    }
+
+    // Add listeners
+    // Get all "navbar-burger" elements
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    // Check if there are any navbar burgers
+    if ($navbarBurgers.length > 0) {
+        // Add a click event on each of them
+        $navbarBurgers.forEach(el => {
+            el.addEventListener('click', () => {
+                // Get the target from the "data-target" attribute
+                const target = el.dataset.target;
+                const $target = document.getElementById(target);
+                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                el.classList.toggle('is-active');
+                $target.classList.toggle('is-active');
+            });
+        });
+    };
+    // initialise window state
+    document.getElementById('changeTheme').addEventListener('click', function () {
+        let theme = persisted_theme() === 'light' ? 'dark' : 'light';
+        change_theme(theme);
+        persist_theme(theme);
+    });
+    document.getElementById("navbar-toc-toggle").addEventListener('change', function() {
+        matchTocState( this.checked )
+    });
+    document.getElementById('toc-tab').addEventListener('click', function () { swap_toc_index('','toc') });
+    document.getElementById('index-tab').addEventListener('click', function () { swap_toc_index('','index') });
+    document.getElementById('mtoc-tab').addEventListener('click', function () { swap_toc_index('m','toc') });
+    document.getElementById('mindex-tab').addEventListener('click', function () { swap_toc_index('m','index') });
+    originalTOC = document.getElementById('toc-menu').getHTML();
+    originalIndex = document.getElementById('index-menu').getHTML();
+    document.getElementById("page-nav-search").addEventListener('keyup', function (event) {
+        filtersearch(event, 'toc-menu', 'index-menu', 'page-nav')
+    });
+    document.getElementById("mobile-nav-search").addEventListener('keyup', function (event) {
+        filtersearch(event, 'mtoc-menu', 'mindex-menu', 'mobile-nav')
+    });
+});
+function filtersearch(event, toc,index,nav) {
+    document.getElementById(toc).innerHTML = originalTOC;
+    document.getElementById(index).innerHTML = originalIndex;
+    var searchText = event.srcElement.value.toLowerCase();
+    if (searchText.length === 0) return;
+    var menuListElements = document.getElementById(nav).querySelectorAll('.toc-item, .index-section');
+    var matchingListElements = Array.from(menuListElements).filter(function (item) {
+        var el;
+        if ( item.classList.contains('toc-item') ) {
+            el = item.querySelector('a');
+        } else {
+            el = item.querySelector('.index-entry')
+        }
+        var listItemHTML = el.innerHTML;
+        var fuzzyRes = fuzzysort.go(searchText, [listItemHTML])[0];
+        if (fuzzyRes === undefined || fuzzyRes.score <= 0) {
+            return false;
+        }
+        var res = fuzzyRes.highlight('<b>','</b>');
+        if (res !== null) {
+            el.innerHTML = res;
+            return true;
+        } else {
+            return false;
+        }
+    });
+    menuListElements.forEach(function(elem){elem.classList.add('is-hidden')});
+    matchingListElements.forEach(function(elem){elem.classList.remove('is-hidden')});
+};
+function swap_toc_index(div, activate) {
+    let disactivate = (activate == 'toc') ? 'index' : 'toc';
+    document.getElementById( div + activate + '-tab').classList.add('is-active');
+    document.getElementById( div + disactivate + '-menu').classList.add('is-hidden');
+    document.getElementById( div + disactivate + '-tab').classList.remove('is-active');
+    document.getElementById( div + activate + '-menu').classList.remove('is-hidden');
+}
+</script>
+
+
+    <link rel="icon" href="https://irclogs.raku.org/favicon.ico">
+    </head>
+    <body class="has-navbar-fixed-top">
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <figure class="navbar-item is-256x256">
+            <a href="/index.html">
+            <img class="is-rounded" src="https://avatars.githubusercontent.com/u/58170775">
+            </a>
+        </figure>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="pageNavigation">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div id="pageNavigation" class="navbar-menu">
+        <div class="navbar-start">
+            <label class="chyronToggle">
+              <input id="navbar-toc-toggle" type="checkbox" />
+              <span class="checkmark"> </span>
+            </label>
+        </div>
+        <div class="navbar-end">
+             <div id="Elucid8_choice" class="navbar-item has-dropdown is-hoverable"><span class="Elucid8-ui" data-UIToken="UI_Switch">UI_Switch</span></div> 
+            <div class="navbar-item">
+                <button id="changeTheme" class="button"><span class="Elucid8-ui" data-UIToken="ChangeTheme">ChangeTheme</span></button>
+            </div>
+        </div>
+        <nav class="panel is-hidden-tablet" id="mobile-nav">
+          <div class="panel-block">
+            <p class="control has-icons-left">
+              <input class="input" type="text" placeholder="Search" id="mobile-nav-search"/>
+              <span class="icon is-left">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </span>
+            </p>
+          </div>
+          <p class="panel-tabs">
+            <a id="mtoc-tab"><span class="Elucid8-ui" data-UIToken="TOC">TOC</span></a>
+            <a id="mindex-tab"><span class="Elucid8-ui" data-UIToken="Index">Index</span></a>
+          </p>
+            <aside id="mtoc-menu" class="panel-block">
+            <div class="toc"><div class="toc-item" style="--level:0;" data-bullet=""><a href="#Methods">Methods</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_open">method open</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_comb">method comb</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_chomp">method chomp</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_get">routine get</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_getc">routine getc</a></div>
+<div class="toc-item" style="--level:2;" data-bullet="‣"><a href="#Buffering_terminals">Buffering terminals</a></div>
+<div class="toc-item" style="--level:2;" data-bullet="‣"><a href="#Waiting_for_potential_combiners">Waiting for potential combiners</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#submethod_DESTROY">submethod DESTROY</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_gist">method gist</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_eof">method eof</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_encoding">method encoding</a></div>
+<div class="toc-item" style="--level:2;" data-bullet="‣"><a href="#utf16,_utf16le_and_utf16be">utf16, utf16le and utf16be</a></div>
+<div class="toc-item" style="--level:2;" data-bullet="‣"><a href="#Examples">Examples</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_lines">routine lines</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_lock">method lock</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_unlock">method unlock</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_words">routine words</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_split">method split</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_spurt">method spurt</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_print">method print</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_print-nl">method print-nl</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_printf">method printf</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_out-buffer">method out-buffer</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_put">method put</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_say">method say</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_read">method read</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_readchars">method readchars</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_write">method write</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_seek">method seek</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_tell">method tell</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_slurp-rest">method slurp-rest</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_slurp">method slurp</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_Supply">method Supply</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_path">method path</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_IO">method IO</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_Str">method Str</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_close">routine close</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_flush">method flush</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_native-descriptor">method native-descriptor</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_nl-in">method nl-in</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_nl-out">method nl-out</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_opened">method opened</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_t_X&lt;|Reference,tty&gt;">method t  </a></div>
+<div class="toc-item" style="--level:0;" data-bullet=""><a href="#Creating_Custom_Handles">Creating Custom Handles</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_WRITE">method WRITE</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_READ">method READ</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_EOF">method EOF</a></div>
+<div class="toc-item" style="--level:0;" data-bullet=""><a href="#Related_roles_and_classes">Related roles and classes</a></div>
+</div>
+
+            </aside>
+            <aside id="mindex-menu" class="panel-block is-hidden">
+            <div class="index">
+<div class="index-section" data-index-level="1" style="--level:1">
+<span class="index-entry">Reference</span>: <a class="index-ref" href="#index-entry-">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-ShiftJIS">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-utf16le">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-utf16be">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>routine lines</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method write</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method write</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method write</span>
+</div>
+</div>
+
+            </aside>
+        </nav>
+    </div>
+</nav>
+<nav class="panel is-hidden-mobile" id="page-nav">
+  <div class="panel-block">
+    <p class="control has-icons-left">
+      <input class="input" type="text" id="page-nav-search"/>
+      <span class="icon is-left">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </span>
+    </p>
+  </div>
+  <p class="panel-tabs">
+    <a id="toc-tab"><span class="Elucid8-ui" data-UIToken="TOC">TOC</span></a>
+    <a id="index-tab"><span class="Elucid8-ui" data-UIToken="Index">Index</span></a>
+  </p>
+    <aside id="toc-menu" class="panel-block">
+    <div class="toc"><div class="toc-item" style="--level:0;" data-bullet=""><a href="#Methods">Methods</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_open">method open</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_comb">method comb</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_chomp">method chomp</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_get">routine get</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_getc">routine getc</a></div>
+<div class="toc-item" style="--level:2;" data-bullet="‣"><a href="#Buffering_terminals">Buffering terminals</a></div>
+<div class="toc-item" style="--level:2;" data-bullet="‣"><a href="#Waiting_for_potential_combiners">Waiting for potential combiners</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#submethod_DESTROY">submethod DESTROY</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_gist">method gist</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_eof">method eof</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_encoding">method encoding</a></div>
+<div class="toc-item" style="--level:2;" data-bullet="‣"><a href="#utf16,_utf16le_and_utf16be">utf16, utf16le and utf16be</a></div>
+<div class="toc-item" style="--level:2;" data-bullet="‣"><a href="#Examples">Examples</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_lines">routine lines</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_lock">method lock</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_unlock">method unlock</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_words">routine words</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_split">method split</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_spurt">method spurt</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_print">method print</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_print-nl">method print-nl</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_printf">method printf</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_out-buffer">method out-buffer</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_put">method put</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_say">method say</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_read">method read</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_readchars">method readchars</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_write">method write</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_seek">method seek</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_tell">method tell</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_slurp-rest">method slurp-rest</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_slurp">method slurp</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_Supply">method Supply</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_path">method path</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_IO">method IO</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_Str">method Str</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#routine_close">routine close</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_flush">method flush</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_native-descriptor">method native-descriptor</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_nl-in">method nl-in</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_nl-out">method nl-out</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_opened">method opened</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_t_X&lt;|Reference,tty&gt;">method t  </a></div>
+<div class="toc-item" style="--level:0;" data-bullet=""><a href="#Creating_Custom_Handles">Creating Custom Handles</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_WRITE">method WRITE</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_READ">method READ</a></div>
+<div class="toc-item" style="--level:1;" data-bullet="▹"><a href="#method_EOF">method EOF</a></div>
+<div class="toc-item" style="--level:0;" data-bullet=""><a href="#Related_roles_and_classes">Related roles and classes</a></div>
+</div>
+
+    </aside>
+    <aside id="index-menu" class="panel-block is-hidden">
+    <div class="index">
+<div class="index-section" data-index-level="1" style="--level:1">
+<span class="index-entry">Reference</span>: <a class="index-ref" href="#index-entry-">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-ShiftJIS">&nbsp;§&nbsp;</a><span>method encoding</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-utf16le">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-utf16be">&nbsp;§&nbsp;</a><span>utf16, utf16le and utf16be</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>routine lines</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method write</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method write</span>, <a class="index-ref" href="#index-entry-_0">&nbsp;§&nbsp;</a><span>method write</span>
+</div>
+</div>
+
+    </aside>
+</nav>
+
+    <div class="columns">
+    <div id="TOC" class="column is-one-quarter">
+        
+    </div>
+    <div id="MainText" class="column">
+        <section class="section">
+  <div class="container">
+<div id="class_IO::Handle"></div><h1 class="title is-centered">class IO::Handle</h1>
+
+<p class="subtitle">Opened file or stream</p>
+  </div>
+</section>
+
+        <div class="content px-4">
+        
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">class</span>&nbsp;<span class="rainbow-type">IO::Handle</span>&nbsp;{&nbsp;}
+</pre>
+</div>
+                </div>
+            <p id="936342c">Instances of <span class="code">IO::Handle</span> encapsulate a <span class="important">handle</span> to manipulate input/output resources. Usually there is no need to create directly an <span class="code">IO::Handle</span> instance, since it will be done by other roles and methods. For instance, an <a href="/type/IO::Path"><span class="code">IO::Path</span></a> object provides an <a href="/routine/open">open</a> method that returns an <span class="code">IO::Handle</span>: </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">/tmp/log.txt</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>;<br><span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>.^<span class="rainbow-routine">name</span>;&nbsp;<span class="rainbow-comment"># OUTPUT: IO::Handle</span>
+</pre>
+</div>
+                </div>
+            <p id="a2147c1">The first line is pretty much equivalent to the following piece of code: </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-type">IO::Handle</span>.<span class="rainbow-routine">new</span>(&nbsp;:path(&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">/tmp/log.txt</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">path</span>&nbsp;)&nbsp;).<span class="rainbow-routine">open</span>;
+</pre>
+</div>
+                </div>
+            <h1 id="Methods" class="heading py-2 "><a href="#" title="go to top of document">Methods</a><a class="raku-anchor" title="direct link" href="#Methods">§</a></h1>
+
+<div class="id-target" id="method open"></div><h2 id="method_open" class="heading py-2 "><a href="#" title="go to top of document">method open</a><a class="raku-anchor" title="direct link" href="#method open">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">open</span>(IO::Handle:D:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$r</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$w</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$x</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$a</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$update</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$rw</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$rx</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$ra</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$mode</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$create</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$append</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$truncate</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$exclusive</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$bin</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$enc</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$chomp</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$!chomp</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$nl-in</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$!nl-in</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Str:D&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$nl-out</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$!nl-out</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$out-buffer</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-routine">copy</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;)
+</pre>
+</div>
+                </div>
+            <p id="92f40db">Opens the handle in one of the modes. <a href="/routine/fail">Fails</a> with appropriate exception if the open fails. </p>
+<p id="b1fac18">See description of individual methods for the accepted values and behavior of <a href="/type/IO/Handle"><span class="code">:$chomp</span></a>, <a href="/type/IO/Handle"><span class="code">:$nl-in</span></a>, <a href="/type/IO/Handle"><span class="code">:$nl-out</span></a>, and <a href="/type/IO/Handle"><span class="code">:$enc</span></a>. The values for parameters default to the invocant's attributes and if any of them are provided, the attributes will be updated to the new values. Specify <span class="code">:$bin</span> set to <span class="code">True</span> instead of <span class="code">:$enc</span> to indicate the handle should be opened in binary mode. Specifying undefined value as <span class="code">:$enc</span> is equivalent to not specifying <span class="code">:$enc</span> at all. Specifying both a defined encoding as <span class="code">:$enc</span> and <span class="code">:$bin</span> set to true will cause <span class="code">X::IO::BinaryAndEncoding</span> exception to be thrown. </p>
+<p id="a91130a">The open mode defaults to non-exclusive, read only (same as specifying <span class="code">:r</span>) and can be controlled by a mix of the following arguments: </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>text</label>
+                    <div><pre class="nohighlights">
+:r      same as specifying   :mode&lt;ro&gt;  same as specifying nothing
+
+:w      same as specifying   :mode&lt;wo&gt;, :create, :truncate
+:a      same as specifying   :mode&lt;wo&gt;, :create, :append
+:x      same as specifying   :mode&lt;wo&gt;, :create, :exclusive
+
+:update same as specifying   :mode&lt;rw&gt;
+:rw     same as specifying   :mode&lt;rw&gt;, :create
+:ra     same as specifying   :mode&lt;rw&gt;, :create, :append
+:rx     same as specifying   :mode&lt;rw&gt;, :create, :exclusive
+</pre>
+</div>
+                </div>
+            <p id="e6a6368">Argument <span class="code">:r</span> along with <span class="code">:w</span>, <span class="code">:a</span>, <span class="code">:x</span> are exactly the same as the combination of both letters, shown in the three last rows in the table above. Support for combinations of modes <span class="important">other</span> than what is listed above is implementation-dependent and should be assumed unsupported. That is, specifying, for example, <span class="code">.open(:r :create)</span> or <span class="code">.open(:mode&lt;wo&gt; :append :truncate)</span> might work or might cause the Universe to implode, depending on a particular implementation. This applies to reads/writes to a handle opened in such unsupported modes as well. </p>
+<p id="6f55add">The mode details are: </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>text</label>
+                    <div><pre class="nohighlights">
+:mode&lt;ro&gt;  means &quot;read only&quot;
+:mode&lt;wo&gt;  means &quot;write only&quot;
+:mode&lt;rw&gt;  means &quot;read and write&quot;
+
+:create    means the file will be created, if it does not exist
+:truncate  means the file will be emptied, if it exists
+:exclusive means .open will fail if the file already exists
+:append    means writes will be done at the end of file's current contents
+</pre>
+</div>
+                </div>
+            <p id="4826224">Attempts to open a directory, write to a handle opened in read-only mode or read from a handle opened in write-only mode, or using text-reading methods on a handle opened in binary mode will fail or throw. </p>
+<p id="2e8355f">In <span class="basis">6.c</span> language, it's possible to open path <span class="code">'-'</span>, which will cause <span class="code">open</span> to open (if <span class="code">closed</span>) the <span class="code">$*IN</span> handle if opening in read-only mode or to open the <span class="code">$*OUT</span> handle if opening in write-only mode. All other modes in this case will result in exception being thrown. </p>
+<p id="eff2484">As of <span class="basis">6.d</span> language version, the use of path <span class="code">'-'</span> is deprecated and it will be removed in future language versions entirely. </p>
+<p id="a9c857b">The <span class="code">:out-buffer</span> controls output buffering and by default behaves as if it were <a href="/type/Nil"><span class="code">Nil</span></a>. See method <a href="/routine/out-buffer">out-buffer</a> for details. </p>
+<p id="c0eba1f"><span class="basis">Note (Rakudo versions before 2017.09): Filehandles are NOT flushed or closed when they go out of scope</span>. While they <span class="important">will</span> get closed when garbage collected, garbage collection isn't guaranteed to get run. This means <span class="important">you should</span> use an explicit <span class="code">close</span> on handles opened for writing, to avoid data loss, and an explicit <span class="code">close</span> is <span class="important">recommended</span> on handles opened for reading as well, so that your program does not open too many files at the same time, triggering exceptions on further <span class="code">open</span> calls. </p>
+<p id="e30d6d8"><span class="basis">Note (Rakudo versions 2017.09 and after):</span> Open filehandles are automatically closed on program exit, but it is still highly recommended that you <span class="code">close</span> opened handles explicitly. </p>
+
+<div class="id-target" id="method comb"></div><h2 id="method_comb" class="heading py-2 "><a href="#" title="go to top of document">method comb</a><a class="raku-anchor" title="direct link" href="#method comb">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">comb</span>(IO::Handle:D:&nbsp;<span class="rainbow-type">Bool</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span><span class="rainbow-operator">,</span>&nbsp;|<span class="rainbow-routine">args</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Seq:D)
+</pre>
+</div>
+                </div>
+            <p id="15503bd">Read the handle and processes its contents the same way <a href="/type/Str"><span class="code">Str.comb</span></a> does, taking the same arguments, closing the handle when done if <span class="code">$close</span> is set to a true value. Implementations may slurp the file in its entirety when this method is called. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">path/to/file</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>;<br><span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">The file has </span><span class="rainbow-escape">{</span><span class="rainbow-operator">+</span><span class="rainbow-name_scalar">$fh</span>.comb:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">♥</span><span class="rainbow-string_delimiter">'</span><span class="rainbow-operator">,</span>&nbsp;:close<span class="rainbow-escape">}</span><span class="rainbow-string"> ♥s in it</span><span class="rainbow-string_delimiter">&quot;</span>;
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method chomp"></div><h2 id="method_chomp" class="heading py-2 "><a href="#" title="go to top of document">method chomp</a><a class="raku-anchor" title="direct link" href="#method chomp">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-name_scalar">$.chomp</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">rw</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-type">True</span>
+</pre>
+</div>
+                </div>
+            <p id="89f66ae">One of the attributes that can be set via <span class="code">.new</span> or <a href="/routine/open">open</a>. Defaults to <span class="code">True</span>. Takes a <a href="/type/Bool"><span class="code">Bool</span></a> specifying whether the line separators (as defined by <a href="/type/IO/Handle"><span class="code">.nl-in</span></a>) should be removed from content when using <a href="/type/IO/Handle"><span class="code">.get</span></a> or <a href="/type/IO/Handle"><span class="code">.lines</span></a> methods. </p>
+
+<div class="id-target" id="routine get"></div><h2 id="routine_get" class="heading py-2 "><a href="#" title="go to top of document">routine get</a><a class="raku-anchor" title="direct link" href="#routine get">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">get</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)<br><span class="rainbow-keyword">multi</span>&nbsp;&nbsp;<span class="rainbow-routine">get</span>&nbsp;(<span class="rainbow-type">IO::Handle</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$*ARGFILES</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)
+</pre>
+</div>
+                </div>
+            <p id="7d45887">Reads a single line of input from the handle, removing the trailing newline characters (as set by <a href="/routine/nl-in"><span class="code">.nl-in</span></a>) if the handle's <span class="code">.chomp</span> attribute is set to <span class="code">True</span>. Returns <a href="/type/Nil"><span class="code">Nil</span></a>, if no more input is available. The subroutine form defaults to <a href="/language/variables"><span class="code">$*ARGFILES</span></a> if no handle is given. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-name_scalar">$*IN</span>.<span class="rainbow-routine">get</span>.<span class="rainbow-routine">say</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># Read one line from the standard input<br></span><br><span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-routine">open</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">filename</span><span class="rainbow-string_delimiter">'</span>;<br><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">get</span>.<span class="rainbow-routine">say</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># Read one line from a file<br></span><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">close</span>;<br><br><span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-routine">get</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># Read one line from $*ARGFILES</span>
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="routine getc"></div><h2 id="routine_getc" class="heading py-2 "><a href="#" title="go to top of document">routine getc</a><a class="raku-anchor" title="direct link" href="#routine getc">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">getc</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)<br><span class="rainbow-keyword">multi</span>&nbsp;&nbsp;<span class="rainbow-routine">getc</span>&nbsp;(<span class="rainbow-type">IO::Handle</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$*ARGFILES</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)
+</pre>
+</div>
+                </div>
+            <p id="4166ad1">Reads a single character from the input stream. Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. The subroutine form defaults to <a href="/language/variables"><span class="code">$*ARGFILES</span></a> if no handle is given. Returns <a href="/type/Nil"><span class="code">Nil</span></a>, if no more input is available, otherwise operation will block, waiting for at least one character to be available; these caveats apply: </p>
+
+<div class="id-target" id="Buffering terminals"></div><h3 id="Buffering_terminals" class="heading py-2 "><a href="#" title="go to top of document">Buffering terminals</a><a class="raku-anchor" title="direct link" href="#Buffering terminals">§</a></h3>
+<p id="d57ce54">Using getc to get a single keypress from a terminal will only work properly if you've set the terminal to &quot;unbuffered&quot;. Otherwise the terminal will wait for the return key to be struck or the buffer to be filled up before the compiler gets even a single byte of data. </p>
+
+<div class="id-target" id="Waiting for potential combiners"></div><h3 id="Waiting_for_potential_combiners" class="heading py-2 "><a href="#" title="go to top of document">Waiting for potential combiners</a><a class="raku-anchor" title="direct link" href="#Waiting for potential combiners">§</a></h3>
+<p id="3f4785f">If your handle's encoding allows combining characters to be read, raku will wait for more data to be available before it provides a character. This means that inputting an &quot;e&quot; followed by a combining acute will give you an e with an acute rather than giving an &quot;e&quot; and letting the next reading function give you a dangling combiner. However, it also means that when the user inputs just an &quot;e&quot; and has no intention to also input a combining acute, your program will be waiting for another keypress before the initial &quot;e&quot; is returned. </p>
+
+<div class="id-target" id="submethod DESTROY"></div><h2 id="submethod_DESTROY" class="heading py-2 "><a href="#" title="go to top of document">submethod DESTROY</a><a class="raku-anchor" title="direct link" href="#submethod DESTROY">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">submethod</span>&nbsp;<span class="rainbow-routine">DESTROY</span>(IO::Handle:D:)
+</pre>
+</div>
+                </div>
+            <p id="b9393cb">Closes the filehandle, unless its <a href="/routine/native-descriptor">native-descriptor</a> is <span class="code">2</span> or lower. This ensures the standard filehandles do not get inadvertently closed. </p>
+<p id="3e5e494">Note that garbage collection is not guaranteed to happen, so you must NOT rely on <span class="code">DESTROY</span> for closing the handles you <span class="important">write to</span> and instead close them yourself. Programs that open a lot of files should close the handles explicitly as well, regardless of whether they were open for writing, since too many files might get opened before garbage collection happens and the no longer used handles get closed. </p>
+
+<div class="id-target" id="method gist"></div><h2 id="method_gist" class="heading py-2 "><a href="#" title="go to top of document">method gist</a><a class="raku-anchor" title="direct link" href="#method gist">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">gist</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)
+</pre>
+</div>
+                </div>
+            <p id="11f86f6">Returns a string containing information which <a href="/type/IO/Handle"><span class="code">.path</span></a>, if any, the handle is created for and whether it is <a href="/type/IO/Handle"><span class="code">.opened</span></a>. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-type">IO::Handle</span>.<span class="rainbow-routine">new</span>;&nbsp;<span class="rainbow-comment"># IO::Handle&lt;(Any)&gt;(closed)<br></span><span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>;&nbsp;&nbsp;<span class="rainbow-comment"># IO::Handle&lt;&quot;foo&quot;.IO&gt;(opened)</span>
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method eof"></div><h2 id="method_eof" class="heading py-2 "><a href="#" title="go to top of document">method eof</a><a class="raku-anchor" title="direct link" href="#method eof">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">eof</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Bool:D)
+</pre>
+</div>
+                </div>
+            <p id="670fa85">Non-blocking. Returns <span class="code">True</span> if the read operations have exhausted the contents of the handle. For <a href="/routine/seek">seekable</a> handles, this means current position is at or beyond the end of file and <a href="/routine/seek">seeking</a> an exhausted handle back into the file's contents will result in <a href="/routine/eof">eof</a> returning <span class="code">False</span> again. </p>
+<p id="178635f">On <a href="/routine/seek">non-seekable</a> handles and handles opened to zero-size files (including special files in <span class="code">/proc/</span>), EOF won't be set until a read operation fails to read any bytes. For example, in this code, the first <span class="code">read</span> consumes all of the data, but it's only until the second <span class="code">read</span> that reads nothing would the EOF on a TTY handle be set: </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>shell highlighting by highlight-js</label>
+                    <div><pre class="browser-hl">
+<code class="language-shell">
+$ echo &quot;x&quot; | raku -e 'with $*IN { .read: 10000; .eof.say; .read: 10; .eof.say }'
+False
+True
+</code></pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method encoding"></div><h2 id="method_encoding" class="heading py-2 "><a href="#" title="go to top of document">method encoding</a><a class="raku-anchor" title="direct link" href="#method encoding">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">encoding</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)<br><span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">encoding</span>(IO::Handle:D:&nbsp;<span class="rainbow-name_scalar">$enc</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)
+</pre>
+</div>
+                </div>
+            <p id="4398f2d">Returns a <a href="/type/Str"><span class="code">Str</span></a> representing the encoding currently used by the handle, defaulting to <span class="code">"utf8"</span>. <a href="/type/Nil"><span class="code">Nil</span></a> indicates the filehandle is currently in binary mode. Specifying an optional positional <span class="code">$enc</span> argument switches the encoding used by the handle; specify <a href="/type/Nil"><span class="code">Nil</span></a> as encoding to put the handle into binary mode. </p>
+<p id="7c1cf2e">The accepted values for encoding are case-insensitive. The available encodings vary by implementation and backend. On Rakudo MoarVM the following are supported: </p>
+<p id="edc3a68"><span class="indexed" id="index-entry-" data-index-text="⦃〚Reference〛 〚windows-1252〛⦄"></span><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚windows-1251〛⦄"></span><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚windows-932〛⦄"></span><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚iso-8859-1〛⦄"></span><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚ascii〛⦄"></span> </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>text</label>
+                    <div><pre class="nohighlights">
+utf8
+utf16
+utf16le
+utf16be
+utf8-c8
+iso-8859-1
+windows-1251
+windows-1252
+windows-932
+ascii
+</pre>
+</div>
+                </div>
+            <p id="daea42d">The default encoding is utf8, which undergoes normalization into Unicode <a href="/type/NFC"><span class="code">NFC</span></a> (normalization form canonical). In some cases you may want to ensure no normalization is done; for this you can use <span class="code">utf8-c8</span>. Before using <span class="code">utf8-c8</span> please read <a href="/language/unicode">Unicode: Filehandles and I/O</a> for more information on <span class="code">utf8-c8</span> and <a href="/type/NFC"><span class="code">NFC</span></a>. </p>
+<p id="7b256d2">As of Rakudo 2018.04 <a href="https://en.wikipedia.org/wiki/Code_page_932_(Microsoft_Windows)">windows-932</a> is also supported which is a variant of <span class="indexed" id="index-entry-ShiftJIS" data-index-text="⦃〚Reference〛 〚ShiftJIS〛⦄">ShiftJIS</span>. </p>
+<p id="44f86bd">Implementation may choose to also provide support for aliases, e.g. Rakudo allows aliases <span class="code">latin-1</span> for <span class="code">iso-8859-1</span> encoding and dashed utf versions: <span class="code">utf-8</span> and <span class="code">utf-16</span>. </p>
+
+<div class="id-target" id="utf16, utf16le and utf16be"></div><h3 id="utf16,_utf16le_and_utf16be" class="heading py-2 "><a href="#" title="go to top of document">utf16, utf16le and utf16be</a><a class="raku-anchor" title="direct link" href="#utf16, utf16le and utf16be">§</a></h3>
+<p id="1a9f971"><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚utf16-le〛⦄"></span><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚utf16-be〛⦄"></span><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚utf16〛⦄"></span><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚utf-16〛⦄"></span> </p>
+<p id="4f02a16">Unlike utf8, utf16 has an endianness — either big endian or little endian. This relates to the ordering of bytes. Computer CPUs also have an endianness. Raku's <span class="code">utf16</span> format specifier will use the endianness of host system when encoding. When decoding it will look for a byte order mark and if it is there use that to set the endianness. If there is no byte order mark it will assume the file uses the same endianness as the host system. A byte order mark is the codepoint U+FEFF which is ZERO WIDTH NO-BREAK SPACE. On <span class="code">utf16</span> encoded files the standard states if it exists at the start of a file it shall be interpreted as a byte order mark, not a U+FEFF codepoint. </p>
+<p id="a492aa9">While writing will cause a different file to be written on different endian systems, at the release of 2018.10 the byte order mark will be written out when writing a file and files created with the utf16 encoding will be able to be read on either big or little endian systems. </p>
+<p id="476dd87">When using utf16be or utf16le encodings a byte order mark is <span class="basis">not</span> used. The endianness used is not affected by the host cpu type and is either big endian for utf16be or little endian for utf16le. </p>
+<p id="399a359">In keeping with the standard, a 0xFEFF byte at the start of a file is interpreted as a ZERO WIDTH NO-BREAK SPACE and not as a byte order mark. No byte order mark is written to files that use the utf16be or utf16le encodings. </p>
+<p id="231cb08">As of Rakudo 2018.09 on MoarVM, utf16, <span class="indexed" id="index-entry-utf16le" data-index-text="⦃〚Reference〛 〚utf16le〛⦄">utf16le</span> and <span class="indexed" id="index-entry-utf16be" data-index-text="⦃〚Reference〛 〚utf16be〛⦄">utf16be</span> are supported. In 2018.10, writing to a file with utf16 will properly add a byte order mark (BOM). </p>
+<h3 id="Examples" class="heading py-2 "><a href="#" title="go to top of document">Examples</a><a class="raku-anchor" title="direct link" href="#Examples">§</a></h3>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">with</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;.spurt:&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">First line is text, then:</span><span class="rainbow-escape">\n</span><span class="rainbow-string">Binary</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;will&nbsp;leave&nbsp;{.<span class="rainbow-routine">close</span>}&nbsp;<span class="rainbow-operator">=</span>&nbsp;.<span class="rainbow-routine">open</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">get</span>.<span class="rainbow-routine">say</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># OUTPUT: «First line is text, then:␤»<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$fh</span>.encoding:&nbsp;<span class="rainbow-type">Nil</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">slurp</span>.<span class="rainbow-routine">say</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># OUTPUT: «Buf[uint8]:0x&lt;42 69 6e 61 72 79&gt;␤»<br></span>}
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="routine lines"></div><h2 id="routine_lines" class="heading py-2 "><a href="#" title="go to top of document">routine lines</a><a class="raku-anchor" title="direct link" href="#routine lines">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">sub</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">lines</span>(&nbsp;<span class="rainbow-name_scalar">$what</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$*ARGFILES</span><span class="rainbow-operator">,</span>&nbsp;|c)<br><span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">lines</span>(&nbsp;IO::Handle:D:&nbsp;<span class="rainbow-name_scalar">$limit</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span>&nbsp;)<br><span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">lines</span>(&nbsp;IO::Handle:D:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span>&nbsp;)
+</pre>
+</div>
+                </div>
+            <p id="eeca857">The sub form, which takes <span class="code">$*ARGFILES</span> by default, will apply the <span class="code">lines</span> method to the object that's the first argument, and pass it the rest of the arguments. </p>
+<p id="6af0a11">The method will return a <a href="/type/Seq"><span class="code">Seq</span></a> each element of which is a line from the handle (that is chunks delineated by <a href="/type/IO/Handle"><span class="code">.nl-in</span></a>). If the handle's <a href="/type/IO/Handle"><span class="code">.chomp</span></a> attribute is set to <span class="code">True</span>, then characters specified by <a href="/type/IO/Handle"><span class="code">.nl-in</span></a> will be stripped from each line. </p>
+<p id="24b542e">Reads up to <span class="code">$limit</span> lines, where <span class="code">$limit</span> can be a non-negative <a href="/type/Int"><span class="code">Int</span></a>, <span class="code">Inf</span>, or <a href="/type/Whatever"><span class="code">Whatever</span></a> (which is interpreted to mean <span class="code">Inf</span>). If <span class="code">:$close</span> is set to <span class="code">True</span>, will close the handle when the file ends or <span class="code">$limit</span> is reached. Subroutine form defaults to <a href="/language/variables"><span class="code">$*ARGFILES</span></a>, if no handle is provided. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+<p id="c9d9397"><span class="basis">NOTE:</span> the lines are read lazily, so ensure the returned <a href="/type/Seq"><span class="code">Seq</span></a> is either <a href="/language/glossary">fully reified</a> or is no longer needed when you close the handle or attempt to use any other method that changes the file position. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">The file contains </span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">50GB-file</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>.<span class="rainbow-routine">lines</span>.<span class="rainbow-routine">grep</span>(<span class="rainbow-operator">*</span>.contains:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">Raku</span><span class="rainbow-string_delimiter">'</span>).<span class="rainbow-routine">elems</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string"> lines that mention Raku</span><span class="rainbow-string_delimiter">&quot;</span>;<br><span class="rainbow-comment"># OUTPUT: «The file contains 72 lines that mention Raku␤»</span>
+</pre>
+</div>
+                </div>
+            <p id="0ef0ed1">You can use <span class="code">lines</span> in <span class="code">/proc/*</span> files (from the 6.d version): </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-routine">lines</span>(&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">/proc/</span><span class="rainbow-name_scalar">$*PID</span><span class="rainbow-string">/statm</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>&nbsp;);&nbsp;<span class="rainbow-comment"># OUTPUT: «(58455 31863 8304 2 0 29705 0)␤»</span>
+</pre>
+</div>
+                </div>
+            <p id="1512d4b"><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚File locking〛⦄"></span> </p>
+
+<div class="id-target" id="method lock"></div><h2 id="method_lock" class="heading py-2 "><a href="#" title="go to top of document">method lock</a><a class="raku-anchor" title="direct link" href="#method lock">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">lock</span>(IO::Handle:D:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bool:D&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$non-blocking</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-type">False</span><span class="rainbow-operator">,</span>&nbsp;Bool:D&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$shared</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-type">False</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="3682f72">Places an advisory lock on the file the filehandle if open for. If <span class="code">:$non-blocking</span> is <span class="code">True</span> will <a href="/routine/fail"><span class="code">fail</span></a> with <a href="/type/X::IO::Lock"><span class="code">X::IO::Lock</span></a> if lock could not be obtained, otherwise will block until the lock can be placed. If <span class="code">:$shared</span> is <span class="code">True</span> will place a shared (read) lock, otherwise will place an exclusive (write) lock. On success, returns <span class="code">True</span>; <a href="/routine/fail">fails</a> with <a href="/type/X::IO::Lock"><span class="code">X::IO::Lock</span></a> if lock cannot be placed (e.g. when trying to place a shared lock on a filehandle opened in write mode or trying to place an exclusive lock on a filehandle opened in read mode). </p>
+<p id="92fb4c8">You can use <span class="code">.lock</span> again to replace an existing lock with another one. To remove a lock, <a href="/routine/close"><span class="code">close</span></a> the filehandle or use <a href="/routine/unlock"><span class="code">unlock</span></a>. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-comment"># One program writes, the other reads, and thanks to locks either<br></span><span class="rainbow-comment"># will wait for the other to finish before proceeding to read/write<br></span><br><span class="rainbow-comment"># Writer<br></span><span class="rainbow-keyword">given</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>(:w)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">lock</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;.spurt:&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">I ♥ Raku!</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">close</span>;&nbsp;<span class="rainbow-comment"># closing the handle unlocks it; we could also use `unlock` for that<br></span>}<br><br><span class="rainbow-comment"># Reader<br></span><span class="rainbow-keyword">given</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;.lock:&nbsp;:shared;<br>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">slurp</span>.<span class="rainbow-routine">say</span>;&nbsp;<span class="rainbow-comment"># OUTPUT: «I ♥ Raku!␤»<br></span>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">close</span>;<br>}
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method unlock"></div><h2 id="method_unlock" class="heading py-2 "><a href="#" title="go to top of document">method unlock</a><a class="raku-anchor" title="direct link" href="#method unlock">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">unlock</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="b6efe87">Removes a <a href="/routine/lock"><span class="code">lock</span></a> from the filehandle. It will return <span class="code">True</span> or fail with an exception if it's not possible. </p>
+
+<div class="id-target" id="routine words"></div><h2 id="routine_words" class="heading py-2 "><a href="#" title="go to top of document">routine words</a><a class="raku-anchor" title="direct link" href="#routine words">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">words</span>(IO::Handle:D&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$*ARGFILES</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-name_scalar">$limit</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;Inf<span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Seq:D)<br><span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">words</span>(IO::Handle:D:&nbsp;<span class="rainbow-name_scalar">$limit</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;Inf<span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Seq:D)
+</pre>
+</div>
+                </div>
+            <p id="798da3e">Similar to <a href="/type/Str"><span class="code">Str.words</span></a>, separates the handle's stream on contiguous chunks of whitespace (as defined by Unicode) and returns a <a href="/type/Seq"><span class="code">Seq</span></a> of the resultant &quot;words.&quot; Takes an optional <span class="code">$limit</span> argument that can be a non-negative <a href="/type/Int"><span class="code">Int</span></a>, <span class="code">Inf</span>, or <a href="/type/Whatever"><span class="code">Whatever</span></a> (which is interpreted to mean <span class="code">Inf</span>), to indicate only up-to <span class="code">$limit</span> words must be returned. If <a href="/type/Bool"><span class="code">Bool</span></a> <span class="code">:$close</span> named argument is set to <span class="code">True</span>, will automatically close the handle when the returned <a href="/type/Seq"><span class="code">Seq</span></a> is exhausted. Subroutine form defaults to <a href="/language/variables"><span class="code">$*ARGFILES</span></a>, if no handle is provided. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_hash">%dict</span>&nbsp;<span class="rainbow-operator">:=</span>&nbsp;<span class="rainbow-routine">bag</span>&nbsp;<span class="rainbow-name_scalar">$*IN</span>.<span class="rainbow-routine">words</span>;<br><span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Most common words: </span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-name_hash">%dict</span>.<span class="rainbow-routine">sort</span>(<span class="rainbow-operator">-</span>*.<span class="rainbow-routine">value</span>).head:&nbsp;5;
+</pre>
+</div>
+                </div>
+            <p id="cae1413"><span class="basis">NOTE:</span> implementations may read <span class="important">more</span> data than necessary when a call to <span class="code">.words</span> is made. That is, <span class="code">$handle.words(2)</span> may read more data than two &quot;words&quot; worth of data and subsequent calls to read methods might not read from the place right after the two fetched words. After a call to <span class="code">.words</span>, the file position should be treated as undefined. </p>
+
+<div class="id-target" id="method split"></div><h2 id="method_split" class="heading py-2 "><a href="#" title="go to top of document">method split</a><a class="raku-anchor" title="direct link" href="#method split">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">split</span>(IO::Handle:D:&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span><span class="rainbow-operator">,</span>&nbsp;|c)
+</pre>
+</div>
+                </div>
+            <p id="ced8f5e"><a href="/routine/slurp">Slurps</a> the handle's content and calls <a href="/type/Str"><span class="code">Str.split</span></a> on it, forwarding any of the given arguments. If <span class="code">:$close</span> named parameter is set to <span class="code">True</span>, will <a href="/routine/close">close</a> the invocant after slurping. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">path/to/file</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>;<br><span class="rainbow-name_scalar">$fh</span>.split:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">♥</span><span class="rainbow-string_delimiter">'</span><span class="rainbow-operator">,</span>&nbsp;:close;&nbsp;<span class="rainbow-comment"># Returns file content split on ♥</span>
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method spurt"></div><h2 id="method_spurt" class="heading py-2 "><a href="#" title="go to top of document">method spurt</a><a class="raku-anchor" title="direct link" href="#method spurt">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">spurt</span>(IO::Handle:D:&nbsp;<span class="rainbow-type">Blob</span>&nbsp;<span class="rainbow-name_scalar">$data</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-type">False</span>)<br><span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">spurt</span>(IO::Handle:D:&nbsp;<span class="rainbow-type">Cool</span>&nbsp;<span class="rainbow-name_scalar">$data</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-type">False</span>)
+</pre>
+</div>
+                </div>
+            <p id="a1b6db0">Writes all of the <span class="code">$data</span> into the filehandle, closing it when finished, if <span class="code">$close</span> is <span class="code">True</span>. For <a href="/type/Cool"><span class="code">Cool</span></a> <span class="code">$data</span>, will use the encoding the handle is set to use (<a href="/routine/open"><span class="code">IO::Handle.open</span></a> or <a href="/routine/encoding"><span class="code">IO::Handle.encoding</span></a>). </p>
+<p id="054e86e">Behavior for spurting a <a href="/type/Cool"><span class="code">Cool</span></a> when the handle is in binary mode or spurting a <a href="/type/Blob"><span class="code">Blob</span></a> when the handle is NOT in binary mode is undefined. </p>
+
+<div class="id-target" id="method print"></div><h2 id="method_print" class="heading py-2 "><a href="#" title="go to top of document">method print</a><a class="raku-anchor" title="direct link" href="#method print">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">print</span>(<span class="rainbow-operator">**</span><span class="rainbow-name_array">@text</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)<br><span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">print</span>(Junction:D&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="15adef0">Writes the given <span class="code">@text</span> to the handle, coercing any non-<a href="/type/Str"><span class="code">Str</span></a> objects to <a href="/type/Str"><span class="code">Str</span></a> by calling <a href="/routine/Str"><span class="code">.Str</span></a> method on them. <a href="/type/Junction"><span class="code">Junction</span></a> arguments <a href="/language/glossary">autothread</a> and the order of printed strings is not guaranteed. See <a href="/routine/write">write</a> to write bytes. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">path/to/file</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.open:&nbsp;:w;<br><span class="rainbow-name_scalar">$fh</span>.print:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">some text</span><span class="rainbow-string_delimiter">'</span>;<br><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">close</span>;
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method print-nl"></div><h2 id="method_print-nl" class="heading py-2 "><a href="#" title="go to top of document">method print-nl</a><a class="raku-anchor" title="direct link" href="#method print-nl">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">print-nl</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="4d67962">Writes the value of <span class="code">$.nl-out</span> attribute into the handle. This attribute, by default, is <span class="code">␤</span>, but see the <a href="/language/newline">page on newline</a> for the rules it follows in different platforms and environments. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">path/to/file</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.open:&nbsp;:w<span class="rainbow-operator">,</span>&nbsp;:nl-out(<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-escape">\r</span><span class="rainbow-escape">\n</span><span class="rainbow-string_delimiter">&quot;</span>);<br><span class="rainbow-name_scalar">$fh</span>.print:&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">some text</span><span class="rainbow-string_delimiter">&quot;</span>;<br><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">print-nl</span>;&nbsp;<span class="rainbow-comment"># prints \r\n<br></span><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">close</span>;
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method printf"></div><h2 id="method_printf" class="heading py-2 "><a href="#" title="go to top of document">method printf</a><a class="raku-anchor" title="direct link" href="#method printf">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">printf</span>(IO::Handle:D:&nbsp;<span class="rainbow-type">Cool</span>&nbsp;<span class="rainbow-name_scalar">$format</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">*</span><span class="rainbow-name_array">@args</span>)
+</pre>
+</div>
+                </div>
+            <p id="58ac516">Formats a string based on the given format and arguments and <span class="code">.print</span>s the result into the filehandle. See <a href="/routine/sprintf">sprintf</a> for details on acceptable format directives. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-routine">open</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">path/to/file</span><span class="rainbow-string_delimiter">'</span><span class="rainbow-operator">,</span>&nbsp;:w;<br><span class="rainbow-name_scalar">$fh</span>.printf:&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">The value is </span><span class="rainbow-name_hash">%d</span><span class="rainbow-escape">\n</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;32;<br><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">close</span>;
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method out-buffer"></div><h2 id="method_out-buffer" class="heading py-2 "><a href="#" title="go to top of document">method out-buffer</a><a class="raku-anchor" title="direct link" href="#method out-buffer">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">out-buffer</span>(<span class="rainbow-keyword">--&gt;</span>&nbsp;Int:D)&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">rw</span>
+</pre>
+</div>
+                </div>
+            <p id="bfc4e3e">Controls output buffering and can be set via an argument to <a href="/routine/open">open</a>. Takes an <span class="code">int</span> as the size of the buffer to use (zero is acceptable). Can take a <a href="/type/Bool"><span class="code">Bool</span></a>: <span class="code">True</span> means to use default, implementation-defined buffer size; <span class="code">False</span> means to disable buffering (equivalent to using <span class="code">0</span> as buffer size). </p>
+<p id="06b9341">Lastly, can take a <a href="/type/Nil"><span class="code">Nil</span></a> to enable TTY-based buffering control: if the handle <a href="/routine/t">is a TTY</a>, the buffering is disabled, otherwise, default, implementation-defined buffer size is used. </p>
+<p id="d87ce3b">See <a href="/routine/flush">flush</a> to write out data currently in the buffer. Changing buffer size flushes the filehandle. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">given</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.open:&nbsp;:w<span class="rainbow-operator">,</span>&nbsp;:1000out-buffer&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;.say:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">Hello world!</span><span class="rainbow-string_delimiter">'</span>;&nbsp;<span class="rainbow-comment"># buffered<br></span>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">out-buffer</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;42;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># buffer resized; previous print flushed<br></span>&nbsp;&nbsp;&nbsp;&nbsp;.say:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">And goodbye</span><span class="rainbow-string_delimiter">'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">close</span>;&nbsp;<span class="rainbow-comment"># closing the handle flushes the buffer<br></span>}
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method put"></div><h2 id="method_put" class="heading py-2 "><a href="#" title="go to top of document">method put</a><a class="raku-anchor" title="direct link" href="#method put">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">put</span>(<span class="rainbow-operator">**</span><span class="rainbow-name_array">@text</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)<br><span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">put</span>(Junction:D&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="08c1690">Writes the given <span class="code">@text</span> to the handle, coercing any non-<a href="/type/Str"><span class="code">Str</span></a> objects to <a href="/type/Str"><span class="code">Str</span></a> by calling <a href="/routine/Str"><span class="code">.Str</span></a> method on them, and appending the value of <a href="/type/IO/Handle"><span class="code">.nl-out</span></a> at the end. <a href="/type/Junction"><span class="code">Junction</span></a> arguments <a href="/language/glossary">autothread</a> and the order of printed strings is not guaranteed. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">path/to/file</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.open:&nbsp;:w;<br><span class="rainbow-name_scalar">$fh</span>.put:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">some text</span><span class="rainbow-string_delimiter">'</span>;<br><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">close</span>;
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method say"></div><h2 id="method_say" class="heading py-2 "><a href="#" title="go to top of document">method say</a><a class="raku-anchor" title="direct link" href="#method say">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">say</span>(IO::Handle:D:&nbsp;<span class="rainbow-operator">**</span><span class="rainbow-name_array">@text</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="369049b">This method is identical to <a href="/type/IO/Handle">put</a> except that it stringifies its arguments by calling <a href="/routine/gist"><span class="code">.gist</span></a> instead of <a href="/routine/Str"><span class="code">.Str</span></a>. </p>
+<p id="fc4d59c">Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-routine">open</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">path/to/file</span><span class="rainbow-string_delimiter">'</span><span class="rainbow-operator">,</span>&nbsp;:w;<br><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">say</span>(<span class="rainbow-type">Complex</span>.<span class="rainbow-routine">new</span>(3<span class="rainbow-operator">,</span>&nbsp;4));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># OUTPUT: «3+4i␤»<br></span><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">close</span>;
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method read"></div><h2 id="method_read" class="heading py-2 "><a href="#" title="go to top of document">method read</a><a class="raku-anchor" title="direct link" href="#method read">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">read</span>(IO::Handle:D:&nbsp;<span class="rainbow-type">Int</span>(Cool:D)&nbsp;<span class="rainbow-name_scalar">$bytes</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;65536&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Buf:D)
+</pre>
+</div>
+                </div>
+            <p id="a7779a9">Binary reading; reads and returns up to <span class="code">$bytes</span> bytes from the filehandle. <span class="code">$bytes</span> defaults to an implementation-specific value (in Rakudo, the value of <span class="code">$*DEFAULT-READ-ELEMS</span>, which by default is set to <span class="code">65536</span>). This method can be called even when the handle is not <a href="/type/IO/Handle">in binary mode</a>. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+(<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$file</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>).spurt:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">I ♥ Raku</span><span class="rainbow-string_delimiter">'</span>;<br><span class="rainbow-keyword">given</span>&nbsp;<span class="rainbow-name_scalar">$file</span>.<span class="rainbow-routine">open</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">say</span>&nbsp;.read:&nbsp;6;&nbsp;<span class="rainbow-comment"># OUTPUT: «Buf[uint8]:0x&lt;49 20 e2 99 a5 20&gt;␤»<br></span>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">close</span>;<br>}
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method readchars"></div><h2 id="method_readchars" class="heading py-2 "><a href="#" title="go to top of document">method readchars</a><a class="raku-anchor" title="direct link" href="#method readchars">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">readchars</span>(IO::Handle:D:&nbsp;<span class="rainbow-type">Int</span>(Cool:D)&nbsp;<span class="rainbow-name_scalar">$chars</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;65536&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)
+</pre>
+</div>
+                </div>
+            <p id="d1aebde">Reading chars; reads and returns up to <span class="code">$chars</span> chars (graphemes) from the filehandle. <span class="code">$chars</span> defaults to an implementation-specific value (in Rakudo, the value of <span class="code">$*DEFAULT-READ-ELEMS</span>, which by default is set to <span class="code">65536</span>). Attempting to call this method when the handle is <a href="/type/IO/Handle">in binary mode</a> will result in <a href="/type/X::IO::BinaryMode"><span class="code">X::IO::BinaryMode</span></a> exception being thrown. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+(<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$file</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>).spurt:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">I ♥ Raku</span><span class="rainbow-string_delimiter">'</span>;<br><span class="rainbow-keyword">given</span>&nbsp;<span class="rainbow-name_scalar">$file</span>.<span class="rainbow-routine">open</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">say</span>&nbsp;.readchars:&nbsp;5;&nbsp;<span class="rainbow-comment"># OUTPUT: «I ♥ R␤»<br></span>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">close</span>;<br>}
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method write"></div><h2 id="method_write" class="heading py-2 "><a href="#" title="go to top of document">method write</a><a class="raku-anchor" title="direct link" href="#method write">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">write</span>(IO::Handle:D:&nbsp;Blob:D&nbsp;<span class="rainbow-name_scalar">$buf</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="d47942e">Writes <span class="code">$buf</span> to the filehandle. This method can be called even when the handle is not <a href="/type/IO/Handle">in binary mode</a>. </p>
+<p id="4a9750e"><span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚SeekFromBeginning〛⦄"></span> <span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚SeekFromCurrent〛⦄"></span> <span class="indexed" id="index-entry-_0" data-index-text="⦃〚Reference〛 〚SeekFromEnd〛⦄"></span> </p>
+
+<div class="id-target" id="method seek"></div><h2 id="method_seek" class="heading py-2 "><a href="#" title="go to top of document">method seek</a><a class="raku-anchor" title="direct link" href="#method seek">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">seek</span>(IO::Handle:D:&nbsp;Int:D&nbsp;<span class="rainbow-name_scalar">$offset</span><span class="rainbow-operator">,</span>&nbsp;SeekType:D&nbsp;<span class="rainbow-name_scalar">$whence</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="b8527a4">Move the file pointer (that is, the position at which any subsequent read or write operations will begin) to the byte position specified by <span class="code">$offset</span> relative to the location specified by <span class="code">$whence</span> which may be one of: </p>
+
+<ul class="item-list"><li class="item" data-bullet="•" style="--level:0;"> <p id="1778c57"><span class="code">SeekFromBeginning</span>: The beginning of the file. </p></li>
+<li class="item" data-bullet="•" style="--level:0;"> <p id="c01f7cc"><span class="code">SeekFromCurrent</span>: The current position in the file. </p></li>
+<li class="item" data-bullet="•" style="--level:0;"> <p id="bbe49d7"><span class="code">SeekFromEnd</span>: The end of the file. Please note that you need to specify a negative offset if you want to position before the end of the file. </p></li>
+</ul>
+
+<div class="id-target" id="method tell"></div><h2 id="method_tell" class="heading py-2 "><a href="#" title="go to top of document">method tell</a><a class="raku-anchor" title="direct link" href="#method tell">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">tell</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Int:D)
+</pre>
+</div>
+                </div>
+            <p id="38cbd67">Return the current position of the file pointer in bytes. </p>
+
+<div class="id-target" id="method slurp-rest"></div><h2 id="method_slurp-rest" class="heading py-2 "><a href="#" title="go to top of document">method slurp-rest</a><a class="raku-anchor" title="direct link" href="#method slurp-rest">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">slurp-rest</span>(IO::Handle:D:&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$bin</span>!&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">Buf</span>)<br><span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">slurp-rest</span>(IO::Handle:D:&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$enc</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">Str</span>)
+</pre>
+</div>
+                </div>
+            <p id="92c46a3"><span class="basis">DEPRECATION NOTICE:</span> this method is deprecated in the <span class="code">6.d</span> version. Do not use it for new code, use <a href="/routine/slurp"><span class="code">.slurp</span> method</a> instead. </p>
+<p id="e057d0d">Returns the remaining content of the file from the current file position (which may have been set by previous reads or by <span class="code">seek</span>.) If the adverb <span class="code">:bin</span> is provided a <a href="/type/Buf"><span class="code">Buf</span></a> will be returned; otherwise the return will be a <a href="/type/Str"><span class="code">Str</span></a> with the optional encoding <span class="code">:enc</span>. </p>
+
+<div class="id-target" id="method slurp"></div><h2 id="method_slurp" class="heading py-2 "><a href="#" title="go to top of document">method slurp</a><a class="raku-anchor" title="direct link" href="#method slurp">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">slurp</span>(IO::Handle:D:&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$close</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$bin</span>)
+</pre>
+</div>
+                </div>
+            <p id="22d4d0f">Returns all the content from the current file pointer to the end. If the invocant is in binary mode or if <span class="code">$bin</span> is set to <span class="code">True</span>, will return a <a href="/type/Buf"><span class="code">Buf</span></a>, otherwise will decode the content using invocant's current <a href="/routine/encoding"><span class="code">.encoding</span></a> and return a <a href="/type/Str"><span class="code">Str</span></a>. </p>
+<p id="0ae20e4">If <span class="code">:$close</span> is set to <span class="code">True</span>, will close the handle when finished reading. </p>
+<p id="5c8b315"><span class="basis">Note:</span> On <a href="/language/glossary">Rakudo</a> this method was introduced with release 2017.04; <span class="code">$bin</span> arg was added in 2017.10. </p>
+
+<div class="id-target" id="method Supply"></div><h2 id="method_Supply" class="heading py-2 "><a href="#" title="go to top of document">method Supply</a><a class="raku-anchor" title="direct link" href="#method Supply">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">multi</span>&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-type">Supply</span>(IO::Handle:D:&nbsp;<span class="rainbow-operator">:</span><span class="rainbow-name_scalar">$size</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;65536)
+</pre>
+</div>
+                </div>
+            <p id="808c661">Returns a <a href="/type/Supply"><span class="code">Supply</span></a> that will emit the contents of the handle in chunks. The chunks will be <a href="/type/Buf"><span class="code">Buf</span></a> if the handle is in binary mode or, if it isn't, <a href="/type/Str"><span class="code">Str</span></a> decoded using same encoding as <a href="/routine/encoding"><span class="code">IO::Handle.encoding</span></a>. </p>
+<p id="ac02f4d">The size of the chunks is determined by the optional <span class="code">:size</span> named parameter and <span class="code">65536</span> bytes in binary mode or <span class="code">65536</span> characters in non-binary mode. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>(:bin).<span class="rainbow-type">Supply</span>(:size&lt;10&gt;).tap:&nbsp;<span class="rainbow-operator">*</span>.<span class="rainbow-routine">raku</span>.<span class="rainbow-routine">say</span>;<br><span class="rainbow-comment"># OUTPUT:<br></span><span class="rainbow-comment"># Buf[uint8].new(73,32,226,153,165,32,80,101,114,108)<br></span><span class="rainbow-comment"># Buf[uint8].new(32,54,33,10)<br></span><br><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>.<span class="rainbow-type">Supply</span>(:size&lt;10&gt;).tap:&nbsp;<span class="rainbow-operator">*</span>.<span class="rainbow-routine">raku</span>.<span class="rainbow-routine">say</span>;<br><span class="rainbow-comment"># OUTPUT:<br></span><span class="rainbow-comment"># &quot;I ♥ Perl&quot;<br></span><span class="rainbow-comment"># &quot; 6!\n&quot;</span>
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method path"></div><h2 id="method_path" class="heading py-2 "><a href="#" title="go to top of document">method path</a><a class="raku-anchor" title="direct link" href="#method path">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">path</span>(IO::Handle:D:)
+</pre>
+</div>
+                </div>
+            <p id="6334812">For a handle opened on a file this returns the <a href="/type/IO::Path"><span class="code">IO::Path</span></a> that represents the file. For the standard I/O handles <a href="/language/variables"><span class="code">$*IN</span></a>, <a href="/language/variables"><span class="code">$*OUT</span></a>, and <a href="/language/variables"><span class="code">$*ERR</span></a> it returns an <a href="/type/IO::Special"><span class="code">IO::Special</span></a> object. </p>
+
+<div class="id-target" id="method IO"></div><h2 id="method_IO" class="heading py-2 "><a href="#" title="go to top of document">method IO</a><a class="raku-anchor" title="direct link" href="#method IO">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-type">IO</span>(IO::Handle:D:)
+</pre>
+</div>
+                </div>
+            <p id="96bf3e5">Alias for <a href="/type/IO/Handle"><span class="code">.path</span></a> </p>
+
+<div class="id-target" id="method Str"></div><h2 id="method_Str" class="heading py-2 "><a href="#" title="go to top of document">method Str</a><a class="raku-anchor" title="direct link" href="#method Str">§</a></h2>
+<p id="cf0015a">Returns the value of <a href="/type/IO/Handle"><span class="code">.path</span></a>, coerced to <a href="/type/Str"><span class="code">Str</span></a>. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>.<span class="rainbow-type">Str</span>;&nbsp;<span class="rainbow-comment"># OUTPUT: «foo␤»</span>
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="routine close"></div><h2 id="routine_close" class="heading py-2 "><a href="#" title="go to top of document">routine close</a><a class="raku-anchor" title="direct link" href="#routine close">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">close</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Bool:D)<br><span class="rainbow-keyword">multi</span>&nbsp;&nbsp;<span class="rainbow-routine">close</span>(<span class="rainbow-type">IO::Handle</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>)
+</pre>
+</div>
+                </div>
+            <p id="511afea">Closes an open filehandle, returning <span class="code">True</span> on success. No error is thrown if the filehandle is already closed, although if you close one of the standard filehandles (by default: <span class="code">$*IN</span>, <span class="code">$*OUT</span>, or <span class="code">$*ERR</span>: any handle with <a href="/routine/native-descriptor">native-descriptor</a> <span class="code">2</span> or lower), you won't be able to re-open them. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">given</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">foo/bar</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">open</span>(:w)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;.spurt:&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">I ♥ Raku!</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">close</span>;<br>}
+</pre>
+</div>
+                </div>
+            <p id="afe543e">It's a common idiom to use <a href="/language/phasers"><span class="code">LEAVE</span> phaser</a> for closing the handles, which ensures the handle is closed regardless of how the block is left. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-routine">do</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-routine">open</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">path-to-file</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">LEAVE</span>&nbsp;<span class="rainbow-routine">close</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># ... do stuff with the file<br></span>}<br><br><span class="rainbow-keyword">sub</span>&nbsp;do-stuff-with-the-file&nbsp;(<span class="rainbow-type">IO</span>&nbsp;<span class="rainbow-name_scalar">$path-to-file</span>)&nbsp;{<br>&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$path-to-file</span>.<span class="rainbow-routine">open</span>;<br><br>&nbsp;&nbsp;<span class="rainbow-comment"># stick a `try` on it, since this will get run even when the sub is<br></span>&nbsp;&nbsp;<span class="rainbow-comment"># called with wrong arguments, in which case the `$fh` will be an `Any`<br></span>&nbsp;&nbsp;<span class="rainbow-keyword">LEAVE</span>&nbsp;<span class="rainbow-keyword">try</span>&nbsp;<span class="rainbow-routine">close</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>;<br><br>&nbsp;&nbsp;<span class="rainbow-comment"># ... do stuff with the file<br></span>}
+</pre>
+</div>
+                </div>
+            <p id="6f99922"><span class="basis">Note:</span> unlike some other languages, Raku does not use reference counting, and so <span class="basis">the filehandles are NOT closed when they go out of scope</span>. While they <span class="important">will</span> get closed when garbage collected, garbage collection isn't guaranteed to get run. This means <span class="basis">you must</span> use an explicit <span class="code">close</span> on handles opened for writing, to avoid data loss, and an explicit <span class="code">close</span> is <span class="important">recommended</span> on handles opened for reading as well, so that your program does not open too many files at the same time, triggering exceptions on further <span class="code">open</span> calls. </p>
+<p id="13a185f">Note several methods allow for providing <span class="code">:close</span> argument, to close the handle after the operation invoked by the method completes. As a simpler alternative, the <a href="/type/IO::Path"><span class="code">IO::Path</span></a> type provides many reading and writing methods that let you work with files without dealing with filehandles directly. </p>
+
+<div class="id-target" id="method flush"></div><h2 id="method_flush" class="heading py-2 "><a href="#" title="go to top of document">method flush</a><a class="raku-anchor" title="direct link" href="#method flush">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">flush</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)
+</pre>
+</div>
+                </div>
+            <p id="7127a80">Will flush the handle, writing any of the buffered data. Returns <span class="code">True</span> on success; otherwise, <a href="/routine/fail">fails</a> with <a href="/type/X::IO::Flush"><span class="code">X::IO::Flush</span></a>. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">given</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">&quot;</span>.<span class="rainbow-type">IO</span>.open:&nbsp;:w&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">LEAVE</span>&nbsp;.<span class="rainbow-routine">close</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;.print:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">something</span><span class="rainbow-string_delimiter">'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">slurp</span>.<span class="rainbow-routine">say</span>;&nbsp;<span class="rainbow-comment"># (if the data got buffered) OUTPUT: «␤»<br></span>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">flush</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># flush the handle<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>.<span class="rainbow-routine">slurp</span>.<span class="rainbow-routine">say</span>;&nbsp;<span class="rainbow-comment"># OUTPUT: «something␤»<br></span>}
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method native-descriptor"></div><h2 id="method_native-descriptor" class="heading py-2 "><a href="#" title="go to top of document">method native-descriptor</a><a class="raku-anchor" title="direct link" href="#method native-descriptor">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">native-descriptor</span>(IO::Handle:D:)
+</pre>
+</div>
+                </div>
+            <p id="6394e0f">This returns a value that the operating system would understand as a &quot;file descriptor&quot; and is suitable for passing to a native function that requires a file descriptor as an argument such as <span class="code">fcntl</span> or <span class="code">ioctl</span>. </p>
+
+<div class="id-target" id="method nl-in"></div><h2 id="method_nl-in" class="heading py-2 "><a href="#" title="go to top of document">method nl-in</a><a class="raku-anchor" title="direct link" href="#method nl-in">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">nl-in</span>(<span class="rainbow-keyword">--&gt;</span>&nbsp;Str:D)&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">rw</span>
+</pre>
+</div>
+                </div>
+            <p id="3971763">One of the attributes that can be set via <span class="code">.new</span> or <a href="/routine/open">open</a>. Defaults to <span class="code">["\x0A", "\r\n"]</span>. Takes either a <a href="/type/Str"><span class="code">Str</span></a> or <a href="/type/Array"><span class="code">Array</span></a> of <a href="/type/Str"><span class="code">Str</span></a> specifying input line ending(s) for this handle. If <span class="code">.chomp</span> attribute is set to <span class="code">True</span>, will strip these endings in routines that <span class="code">chomp</span>, such as <a href="/routine/get"><span class="code">get</span></a> and <a href="/routine/lines"><span class="code">lines</span></a>. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">with</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">test</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;.spurt:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">1foo2bar3foo</span><span class="rainbow-string_delimiter">'</span>;&nbsp;<span class="rainbow-comment"># write some data into our test file<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;will&nbsp;leave&nbsp;{.<span class="rainbow-routine">close</span>}&nbsp;<span class="rainbow-operator">=</span>&nbsp;.<span class="rainbow-routine">open</span>;&nbsp;<span class="rainbow-comment"># can also set .nl-in via .open arg<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">nl-in</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;[&lt;foo&nbsp;bar&gt;];&nbsp;<span class="rainbow-comment"># set two possible line endings to use;<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">lines</span>.<span class="rainbow-routine">say</span>;&nbsp;<span class="rainbow-comment"># OUTPUT: (&quot;1&quot;, &quot;2&quot;, &quot;3&quot;).Seq<br></span>}
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method nl-out"></div><h2 id="method_nl-out" class="heading py-2 "><a href="#" title="go to top of document">method nl-out</a><a class="raku-anchor" title="direct link" href="#method nl-out">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">has</span>&nbsp;Str:D&nbsp;<span class="rainbow-name_scalar">$.nl-out</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">rw</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-escape">\n</span><span class="rainbow-string_delimiter">&quot;</span>;
+</pre>
+</div>
+                </div>
+            <p id="a67fb43">One of the attributes that can be set via <span class="code">.new</span> or <a href="/routine/open">open</a>. Defaults to <span class="code">"\n"</span>. Takes a <a href="/type/Str"><span class="code">Str</span></a> specifying output line ending for this handle, to be used by methods <a href="/type/IO/Handle"><span class="code">.put</span></a> and <a href="/type/IO/Handle"><span class="code">.say</span></a>. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">with</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">test</span><span class="rainbow-string_delimiter">'</span>.<span class="rainbow-type">IO</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">given</span>&nbsp;.open:&nbsp;:w&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.put:&nbsp;42;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">nl-out</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">foo</span><span class="rainbow-string_delimiter">'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.put:&nbsp;42;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">close</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">slurp</span>.<span class="rainbow-routine">raku</span>.<span class="rainbow-routine">say</span>;&nbsp;<span class="rainbow-comment"># OUTPUT: «&quot;42\n42foo&quot;␤»<br></span>}
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method opened"></div><h2 id="method_opened" class="heading py-2 "><a href="#" title="go to top of document">method opened</a><a class="raku-anchor" title="direct link" href="#method opened">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">opened</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Bool:D)
+</pre>
+</div>
+                </div>
+            <p id="4e67278">Returns <span class="code">True</span> if the handle is open, <span class="code">False</span> otherwise. </p>
+
+<div class="id-target" id="method t"></div><h2 id="method_t_X&lt;|Reference,tty&gt;" class="heading py-2 "><a href="#" title="go to top of document">method t</a><a class="raku-anchor" title="direct link" href="#method t">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">t</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Bool:D)
+</pre>
+</div>
+                </div>
+            <p id="b11b0b9">Returns <span class="code">True</span> if the handle is opened to a <a href="https://en.wikipedia.org/wiki/Terminal_emulator">TTY</a>, <span class="code">False</span> otherwise. </p>
+
+<div class="id-target" id="Creating Custom Handles"></div><h1 id="Creating_Custom_Handles" class="heading py-2 "><a href="#" title="go to top of document">Creating Custom Handles</a><a class="raku-anchor" title="direct link" href="#Creating Custom Handles">§</a></h1>
+<p id="324334b">As of 6.d language (early implementation available in Rakudo compiler version 2018.08), a few helper methods are available to simplify creation of custom <span class="code">IO::Handle</span> objects. In your subclass you simply need to implement those methods to affect all of the related features. If your handle wants to work with textual read/write methods and doesn't use the standard <span class="code">.open</span> method, be sure to call <span class="code">.encoding</span> method in your custom handle to get decoder/encoder properly set up: </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">class</span>&nbsp;IO::URL&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-type">IO::Handle</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-name_scalar">$.URL</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">required</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-type">Buf</span>&nbsp;<span class="rainbow-name_scalar">$!content</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">submethod</span>&nbsp;<span class="rainbow-routine">TWEAK</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">use</span>&nbsp;WWW;&nbsp;<span class="rainbow-comment"># ecosystem module that will let us `get` a web page<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">use</span>&nbsp;DOM::Tiny;&nbsp;<span class="rainbow-comment"># ecosystem module that will parse out all text from HTML<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$!content</span>&nbsp;<span class="rainbow-operator">:=</span>&nbsp;<span class="rainbow-type">Buf</span>.new:&nbsp;DOM::Tiny.<span class="rainbow-routine">parse</span>(<span class="rainbow-routine">get</span>&nbsp;<span class="rainbow-name_scalar">$!URL</span>).all-text(:trim).<span class="rainbow-routine">encode</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">self</span>.encoding:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">utf8</span><span class="rainbow-string_delimiter">'</span>;&nbsp;<span class="rainbow-comment"># set up encoder/decoder<br></span>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">open</span>(<span class="rainbow-operator">|</span>)&nbsp;&nbsp;{&nbsp;<span class="rainbow-routine">self</span>&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># block out some IO::Handle methods<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">close</span>(<span class="rainbow-operator">|</span>)&nbsp;{&nbsp;<span class="rainbow-routine">self</span>&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># that work with normal low-level file<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">opened</span>&nbsp;&nbsp;&nbsp;{&nbsp;<span class="rainbow-operator">!</span>&nbsp;<span class="rainbow-routine">self</span>.<span class="rainbow-routine">EOF</span>&nbsp;}&nbsp;<span class="rainbow-comment"># handles, since we don't. This isn't<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">lock</span>(<span class="rainbow-operator">|</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)&nbsp;{&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># necessary, but will make our handle<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">unlock</span>(&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">True</span>)&nbsp;{&nbsp;}&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># be more well-behaved if someone<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># actually calls one of these methods. There are more of these you<br></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># can handle, such as .tell, .seek, .flush, .native-descriptor, etc.<br></span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;WRITE(<span class="rainbow-operator">|</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># For this handle we'll just die on write. If yours can handle writes.<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># The data to write will be given as a Blob positional argument.<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">die</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Cannot write into IO::URL</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;READ(\<span class="rainbow-routine">bytes</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># We splice off the requested number of bytes from the head of<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># our content Buf. The handle's decoder will handle decoding them<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># automatically, if textual read methods were called on the handle.<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$!content</span>.splice:&nbsp;0<span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-routine">bytes</span><br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">EOF</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># For &quot;end of file&quot;, we'll simply report whether we still have<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-comment"># any bytes of the website we fetched on creation.<br></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">not</span>&nbsp;<span class="rainbow-name_scalar">$!content</span><br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br><br><span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$fh</span>&nbsp;<span class="rainbow-operator">:=</span>&nbsp;IO::URL.new:&nbsp;:URL&lt;<span class="rainbow-routine">raku</span>.org&gt;;<br><br><span class="rainbow-comment"># .slurp and print all the content from the website. We can use all other<br></span><span class="rainbow-comment"># read methods, such as .lines, or .get, or .readchars. All of them work<br></span><span class="rainbow-comment"># correctly, even though we only defined .READ and .EOF<br></span><span class="rainbow-name_scalar">$fh</span>.<span class="rainbow-routine">slurp</span>.<span class="rainbow-routine">say</span>;
+</pre>
+</div>
+                </div>
+            
+<div class="id-target" id="method WRITE"></div><h2 id="method_WRITE" class="heading py-2 "><a href="#" title="go to top of document">method WRITE</a><a class="raku-anchor" title="direct link" href="#method WRITE">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;WRITE(IO::Handle:D:&nbsp;Blob:D&nbsp;\data&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Bool:D)
+</pre>
+</div>
+                </div>
+            <p id="7f2a874">Called whenever a write operation is performed on the handle. Always receives the data as a <a href="/type/Blob"><span class="code">Blob</span></a>, even if a textual writing method has been called. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">class</span>&nbsp;IO::Store&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-type">IO::Handle</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-name_array">@.lines</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;[];<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">submethod</span>&nbsp;<span class="rainbow-routine">TWEAK</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">self</span>.encoding:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">utf8</span><span class="rainbow-string_delimiter">'</span>;&nbsp;<span class="rainbow-comment"># set up encoder/decoder<br></span>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;WRITE(IO::Handle:D:&nbsp;Blob:D&nbsp;\data&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Bool:D)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_array">@!lines</span>.push:&nbsp;data.<span class="rainbow-routine">decode</span>();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-type">True</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">gist</span>()&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">return</span>&nbsp;<span class="rainbow-name_array">@!lines</span>.<span class="rainbow-routine">join</span>(<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-escape">\n</span><span class="rainbow-string_delimiter">&quot;</span>&nbsp;);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br><span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$store</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;IO::Store.<span class="rainbow-routine">new</span>();<br><span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$output</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$PROCESS::OUT</span>;<br><span class="rainbow-name_scalar">$PROCESS::OUT</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$store</span>;<br>.<span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-keyword">for</span>&nbsp;&lt;<span class="rainbow-routine">one</span>&nbsp;two&nbsp;three&gt;;<br><span class="rainbow-name_scalar">$PROCESS::OUT</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$output</span>;<br><span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-name_scalar">$store</span>.<span class="rainbow-routine">lines</span>();&nbsp;<span class="rainbow-comment"># OUTPUT: «[one␤ two␤ three␤]»</span>
+</pre>
+</div>
+                </div>
+            <p id="a6c5d65">In this example we are creating a simple <span class="code">WRITE</span> redirection which stores anything written to the filehandle to an array. Se need to save the standard output first, which we do in <span class="code">$output</span>, and then everything that is <span class="code">print</span>ed or said (through <span class="code">say</span>) gets stored in the defined <span class="code">IO::Store</span> class. Two things should be taken into account in this class. By default, <span class="code">IO::Handle</span>s are in binary mode, so we need to <span class="code">TWEAK</span> the objects if we want them to work with text. Second, a <span class="code">WRITE</span> operation should return <span class="code">True</span> if successful. It will fail if it does not. </p>
+
+<div class="id-target" id="method READ"></div><h2 id="method_READ" class="heading py-2 "><a href="#" title="go to top of document">method READ</a><a class="raku-anchor" title="direct link" href="#method READ">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;READ(IO::Handle:D:&nbsp;Int:D&nbsp;\<span class="rainbow-routine">bytes</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Buf:D)
+</pre>
+</div>
+                </div>
+            <p id="21e8f8c">Called whenever a read operation is performed on the handle. Receives the number of bytes requested to read. Returns a <a href="/type/Buf"><span class="code">Buf</span></a> with those bytes which can be used to either fill the decoder buffer or returned from reading methods directly. The result is allowed to have fewer than the requested number of bytes, including no bytes at all. </p>
+<p id="2ae3bbb">If you provide your own <span class="code">.READ</span>, you very likely need to provide your own <a href="/routine/EOF"><span class="code">.EOF</span></a> as well, for all the features to behave correctly. </p>
+<p id="161edb5">The compiler may call <a href="/routine/EOF"><span class="code">.EOF</span></a> method any number of times during a read operation to ascertain whether a call to <span class="code">.READ</span> should be made. More bytes than necessary to satisfy a read operation may be requested from <span class="code">.READ</span>, in which case the extra data may be buffered by the <span class="code">IO::Handle</span> or the decoder it's using, to fulfill any subsequent reading operations, without necessarily having to make another <span class="code">.READ</span> call. </p>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">class</span>&nbsp;IO::Store&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-type">IO::Handle</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-name_array">@.lines</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;[];<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">submethod</span>&nbsp;<span class="rainbow-routine">TWEAK</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">self</span>.encoding:&nbsp;<span class="rainbow-string_delimiter">'</span><span class="rainbow-string">utf8</span><span class="rainbow-string_delimiter">'</span>;&nbsp;<span class="rainbow-comment"># set up encoder/decoder<br></span>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;WRITE(IO::Handle:D:&nbsp;Blob:D&nbsp;\data&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Bool:D)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_array">@!lines</span>.push:&nbsp;data;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-type">True</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;whole()&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-type">Buf</span>&nbsp;<span class="rainbow-name_scalar">$everything</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-type">Buf</span>.<span class="rainbow-routine">new</span>();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">for</span>&nbsp;<span class="rainbow-name_array">@!lines</span>&nbsp;<span class="rainbow-keyword">-&gt;</span>&nbsp;<span class="rainbow-name_scalar">$b</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$everything</span>&nbsp;<span class="rainbow-operator">~</span><span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-name_scalar">$b</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">return</span>&nbsp;<span class="rainbow-name_scalar">$everything</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;READ(IO::Handle:D:&nbsp;Int:D&nbsp;\<span class="rainbow-routine">bytes</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Buf:D)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-type">Buf</span>&nbsp;<span class="rainbow-name_scalar">$everything</span>&nbsp;<span class="rainbow-operator">:=</span>&nbsp;<span class="rainbow-routine">self</span>.whole();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">return</span>&nbsp;<span class="rainbow-name_scalar">$everything</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">EOF</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$everything</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-routine">self</span>.whole();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-operator">!</span><span class="rainbow-name_scalar">$everything</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br><br><span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$store</span>&nbsp;<span class="rainbow-operator">:=</span>&nbsp;IO::Store.<span class="rainbow-routine">new</span>();<br><br><span class="rainbow-name_scalar">$store</span>.<span class="rainbow-routine">print</span>(&nbsp;<span class="rainbow-name_scalar">$_</span>&nbsp;)&nbsp;<span class="rainbow-keyword">for</span>&nbsp;&lt;<span class="rainbow-routine">one</span>&nbsp;two&nbsp;three&gt;;<br><span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-name_scalar">$store</span>.<span class="rainbow-routine">read</span>(3).<span class="rainbow-routine">decode</span>;&nbsp;<span class="rainbow-comment"># OUTPUT: «one␤»<br></span><span class="rainbow-routine">say</span>&nbsp;<span class="rainbow-name_scalar">$store</span>.<span class="rainbow-routine">read</span>(3).<span class="rainbow-routine">decode</span>;&nbsp;<span class="rainbow-comment"># OUTPUT: «two␤»</span>
+</pre>
+</div>
+                </div>
+            <p id="53f17d5">In this case, we have programmed the two <span class="code">READ</span> and <span class="code">EOF</span> methods, as well as <span class="code">WRITE</span>, which stores every line in an element in an array. The <span class="code">read</span> method actually calls <span class="code">READ</span>, returning 3 bytes, which correspond to the three characters in the first two elements. Please note that it's the <span class="code">IO::Handle</span> base class the one that is taking care of cursor, since <span class="code">READ</span> just provides a handle into the whole content of the object; the base class will <span class="code">READ</span> 1024 * 1024 bytes at a time. If your object is planned to hold an amount of bytes bigger than that, you will have to handle an internal cursor yourself. That is why in this example we don't actually use the <span class="code">bytes</span> argument. </p>
+
+<div class="id-target" id="method EOF"></div><h2 id="method_EOF" class="heading py-2 "><a href="#" title="go to top of document">method EOF</a><a class="raku-anchor" title="direct link" href="#method EOF">§</a></h2>
+
+                <div class="raku-code">
+                    <button class="copy-code" title="Copy code"><i class="far fa-clipboard"></i></button>
+                    <label>Raku highlighting</label>
+                    <div><pre class="nohighlights">
+<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">EOF</span>(IO::Handle:D:&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Bool:D)
+</pre>
+</div>
+                </div>
+            <p id="1ee386a">Indicates whether &quot;end of file&quot; has been reached for the <span class="basis">data source</span> of the handle; i.e. no more data can be obtained by calling <a href="/routine/READ"><span class="code">.READ</span></a> method. Note that this is <span class="basis">not</span> the same as <a href="/routine/eof">eof</a> method, which will return <span class="code">True</span> only if <span class="code">.EOF</span> returns <span class="code">True</span> <span class="basis">and all the decoder buffers</span>, if any were used by the handle, are also empty. See <a href="/routine/READ"><span class="code">.READ</span></a> for an example implementation. </p>
+
+<div class="id-target" id="Related roles and classes"></div><h1 id="Related_roles_and_classes" class="heading py-2 "><a href="#" title="go to top of document">Related roles and classes</a><a class="raku-anchor" title="direct link" href="#Related roles and classes">§</a></h1>
+<p id="c5ebb1e">See also the related role <a href="/type/IO"><span class="code">IO</span></a> and the related class <a href="/type/IO::Path"><span class="code">IO::Path</span></a>. </p>
+
+        </div>
+        <div class="content px-4">
+        
+        </div>
+    </div>
+</div>
+
+    <footer class="footer main-footer">
+    <div class="container px-4">
+        <nav class="level">
+            <div class="level-item">
+                <span class="Elucid8-ui" data-UIToken="FileSource">Source</span><span class="footer-field">Type/IO/Handle
+            </div>
+            <div class="level-item">
+                <span class="Elucid8-ui" data-UIToken="Time">Time</span>
+            </div>
+            <div class="level-item">
+                <span class="Elucid8-ui" data-UIToken="SourceModified">SourceModified</span> 23:14 UTC, 2024-10-27
+            </div>
+        </nav>
+    </div>
+    
+</footer>
+
+</body>
+</html>

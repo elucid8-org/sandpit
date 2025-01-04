@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html class="theme-light" style="scroll-padding-top:var(--bulma-navbar-height)" >
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Artistic-2.0 license</title>
+<link rel="icon" href="https://irclogs.raku.org/favicon.ico">
+<style>/*! Vanilla CSS */span.basis{font-weight:800}span.important{font-style:italic}span.unusual{text-decoration:underline}span.code{font-weight:500;background-color:linen;display:inline-block;margin:2px;padding:2px}span.overstrike{text-decoration:line-through}span.high{vertical-align:super}span.junior{vertical-align:sub}span.replace{font-style:small-caps;text-shadow:-1px 1px}span.indexed{text-shadow:1px 1px orange}span.indexed:hover::before{content:attr(data-index-text);translate:0 -1.5em;position:absolute;opacity:75%;background-color:#40e0d0;color:indigo}span.keyboard{text-shadow:1px 1px}span.terminal{text-decoration:overline underline}span.footnote{vertical-align:super}span.developer-version{display:none;color:red}span.developer-version span.developer-note{font-family:"Brush Script MT",cursive}span.developer-version:hover{display:inline-block;transform:translate(50px, 100px);z-index:5}span.bad-markdown{text-shadow:1px 1px red}pre.code-block{background-color:#eee;margin:1rem;padding:0 1rem 1rem 1rem}pre.input-block{background-color:#eee;margin:1rem;padding:0 1rem 1rem 1rem}pre.input-block::before{content:"--- input ---";display:block;text-shadow:-2px -2px 4px #000;color:#fff;padding-bottom:1rem}pre.output-block{background-color:#eee;margin:1rem;padding:0 1rem 1rem 1rem}pre.output-block::before{content:"--- output ---";display:block;text-shadow:2px 2px 4px #000;color:#fff;padding-bottom:1rem}div.defn-text{margin-left:1rem}div.defn-term{font-weight:bold;font-style:italic}div.id-target{display:none}div.nested{margin-left:5rem}div.toc .toc-item{margin-left:calc(var(--level)*1rem)}div.toc .toc-item::before{content:attr(data-bullet)}div.toc .toc-item a{padding-left:.4rem}div.index-section{margin-left:calc((var(--level) - 1)*1rem)}div.index-section[data-index-level="1"]{text-shadow:1px 1px orange}div.index-section>a.index-ref{white-space:nowrap;display:inline-block;width:1em}div.index-section>a.index-ref+span{display:none;width:0}div.index-section>a.index-ref:hover+span{display:inline-block;position:absolute;width:auto;z-index:5;background-color:#fff5ee}span.developer-note{display:none;width:0;color:blue;text-shadow:2px 2px 5px green}span.developer-version{display:none;width:0;color:red;text-shadow:2px 2px 5px green}.delta::before,span.developer-text::before{content:"ℹ";vertical-align:super}.delta:hover .developer-version,span.developer-text:hover .developer-version{display:inline-block;position:absolute;width:100%;z-index:5;transform:translate(0.5rem, -1rem)}.delta:hover .developer-note,span.developer-text:hover .developer-note{display:inline-block;position:absolute;width:auto;z-index:5;margin-left:1rem}span.developer-text:hover{text-decoration:overline}div.footer{border-top:2px dashed;margin:1rem 0;padding:2rem}div.footer .footer-field{display:inline-block}div.footer .footer-line{display:block}.heading>a{color:maroon;text-decoration:none}h.title{font-size:larger}table,th,td{border:1px solid;border-collapse:collapse}tbody.procedural tr.procedural .procedural-cell-left{text-align:left}tbody.procedural tr.procedural .procedural-cell-centre{text-align:center}tbody.procedural tr.procedural .procedural-cell-center{text-align:center}tbody.procedural tr.procedural .procedural-cell-right{text-align:right}tbody.procedural tr.procedural .procedural-cell-top{vertical-align:text-top}tbody.procedural tr.procedural .procedural-cell-middle{vertical-align:baseline}tbody.procedural tr.procedural .procedural-cell-bottom{vertical-align:text-bottom}tbody.procedural tr.procedural .procedural-cell-label{font-weight:bold}li.item{padding-left:.4rem;margin-left:calc(var(--level)*1rem)}li.item::marker{content:attr(data-bullet)}div.rakudoc-image-placement{display:flex;flex-direction:column;align-items:center}.rakudoc-placement-error{display:flex;justify-content:sapace-around;align-items:center;color:red;font-weight:bold}.raku-anchor{font-size:.9em;text-decoration:none;visibility:hidden}.heading:hover .raku-anchor{visibility:visible;padding-left:5px}
+</style>
+<style>/* bulma */
+#page-nav{width:25%;position:fixed}#page-nav .panel-block .toc{overflow-y:scroll;height:65vh}#page-nav .panel-block .index{overflow-y:scroll;height:65vh}.main-footer{z-index:1;position:relative}.toc-item:hover{background:var(--bulma-background)}.toc-item a{text-decoration:none;color:var(--bulma-text)}
+</style>
+<style>/* bulma */
+.content p+ul.item-list{margin-top:0}.content p+ol.item-list{margin-top:0}.delta:hover{border:var(--bulma-border-hover) 1px solid}.navbar-start{margin-bottom:1rem}
+</style>
+<style>/* bulma */
+label.chyronToggle input#navbar-toc-toggle{opacity:0;height:0;width:0}label.chyronToggle span.checkmark{top:1rem;position:relative;cursor:pointer}label.chyronToggle input[type=checkbox]{position:absolute;opacity:0;cursor:pointer;height:0;width:0}label.chyronToggle span.checkmark::before{content:"[⇨";color:gray;font-weight:800;line-height:.5rem;font-size:1.75rem;margin-right:.25rem}label.chyronToggle:hover span.checkmark::before{content:"[ ⇨"}label.chyronToggle input[type=checkbox]:checked+.checkmark::before{content:"[ ⇦"}label.chyronToggle:hover input[type=checkbox]:checked+.checkmark::before{content:"[⇦"}
+</style>
+<style>/* graphviz */
+div.graphviz{display:flex;justify-content:space-around;align-items:center;margin:auto;margin-bottom:1rem}.graphviz-error{display:flex;justify-content:space-around;align-items:center;color:red;font-weight:bold}.graphviz-error span.data{color:green}
+</style>
+<style>/* hilite */
+.raku-code{position:relative;margin:1rem 0}.raku-code button.copy-code{cursor:pointer;opacity:0;padding:0 .25rem .25rem .25rem;position:absolute}.raku-code:hover button.copy-code{opacity:.5}.raku-code label{float:right;font-size:xx-small;font-style:italic;height:auto;padding-right:50px}.raku-code pre.browser-hl{padding:7px}.raku-code .code-name{padding-top:.75rem;padding-left:1.25rem;font-weight:500}.raku-code pre{display:inline-block;overflow:scroll;width:96%}.raku-code .rakudoc-in-code{padding:1.25rem 1.5rem}.raku-code .section{padding:0rem}.raku-code .rainbow-name_scalar{color:var(--bulma-link-40);font-weight:500}.raku-code .rainbow-name_array{color:var(--bulma-link);font-weight:500}.raku-code .rainbow-name_hash{color:var(--bulma-link-60);font-weight:500}.raku-code .rainbow-name_code{color:var(--bulma-info);font-weight:500}.raku-code .rainbow-keyword{color:var(--bulma-primary);font-weight:500}.raku-code .rainbow-operator{color:var(--bulma-success);font-weight:500}.raku-code .rainbow-type{color:var(--bulma-danger-60);font-weight:500}.raku-code .rainbow-routine{color:var(--bulma-info-30);font-weight:500}.raku-code .rainbow-string{color:var(--bulma-info-40);font-weight:500}.raku-code .rainbow-string_delimiter{color:var(--bulma-primary-40);font-weight:500}.raku-code .rainbow-escape{color:var(--bulma-black-60);font-weight:500}.raku-code .rainbow-text{color:var(--bulma-black);font-weight:500}.raku-code .rainbow-comment{color:var(--bulma-success-30);font-weight:500}.raku-code .rainbow-regex_special{color:var(--bulma-success-60);font-weight:500}.raku-code .rainbow-regex_literal{color:var(--bulma-black-60);font-weight:500}.raku-code .rainbow-regex_delimiter{color:var(--bulma-primary-60);font-weight:500}.raku-code .rainbow-rakudoc_text{color:var(--bulma-success-40);font-weight:500}.raku-code .rainbow-rakudoc_markup{color:var(--bulma-danger-40);font-weight:500}
+</style>
+<style>/* latexformula */
+div.latex-equation{display:flex;justify-content:space-around;align-items:center}div.latex-equation a.logo{align-self:flex-last}span.latex-formula{display:inline-block;cursor:crosshair}span.latex-formula a{display:none}span.latex-formula:hover>a{display:inline-block;position:absolute;transform:translate(-3rem, -2rem);background:#faebd7}.latex-render-error{color:red;font-weight:bold}
+</style>
+<style>/* listfiles */
+.listf-container{display:flex;flex-direction:column;margin-bottom:1.25rem;font-size:1rem;font-weight:500;line-height:1.5;border:1px solid #ccc;border-bottom:5px solid #d9d9d9;box-shadow:0 2px 3px 0 rgba(0,0,0,.07)}.listf-container .listf-caption{display:flex;justify-content:center;background:#f2f2f2;border-bottom:1px solid #ccc;color:#83858d}.listf-container .listf-file{display:inline-block;border-top:1px solid #ccc;border-bottom:1px solid #ccc;break-inside:avoid}.listf-container .listf-file .listf-link{display:inline-block;width:100%;text-align:center;padding-top:.25rem}.listf-container .listf-file p{padding-left:.5rem;padding-right:.5rem;margin-bottom:.25rem}.listf-error{color:red;font-size:xlarge}
+</style>
+<style>/* leafletmap */
+.leaflet-map-rakudoc{margin-bottom:1rem}.leaflet-map-rakudoc div{margin:auto}
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""
+/>
+
+<script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+<script src="https://rawgit.com/farzher/fuzzysort/master/fuzzysort.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""
+></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/haskell.min.js"></script>
+<script src="https://unpkg.com/leaflet-providers@latest/leaflet-providers.js"
+></script>
+
+<script>    // Hilite-helper.js
+    document.addEventListener('DOMContentLoaded', function () {
+        // trigger the highlighter for non-Raku code
+        hljs.highlightAll();
+
+        // copy code block to clipboard adapted from solution at
+        // https://stackoverflow.com/questions/34191780/javascript-copy-string-to-clipboard-as-text-html
+        // if behaviour problems with different browsers add stylesheet code from that solution.
+        const copyButtons = Array.from(document.querySelectorAll('.copy-code'));
+        copyButtons.forEach( function( button ) {
+        var codeElement = button.nextElementSibling.nextElementSibling; // skip the label and get the div
+        button.addEventListener( 'click', function(insideButton) {
+            var container = document.createElement('div');
+            container.innerHTML = codeElement.innerHTML;
+                container.style.position = 'fixed';
+                container.style.pointerEvents = 'none';
+                container.style.opacity = 0;
+                document.body.appendChild(container);
+                window.getSelection().removeAllRanges();
+                var range = document.createRange();
+                range.selectNode(container);
+                window.getSelection().addRange(range);
+                document.execCommand("copy", false);
+                document.body.removeChild(container);
+            });
+        });
+    });
+</script>
+<script>/* UISwitcher generated vars */
+var dictionary = {
+  "en": {
+    "NoIndex": "No Index for this page",
+    "Time": "Rendered at 15:34 UTC on 2025-01-04",
+    "langName": "English",
+    "Index": "Index",
+    "ChangeTheme": "Change Theme",
+    "UI_Switch": "Switch UI",
+    "LangName": "English",
+    "NoTOC": "No Table of contents for this page",
+    "FileSource": "Source file: ",
+    "TOC": "Table of Contents",
+    "SourceModified": "Source last modified: "
+  },
+  "ua": {
+    "Time": "Виведено о 15:34 UTC на 2025-01-04",
+    "NoIndex": "Немає індексу для цієї сторінки",
+    "SourceModified": "Джерело востаннє змінено: ",
+    "NoTOC": "Немає змісту цієї сторінки",
+    "FileSource": "SВихідний файл: ",
+    "langName": "Українська",
+    "UI_Switch": "Інтерфейс користувача",
+    "ChangeTheme": "Змінити тему",
+    "Index": "Індекс",
+    "TOC": "Зміст"
+  },
+  "cy": {
+    "ChangeTheme": "Newid Thema",
+    "NoIndex": "Dim Mynegai ar gyfer y dudalen hon",
+    "FileSource": "Ffeil ffynhonnell: ",
+    "NoTOC": "Dim Tabl cynnwys ar gyfer y dudalen hon",
+    "SourceModified": "Ffynhonnell a addaswyd ddiwethaf: ",
+    "langName": "Cymraeg",
+    "UI_Switch": "Newid UI",
+    "Index": "Mynegai",
+    "TOC": "Tabl Cynnwys",
+    "Time": "Wedi'i rendro am 15:34 UTC ar 2025-01-04"
+  },
+  "fr": {
+    "NoIndex": "Aucun index pour cette page",
+    "FileSource": "Fichier source: ",
+    "Time": "Rendu à 15:34 UTC à 2025-01-04",
+    "UI_Switch": "Changer d'IU",
+    "TOC": "Table des matières",
+    "Index": "Index",
+    "langName": "Français",
+    "NoTOC": "Aucune table des matières pour cette page",
+    "SourceModified": "Source dernière modification: ",
+    "ChangeTheme": "Changer de thème"
+  },
+  "nl": {
+    "ChangeTheme": "Thema wijzigen",
+    "Time": "Gerenderd at 15:34 UTC on 2025-01-04",
+    "Index": "Index",
+    "UI_Switch": "Switch UI",
+    "NoTOC": "Geen inhoudsopgave voor deze pagina",
+    "TOC": "Inhoudsopgave",
+    "SourceModified": "Bron laatst gewijzigd:",
+    "langName": "Nederlands",
+    "NoIndex": "Geen index voor deze pagina",
+    "FileSource": "Bronbestand: "
+  }
+};
+var def_canon = 'en';
+</script>
+<script>/* UISwitcher */
+var UILang;
+var uiselectors;
+var uilang_persisted = function () { return localStorage.getItem('ui_lang');};
+var persist_uilang = function ( uilang ) { localStorage.setItem( 'ui_lang', uilang );};
+document.addEventListener('DOMContentLoaded', function () {
+    UILang = uilang_persisted();
+    if ( UILang == null ) {
+        UILang = def_canon;
+    }
+    makeUISelector( UILang ); // comes before setUI as it has a label that needs setting
+    uiselectors = document.querySelectorAll('.UISelection'); // uiselectors used in setUI
+    setUI( UILang );
+    uiselectors.forEach( function (elem) {
+        elem.addEventListener('click', function( event ) {
+            newLang = event.target.getAttribute('data-lang');
+            setUI( newLang );
+            persist_uilang( newLang );
+        })
+    })
+});
+function setUI( newLang ) {
+    var spans = document.querySelectorAll('.Elucid8-ui');
+    spans.forEach( function (elem) {
+        token = elem.getAttribute('data-UIToken');
+        elem.innerHTML = dictionary[newLang][token];
+    });
+    uiselectors.forEach( function (rem) {
+        if ( rem.getAttribute('data-UIToken') == newLang ) {
+            rem.classList.add('is-selected')
+        }
+        else {
+            rem.classList.remove('is-selected');
+        }
+    })
+};
+function makeUISelector( initial ) {
+    elem = document.getElementById('Elucid8_choice');
+    label = elem.innerHTML;
+    var options = '';
+    Object.keys(dictionary).forEach(function(key) {
+        isSel = key == def_canon ? ' is-selected' : '';
+        options = options +
+            '<a class="navbar-item UISelection' + isSel + '"' +
+            'data-lang="' + key + '">' + dictionary[key]['langName'] + '</a>';
+    });
+    elem.innerHTML = '<a class="navbar-link">' + label + '</a>' +
+        '<div class="navbar-dropdown">' +
+        options +
+        '</div>';
+};
+</script>
+<script>// BulmaHelper.js
+var change_theme = function (theme) {
+    document.querySelector('html').className = '';
+    document.querySelector('html').classList.add('theme-' + theme);
+};
+var persisted_theme = function () { return localStorage.getItem('theme') };
+var persist_theme = function (theme) { localStorage.setItem('theme', theme) };
+
+var persisted_tocState = function () { return localStorage.getItem('tocOpen') };
+var persist_tocState = function (tocState) { localStorage.setItem('tocOpen', tocState ) };
+
+var originalIndex;
+var originalTOC;
+
+document.addEventListener('DOMContentLoaded', function () {
+    // set up functions needing document variables.
+    var matchTocState = function ( state ) {
+        if ( state ) {
+            document.getElementById("TOC").classList.remove('is-hidden');
+            document.getElementById("page-nav").classList.remove('is-hidden');
+            document.getElementById("mobile-nav").classList.remove('is-hidden');
+            document.getElementById("MainText").classList.add('is-three-quarters');
+            document.getElementById("MainText").classList.add('column');
+            document.getElementById("MainText").classList.remove('px-5');
+            persist_tocState( 'open');
+        }
+        else {
+            document.getElementById("TOC").classList.add('is-hidden');
+            document.getElementById("page-nav").classList.add('is-hidden');
+            document.getElementById("mobile-nav").classList.add('is-hidden');
+            document.getElementById("MainText").classList.remove('is-three-quarters');
+            document.getElementById("MainText").classList.remove('column');
+            document.getElementById("MainText").classList.add('px-5');
+            persist_tocState( 'closed' );
+        }
+    }
+    var setTocState = function ( state ) {
+        if ( state === 'closed') {
+            document.getElementById("TOC").classList.add('is-hidden');
+            document.getElementById("page-nav").classList.add('is-hidden');
+            document.getElementById("mobile-nav").classList.add('is-hidden');
+            document.getElementById("MainText").classList.remove('is-three-quarters');
+            document.getElementById("MainText").classList.remove('column');
+            document.getElementById("MainText").classList.add('px-5');
+            document.getElementById("navbar-toc-toggle").checked = false;
+        }
+        else {
+            document.getElementById("TOC").classList.remove('is-hidden');
+            document.getElementById("page-nav").classList.remove('is-hidden');
+            document.getElementById("mobile-nav").classList.remove('is-hidden');
+            document.getElementById("MainText").classList.add('is-three-quarters');
+            document.getElementById("MainText").classList.add('column');
+            document.getElementById("MainText").classList.remove('px-5');
+            document.getElementById("navbar-toc-toggle").checked = true;
+        }
+    };
+    // initialise if localStorage is set
+    let theme = persisted_theme();
+    if ( theme ) {
+        theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        change_theme(theme);
+        persist_theme(theme);
+    }
+    let tocState = persisted_tocState();
+    if ( tocState ) {
+        setTocState( tocState );
+        persist_tocState( tocState );
+    }
+
+    // Add listeners
+    // Get all "navbar-burger" elements
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    // Check if there are any navbar burgers
+    if ($navbarBurgers.length > 0) {
+        // Add a click event on each of them
+        $navbarBurgers.forEach(el => {
+            el.addEventListener('click', () => {
+                // Get the target from the "data-target" attribute
+                const target = el.dataset.target;
+                const $target = document.getElementById(target);
+                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                el.classList.toggle('is-active');
+                $target.classList.toggle('is-active');
+            });
+        });
+    };
+    // initialise window state
+    document.getElementById('changeTheme').addEventListener('click', function () {
+        let theme = persisted_theme() === 'light' ? 'dark' : 'light';
+        change_theme(theme);
+        persist_theme(theme);
+    });
+    document.getElementById("navbar-toc-toggle").addEventListener('change', function() {
+        matchTocState( this.checked )
+    });
+    document.getElementById('toc-tab').addEventListener('click', function () { swap_toc_index('','toc') });
+    document.getElementById('index-tab').addEventListener('click', function () { swap_toc_index('','index') });
+    document.getElementById('mtoc-tab').addEventListener('click', function () { swap_toc_index('m','toc') });
+    document.getElementById('mindex-tab').addEventListener('click', function () { swap_toc_index('m','index') });
+    originalTOC = document.getElementById('toc-menu').getHTML();
+    originalIndex = document.getElementById('index-menu').getHTML();
+    document.getElementById("page-nav-search").addEventListener('keyup', function (event) {
+        filtersearch(event, 'toc-menu', 'index-menu', 'page-nav')
+    });
+    document.getElementById("mobile-nav-search").addEventListener('keyup', function (event) {
+        filtersearch(event, 'mtoc-menu', 'mindex-menu', 'mobile-nav')
+    });
+});
+function filtersearch(event, toc,index,nav) {
+    document.getElementById(toc).innerHTML = originalTOC;
+    document.getElementById(index).innerHTML = originalIndex;
+    var searchText = event.srcElement.value.toLowerCase();
+    if (searchText.length === 0) return;
+    var menuListElements = document.getElementById(nav).querySelectorAll('.toc-item, .index-section');
+    var matchingListElements = Array.from(menuListElements).filter(function (item) {
+        var el;
+        if ( item.classList.contains('toc-item') ) {
+            el = item.querySelector('a');
+        } else {
+            el = item.querySelector('.index-entry')
+        }
+        var listItemHTML = el.innerHTML;
+        var fuzzyRes = fuzzysort.go(searchText, [listItemHTML])[0];
+        if (fuzzyRes === undefined || fuzzyRes.score <= 0) {
+            return false;
+        }
+        var res = fuzzyRes.highlight('<b>','</b>');
+        if (res !== null) {
+            el.innerHTML = res;
+            return true;
+        } else {
+            return false;
+        }
+    });
+    menuListElements.forEach(function(elem){elem.classList.add('is-hidden')});
+    matchingListElements.forEach(function(elem){elem.classList.remove('is-hidden')});
+};
+function swap_toc_index(div, activate) {
+    let disactivate = (activate == 'toc') ? 'index' : 'toc';
+    document.getElementById( div + activate + '-tab').classList.add('is-active');
+    document.getElementById( div + disactivate + '-menu').classList.add('is-hidden');
+    document.getElementById( div + disactivate + '-tab').classList.remove('is-active');
+    document.getElementById( div + activate + '-menu').classList.remove('is-hidden');
+}
+</script>
+
+
+    <link rel="icon" href="https://irclogs.raku.org/favicon.ico">
+    </head>
+    <body class="has-navbar-fixed-top">
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <figure class="navbar-item is-256x256">
+            <a href="/index.html">
+            <img class="is-rounded" src="https://avatars.githubusercontent.com/u/58170775">
+            </a>
+        </figure>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="pageNavigation">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div id="pageNavigation" class="navbar-menu">
+        <div class="navbar-start">
+            <label class="chyronToggle">
+              <input id="navbar-toc-toggle" type="checkbox" />
+              <span class="checkmark"> </span>
+            </label>
+        </div>
+        <div class="navbar-end">
+             <div id="Elucid8_choice" class="navbar-item has-dropdown is-hoverable"><span class="Elucid8-ui" data-UIToken="UI_Switch">UI_Switch</span></div> 
+            <div class="navbar-item">
+                <button id="changeTheme" class="button"><span class="Elucid8-ui" data-UIToken="ChangeTheme">ChangeTheme</span></button>
+            </div>
+        </div>
+        <nav class="panel is-hidden-tablet" id="mobile-nav">
+          <div class="panel-block">
+            <p class="control has-icons-left">
+              <input class="input" type="text" placeholder="Search" id="mobile-nav-search"/>
+              <span class="icon is-left">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </span>
+            </p>
+          </div>
+          <p class="panel-tabs">
+            <a id="mtoc-tab"><span class="Elucid8-ui" data-UIToken="TOC">TOC</span></a>
+            <a id="mindex-tab"><span class="Elucid8-ui" data-UIToken="Index">Index</span></a>
+          </p>
+            <aside id="mtoc-menu" class="panel-block">
+            <p><span class="Elucid8-ui" data-UIToken="NoTOC">NoTOC</span></p>
+            </aside>
+            <aside id="mindex-menu" class="panel-block is-hidden">
+            <p><span class="Elucid8-ui" data-UIToken="NoIndex">NoIndex</span></p>
+            </aside>
+        </nav>
+    </div>
+</nav>
+<nav class="panel is-hidden-mobile" id="page-nav">
+  <div class="panel-block">
+    <p class="control has-icons-left">
+      <input class="input" type="text" id="page-nav-search"/>
+      <span class="icon is-left">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </span>
+    </p>
+  </div>
+  <p class="panel-tabs">
+    <a id="toc-tab"><span class="Elucid8-ui" data-UIToken="TOC">TOC</span></a>
+    <a id="index-tab"><span class="Elucid8-ui" data-UIToken="Index">Index</span></a>
+  </p>
+    <aside id="toc-menu" class="panel-block">
+    <p><span class="Elucid8-ui" data-UIToken="NoTOC">NoTOC</span></p>
+    </aside>
+    <aside id="index-menu" class="panel-block is-hidden">
+    <p><span class="Elucid8-ui" data-UIToken="NoIndex">NoIndex</span></p>
+    </aside>
+</nav>
+
+    <div class="columns">
+    <div id="TOC" class="column is-one-quarter">
+        
+    </div>
+    <div id="MainText" class="column">
+        <section class="section">
+  <div class="container">
+<div id="Artistic-2.0_license"></div><h1 class="title is-centered">Artistic-2.0 license</h1>
+
+  </div>
+</section>
+
+        <div class="content px-4">
+        <p id="24d2f45">This website is licensed under the Artistic-2.0 license. </p>
+<p id="83ae7b1">Source of text can be found at the <a href="https://www.perlfoundation.org/artistic-license-20.html">Perl Foundation</a> </p>
+<p id="2866589">The text of the license is: </p>
+<p id="5ddd3b3">Preamble </p>
+<p id="07dc6a3">This license establishes the terms under which a given free software Package may be copied, modified, distributed, and/or redistributed. The intent is that the Copyright Holder maintains some artistic control over the development of that Package while still keeping the Package available as open source and free software. You are always permitted to make arrangements wholly outside of this license directly with the Copyright Holder of a given Package. If the terms of this license do not permit the full use that you propose to make of the Package, you should contact the Copyright Holder and seek a different licensing arrangement. </p>
+<p id="aac28da">Definitions </p>
+<p id="05d4b45">&quot;Copyright Holder&quot; means the individual(s) or organization(s) named in the copyright notice for the entire Package. </p>
+<p id="1ab49eb">&quot;Contributor&quot; means any party that has contributed code or other material to the Package, in accordance with the Copyright Holder's procedures. </p>
+<p id="e4844f3">&quot;You&quot; and &quot;your&quot; means any person who would like to copy, distribute, or modify the Package. </p>
+<p id="3912d38">&quot;Package&quot; means the collection of files distributed by the Copyright Holder, and derivatives of that collection and/or of those files. A given Package may consist of either the Standard Version, or a Modified Version. </p>
+<p id="15d23ce">&quot;Distribute&quot; means providing a copy of the Package or making it accessible to anyone else, or in the case of a company or organization, to others outside of your company or organization. </p>
+<p id="0effb6c">&quot;Distributor Fee&quot; means any fee that you charge for Distributing this Package or providing support for this Package to another party. It does not mean licensing fees. </p>
+<p id="486c09f">&quot;Standard Version&quot; refers to the Package if it has not been modified, or has been modified only in ways explicitly requested by the Copyright Holder. </p>
+<p id="6154b2e">&quot;Modified Version&quot; means the Package, if it has been changed, and such changes were not explicitly requested by the Copyright Holder. </p>
+<p id="dea0da6">&quot;Original License&quot; means this Artistic License as Distributed with the Standard Version of the Package, in its current version or as it may be modified by The Perl Foundation in the future. </p>
+<p id="0a78ed4">&quot;Source&quot; form means the source code, documentation source, and configuration files for the Package. ​ &quot;Compiled&quot; form means the compiled bytecode, object code, binary, or any other form resulting from mechanical transformation or translation of the Source form. </p>
+<p id="b78299a">Permission for Use and Modification Without Distribution </p>
+<p id="a843139">(1) You are permitted to use the Standard Version and create and use Modified Versions for any purpose without restriction, provided that you do not Distribute the Modified Version. </p>
+<p id="55fda0a">Permissions for Redistribution of the Standard Version </p>
+<p id="9b126bb">(2) You may Distribute verbatim copies of the Source form of the Standard Version of this Package in any medium without restriction, either gratis or for a Distributor Fee, provided that you duplicate all of the original copyright notices and associated disclaimers. At your discretion, such verbatim copies may or may not include a Compiled form of the Package. ​ (3) You may apply any bug fixes, portability changes, and other modifications made available from the Copyright Holder. The resulting Package will still be considered the Standard Version, and as such will be subject to the Original License. </p>
+<p id="839e8fc">Distribution of Modified Versions of the Package as Source </p>
+<p id="1b9b3da">(4) You may Distribute your Modified Version as Source (either gratis or for a Distributor Fee, and with or without a Compiled form of the Modified Version) provided that you clearly document how it differs from the Standard Version, including, but not limited to, documenting any non-standard features, executables, or modules, and provided that you do at least ONE of the following: (a) make the Modified Version available to the Copyright Holder of the Standard Version, under the Original License, so that the Copyright Holder may include your modifications in the Standard Version. (b) ensure that installation of your Modified Version does not prevent the user installing or running the Standard Version. In addition, the Modified Version must bear a name that is different from the name of the Standard Version. (c) allow anyone who receives a copy of the Modified Version to make the Source form of the Modified Version available to others under (i) the Original License or (ii) a license that permits the licensee to freely copy, modify and redistribute the Modified Version using the same licensing terms that apply to the copy that the licensee received, and requires that the Source form of the Modified Version, and of any works derived from it, be made freely available in that license fees are prohibited but Distributor Fees are allowed. </p>
+<p id="9161162">Distribution of Compiled Forms of the Standard Version or Modified Versions without the Source </p>
+<p id="defa6ff">(5) You may Distribute Compiled forms of the Standard Version without the Source, provided that you include complete instructions on how to get the Source of the Standard Version. Such instructions must be valid at the time of your distribution. If these instructions, at any time while you are carrying out such distribution, become invalid, you must provide new instructions on demand or cease further distribution. If you provide valid instructions or cease distribution within thirty days after you become aware that the instructions are invalid, then you do not forfeit any of your rights under this license. </p>
+<p id="392c4ff">(6) You may Distribute a Modified Version in Compiled form without the Source, provided that you comply with Section 4 with respect to the Source of the Modified Version. ​ Aggregating or Linking the Package </p>
+<p id="9922182">(7) You may aggregate the Package (either the Standard Version or Modified Version) with other packages and Distribute the resulting aggregation provided that you do not charge a licensing fee for the Package. Distributor Fees are permitted, and licensing fees for other components in the aggregation are permitted. The terms of this license apply to the use and Distribution of the Standard or Modified Versions as included in the aggregation. (8) You are permitted to link Modified and Standard Versions with other works, to embed the Package in a larger work of your own, or to build stand-alone binary or bytecode versions of applications that include the Package, and Distribute the result without restriction, provided the result does not expose a direct interface to the Package. </p>
+<p id="60c7fb5">Items That are Not Considered Part of a Modified Version </p>
+<p id="8ca08e0">(9) Works (including, but not limited to, modules and scripts) that merely extend or make use of the Package, do not, by themselves, cause the Package to be a Modified Version. In addition, such works are not considered parts of the Package itself, and are not subject to the terms of this license. </p>
+<p id="148688d">General Provisions (10) Any use, modification, and distribution of the Standard or Modified Versions is governed by this Artistic License. By using, modifying or distributing the Package, you accept this license. Do not use, modify, or distribute the Package, if you do not accept this license. </p>
+<p id="de5c852">(11) If your Modified Version has been derived from a Modified Version made by someone other than you, you are nevertheless required to ensure that your Modified Version complies with the requirements of this license. </p>
+<p id="cf42f21">(12) This license does not grant you the right to use any trademark, service mark, tradename, or logo of the Copyright Holder. </p>
+<p id="f0cecb9">(13) This license includes the non-exclusive, worldwide, free-of-charge patent license to make, have made, use, offer to sell, sell, import and otherwise transfer the Package with respect to any patent claims licensable by the Copyright Holder that are necessarily infringed by the Package. If you institute patent litigation (including a cross-claim or counterclaim) against any party alleging that the Package constitutes direct or contributory patent infringement, then this Artistic License to you shall terminate on the date that such litigation is filed. </p>
+<p id="5ae411d">(14) Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS &quot;AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES. THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. </p>
+
+        </div>
+        <div class="content px-4">
+        
+        </div>
+    </div>
+</div>
+
+    <footer class="footer main-footer">
+    <div class="container px-4">
+        <nav class="level">
+            <div class="level-item">
+                <span class="Elucid8-ui" data-UIToken="FileSource">Source</span><span class="footer-field">license
+            </div>
+            <div class="level-item">
+                <span class="Elucid8-ui" data-UIToken="Time">Time</span>
+            </div>
+            <div class="level-item">
+                <span class="Elucid8-ui" data-UIToken="SourceModified">SourceModified</span> 11:56 UTC, 2023-03-03
+            </div>
+        </nav>
+    </div>
+    
+</footer>
+
+</body>
+</html>

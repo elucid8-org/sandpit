@@ -1,5 +1,6 @@
 {
 	｢cy｣ => {
+		｢FileSource｣     => "Ffeil ffynhonnell: ",
 		｢NoTOC｣       => "Dim Tabl cynnwys ar gyfer y dudalen hon",
 		｢Time｣        => "eval\{ sprintf( \"Wedi'i rendro am \%02d:\%02d UTC ar \%s\", .hour, .minute, .yyyy-mm-dd) with now.DateTime }",
 		｢UI_Switch｣   => "Newid UI",
@@ -8,9 +9,10 @@
 		｢NoIndex｣     => "Dim Mynegai ar gyfer y dudalen hon",
 		｢langName｣    => "Cymraeg",
 		｢Index｣       => "Mynegai",
-		｢SourceModified｣ => "Ffynhonnell a addaswyd ddiwethaf:"
+		｢SourceModified｣ => "Ffynhonnell a addaswyd ddiwethaf: "
 	},
 	｢fr｣ => {
+		｢FileSource｣     => "Fichier source: ",
 		｢langName｣    => "Français",
 		｢ChangeTheme｣ => "Changer de thème",
 		｢TOC｣         => "Table des matières",
@@ -19,7 +21,7 @@
 		｢Index｣       => "Index",
 		｢Time｣        => "eval\{ sprintf( \"Rendu à \%02d:\%02d UTC à \%s\", .hour, .minute, .yyyy-mm-dd) with now.DateTime }",
 		｢NoTOC｣       => "Aucune table des matières pour cette page",
-		｢SourceModified｣ => "Source dernière modification :"
+		｢SourceModified｣ => "Source dernière modification: "
 	},
 	｢en｣ => {
 		｢TOC｣            => "Table of Contents",
@@ -27,14 +29,15 @@
 		｢LangName｣       => "English",
 		｢Time｣           => "eval\{ sprintf( \"Rendered at \%02d:\%02d UTC on \%s\", .hour, .minute, .yyyy-mm-dd) with now.DateTime }",
 		｢Index｣          => "Index",
-		｢FileSource｣     => "Source file:",
+		｢FileSource｣     => "Source file: ",
 		｢NoIndex｣        => "No Index for this page",
 		｢langName｣       => "English",
 		｢ChangeTheme｣    => "Change Theme",
 		｢UI_Switch｣      => "Switch UI",
-		｢SourceModified｣ => "Source last modified:"
+		｢SourceModified｣ => "Source last modified: "
 	},
 	｢ua｣ => {
+		｢FileSource｣     => "SВихідний файл: ",
 		｢ChangeTheme｣ => "Змінити тему",
 		｢UI_Switch｣   => "Інтерфейс користувача",
 		｢Time｣        => "eval\{ sprintf( \"Виведено о \%02d:\%02d UTC на \%s\", .hour, .minute, .yyyy-mm-dd) with now.DateTime }",
@@ -43,9 +46,10 @@
 		｢Index｣       => "Індекс",
 		｢NoIndex｣     => "Немає індексу для цієї сторінки",
 		｢TOC｣         => "Зміст",
-		｢SourceModified｣ => "Джерело востаннє змінено:"
+		｢SourceModified｣ => "Джерело востаннє змінено: "
 	},
 	｢nl｣ => {
+		｢FileSource｣     => "Bronbestand: ",
 		｢ChangeTheme｣ => "Thema wijzigen",
 		｢NoIndex｣     => "Geen index voor deze pagina",
 		｢UI_Switch｣   => "Switch UI",
