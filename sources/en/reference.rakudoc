@@ -4,10 +4,10 @@
 
 =SUBTITLE Broader explanations of fundamental topics and descriptions of Types and slangs
 
-=for ListFiles :select<kind=Language, category=fundamental>
+=for ListFiles :select<kind=Language, category=fundamental> :caption<Fundamental topics>
 Fundamental topics
 
-=for ListFiles :select<kind=Language, category=reference>
+=for ListFiles :select<kind=Language, category=reference> :caption<General reference>
 General reference
 
 =end rakudoc

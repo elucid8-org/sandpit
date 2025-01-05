@@ -1,74 +1,307 @@
 {
-	｢Type/RakuAST/Doc/Paragraph｣        => {
-		｢subtitle｣ => "Contains the information about a RakuDoc paragraph",
+	｢Type/RakuAST/Doc/Declarator｣       => {
+		｢title｣    => "class RakuAST::Doc::Declarator",
+		｢subtitle｣ => "Contains the declarator docs of a RakuAST object",
 		｢config｣   => {
-			｢subkind｣  => "class",
 			｢kind｣     => "Type",
+			｢subkind｣  => "class",
 			｢category｣ => "basic"
-		},
-		｢title｣    => "class RakuAST::Doc::Paragraph"
-	},
-	｢reference｣                         => {
-		｢config｣   => {
-			｢page-content-columns｣ => True,
-			｢no-glossary｣          => True
-		},
-		｢title｣    => "Raku language documentation",
-		｢subtitle｣ => "Broader explanations of fundamental topics and descriptions of Types and slangs"
-	},
-	｢Language/math｣                     => {
-		｢config｣   => {
-			｢kind｣     => "Language",
-			｢category｣ => "tutorial",
-			｢subkind｣  => "Language"
-		},
-		｢title｣    => "Doing math with Raku",
-		｢subtitle｣ => "Different mathematical paradigms and how they are implemented in this language"
-	},
-	｢Language/operators｣                => {
-		｢subtitle｣ => "Common Raku infixes, prefixes, postfixes, and more!",
-		｢title｣    => "Operators",
-		｢config｣   => {
-			｢kind｣     => "Language",
-			｢subkind｣  => "Language",
-			｢category｣ => "fundamental"
 		}
 	},
-	｢Type/IO/Spec/QNX｣                  => {
-		｢subtitle｣ => "Platform specific operations on file and directory paths QNX",
-		｢title｣    => "class IO::Spec::QNX",
+	｢Type/IO/Notification｣              => {
+		｢title｣    => "class IO::Notification",
+		｢subtitle｣ => "<p id=\"68227d5\">Asynchronous notification for file and directory changes <span class=\"indexed\" id=\"index-entry-\" data-index-text=\"⦃〚Types〛 〚FileChangeEvent (enum)〛⦄\"></span> <span class=\"indexed\" id=\"index-entry-_0\" data-index-text=\"⦃〚Types〛 〚FileChanged (FileChangeEvent)〛⦄\"></span> <span class=\"indexed\" id=\"index-entry-_0\" data-index-text=\"⦃〚Types〛 〚FileRenamed (FileChangeEvent)〛⦄\"></span> </p>",
+		｢config｣   => {
+			｢subkind｣  => "class",
+			｢category｣ => "domain-specific",
+			｢kind｣     => "Type"
+		}
+	},
+	｢Type/IO/Socket/INET｣               => {
+		｢subtitle｣ => "TCP Socket",
+		｢title｣    => "class IO::Socket::INET",
+		｢config｣   => {
+			｢kind｣     => "Type",
+			｢category｣ => "domain-specific",
+			｢subkind｣  => "class"
+		}
+	},
+	｢Type/IO/Path/QNX｣                  => {
+		｢title｣    => "class IO::Path::QNX",
 		｢config｣   => {
 			｢subkind｣  => "class",
 			｢kind｣     => "Type",
 			｢category｣ => "domain-specific"
+		},
+		｢subtitle｣ => "IO::Path pre-loaded with IO::Spec::QNX"
+	},
+	｢Type/IO/Socket/Async｣              => {
+		｢title｣    => "class IO::Socket::Async",
+		｢subtitle｣ => "Asynchronous socket in TCP or UDP",
+		｢config｣   => {
+			｢category｣ => "domain-specific",
+			｢kind｣     => "Type",
+			｢subkind｣  => "class"
 		}
 	},
-	｢Type/IO/Path｣                      => {
-		｢title｣    => "class IO::Path",
+	｢Type/RakuAST/Doc｣                  => {
+		｢subtitle｣ => "Namespace for holding RakuDoc related classes",
+		｢title｣    => "package RakuAST::Doc",
+		｢config｣   => {
+			｢subkind｣  => "package",
+			｢category｣ => "basic",
+			｢kind｣     => "Type"
+		}
+	},
+	｢Language/variables｣                => {
+		｢subtitle｣ => "Variables in Raku",
+		｢config｣   => {
+			｢kind｣     => "Language",
+			｢subkind｣  => "Language",
+			｢category｣ => "fundamental"
+		},
+		｢title｣    => "Variables"
+	},
+	｢Type/IO/Spec/Cygwin｣               => {
+		｢subtitle｣ => "Platform specific operations on file and directory paths for Cygwin",
+		｢config｣   => {
+			｢subkind｣  => "class",
+			｢kind｣     => "Type",
+			｢category｣ => "domain-specific"
+		},
+		｢title｣    => "class IO::Spec::Cygwin"
+	},
+	｢Type/RakuAST/Doc/Markup｣           => {
+		｢title｣    => "class RakuAST::Doc::Markup",
+		｢config｣   => {
+			｢category｣ => "basic",
+			｢subkind｣  => "class",
+			｢kind｣     => "Type"
+		},
+		｢subtitle｣ => "Contains the information about RakuDoc markup"
+	},
+	｢Language/101-basics｣               => {
+		｢subtitle｣ => "A basic introductory example of a Raku program",
+		｢title｣    => "Raku by example 101",
+		｢config｣   => {
+			｢category｣ => "beginning",
+			｢kind｣     => "Language",
+			｢subkind｣  => "Language"
+		}
+	},
+	｢Type/IO/Path/Unix｣                 => {
 		｢config｣   => {
 			｢category｣ => "domain-specific",
 			｢kind｣     => "Type",
 			｢subkind｣  => "class"
 		},
-		｢subtitle｣ => "File or directory path"
+		｢subtitle｣ => "IO::Path pre-loaded with IO::Spec::Unix",
+		｢title｣    => "class IO::Path::Unix"
 	},
-	｢Type/IO/Path/QNX｣                  => {
-		｢title｣    => "class IO::Path::QNX",
-		｢subtitle｣ => "IO::Path pre-loaded with IO::Spec::QNX",
+	｢Type/RakuAST/Doc/Block｣            => {
+		｢title｣    => "class RakuAST::Doc::Block",
+		｢subtitle｣ => "Contains the information of a RakuDoc block",
+		｢config｣   => {
+			｢subkind｣  => "class",
+			｢kind｣     => "Type",
+			｢category｣ => "basic"
+		}
+	},
+	｢Type/IO/Spec/Unix｣                 => {
+		｢title｣    => "class IO::Spec::Unix",
+		｢config｣   => {
+			｢kind｣     => "Type",
+			｢subkind｣  => "class",
+			｢category｣ => "domain-specific"
+		},
+		｢subtitle｣ => "Platform specific operations on file and directory paths for POSIX"
+	},
+	｢reference｣                         => {
+		｢title｣    => "Raku language documentation",
+		｢subtitle｣ => "Broader explanations of fundamental topics and descriptions of Types and slangs",
+		｢config｣   => {
+			｢no-glossary｣          => True,
+			｢page-content-columns｣ => True
+		}
+	},
+	｢Type/IO/Spec｣                      => {
+		｢config｣   => {
+			｢category｣ => "domain-specific",
+			｢kind｣     => "Type",
+			｢subkind｣  => "class"
+		},
+		｢subtitle｣ => "Platform specific operations on file and directory paths",
+		｢title｣    => "class IO::Spec"
+	},
+	｢Type/RakuAST/Doc/Paragraph｣        => {
+		｢subtitle｣ => "Contains the information about a RakuDoc paragraph",
+		｢config｣   => {
+			｢category｣ => "basic",
+			｢kind｣     => "Type",
+			｢subkind｣  => "class"
+		},
+		｢title｣    => "class RakuAST::Doc::Paragraph"
+	},
+	｢Type/IO/Path/Win32｣                => {
+		｢title｣    => "class IO::Path::Win32",
+		｢subtitle｣ => "IO::Path pre-loaded with IO::Spec::Win32",
+		｢config｣   => {
+			｢subkind｣  => "class",
+			｢category｣ => "domain-specific",
+			｢kind｣     => "Type"
+		}
+	},
+	｢Type/IO/CatHandle｣                 => {
+		｢title｣    => "class IO::CatHandle",
+		｢config｣   => {
+			｢subkind｣  => "class",
+			｢kind｣     => "Type",
+			｢category｣ => "domain-specific"
+		},
+		｢subtitle｣ => "Use multiple IO handles as if they were one"
+	},
+	｢ml-index｣                          => {
+		｢subtitle｣ => "Choose the language to start",
+		｢config｣   => {
+			｢toc｣   => False,
+			｢index｣ => False
+		},
+		｢title｣    => "Website contents",
+		｢lang｣     => "en"
+	},
+	｢Type/IO/Handle｣                    => {
+		｢subtitle｣ => "Opened file or stream",
+		｢config｣   => {
+			｢kind｣     => "Type",
+			｢subkind｣  => "class",
+			｢category｣ => "domain-specific"
+		},
+		｢title｣    => "class IO::Handle"
+	},
+	｢Type/RakuAST/Doc/DeclaratorTarget｣ => {
+		｢config｣   => {
+			｢category｣ => "basic",
+			｢kind｣     => "Type",
+			｢subkind｣  => "role"
+		},
+		｢title｣    => "class RakuAST::Doc::DeclaratorTarget",
+		｢subtitle｣ => "Provide leading/trailing doc functionality"
+	},
+	｢Language/operators｣                => {
+		｢title｣    => "Operators",
+		｢subtitle｣ => "Common Raku infixes, prefixes, postfixes, and more!",
+		｢config｣   => {
+			｢subkind｣  => "Language",
+			｢kind｣     => "Language",
+			｢category｣ => "fundamental"
+		}
+	},
+	｢Type/IO/Spec/Win32｣                => {
+		｢subtitle｣ => "Platform specific operations on file and directory paths for Windows",
+		｢title｣    => "class IO::Spec::Win32",
+		｢config｣   => {
+			｢category｣ => "domain-specific",
+			｢subkind｣  => "class",
+			｢kind｣     => "Type"
+		}
+	},
+	｢Type/IO/Notification/Change｣       => {
+		｢config｣   => {
+			｢subkind｣  => "class",
+			｢category｣ => "domain-specific",
+			｢kind｣     => "Type"
+		},
+		｢title｣    => "class IO::Notification::Change",
+		｢subtitle｣ => "Changes in a file, produced by watch-file"
+	},
+	｢Type/IO/Special｣                   => {
+		｢subtitle｣ => "Path to special I/O device",
+		｢title｣    => "class IO::Special",
 		｢config｣   => {
 			｢subkind｣  => "class",
 			｢kind｣     => "Type",
 			｢category｣ => "domain-specific"
 		}
 	},
-	｢miscellaneous｣                     => {
-		｢title｣    => "Raku language documentation",
-		｢subtitle｣ => "Miscellaneous categories",
+	｢Type/IO/Spec/QNX｣                  => {
+		｢title｣    => "class IO::Spec::QNX",
+		｢subtitle｣ => "Platform specific operations on file and directory paths QNX",
 		｢config｣   => {
-			｢no-toc｣               => True,
-			｢no-glossary｣          => True,
-			｢page-content-one-col｣ => True
+			｢kind｣     => "Type",
+			｢category｣ => "domain-specific",
+			｢subkind｣  => "class"
 		}
+	},
+	｢introduction｣                      => {
+		｢subtitle｣ => "Introductory material, tutorials and migration guides for users familiar with other languages.",
+		｢title｣    => "Raku language documentation",
+		｢config｣   => {
+			｢no-glossary｣          => True,
+			｢page-content-columns｣ => True
+		}
+	},
+	｢Type/IO/Socket｣                    => {
+		｢subtitle｣ => "Network socket",
+		｢config｣   => {
+			｢kind｣     => "Type",
+			｢subkind｣  => "role",
+			｢category｣ => "domain-specific"
+		},
+		｢title｣    => "role IO::Socket"
+	},
+	｢Type/IO/Pipe｣                      => {
+		｢config｣   => {
+			｢subkind｣  => "class",
+			｢category｣ => "domain-specific",
+			｢kind｣     => "Type"
+		},
+		｢subtitle｣ => "Buffered inter-process string or binary stream",
+		｢title｣    => "class IO::Pipe"
+	},
+	｢en｣                                => {
+		｢Language/operators｣  => {
+			｢config｣   => {
+				｢subkind｣  => "Language",
+				｢category｣ => "fundamental",
+				｢kind｣     => "Language"
+			},
+			｢title｣    => "Operators",
+			｢subtitle｣ => "Common Raku infixes, prefixes, postfixes, and more!"
+		},
+		｢Language/101-basics｣ => {
+			｢config｣   => {
+				｢category｣ => "beginning",
+				｢subkind｣  => "Language",
+				｢kind｣     => "Language"
+			},
+			｢title｣    => "Raku by example 101",
+			｢subtitle｣ => "A basic introductory example of a Raku program"
+		},
+		｢reference｣           => {
+			｢subtitle｣ => "Broader explanations of fundamental topics and descriptions of Types and slangs",
+			｢config｣   => {
+				｢no-glossary｣          => True,
+				｢page-content-columns｣ => True
+			},
+			｢title｣    => "Raku language documentation"
+		},
+		｢introduction｣        => {
+			｢title｣    => "Raku language documentation",
+			｢config｣   => {
+				｢no-glossary｣          => True,
+				｢page-content-columns｣ => True
+			},
+			｢subtitle｣ => "Introductory material, tutorials and migration guides for users familiar with other languages."
+		}
+	},
+	｢Type/IO/Path｣                      => {
+		｢title｣    => "class IO::Path",
+		｢config｣   => {
+			｢subkind｣  => "class",
+			｢kind｣     => "Type",
+			｢category｣ => "domain-specific"
+		},
+		｢subtitle｣ => "File or directory path"
 	},
 	｢license｣                           => {
 		｢config｣   => {
@@ -78,84 +311,40 @@
 		｢subtitle｣ => "No description",
 		｢title｣    => "Artistic-2.0 license"
 	},
+	｢Type/IO/Path/Cygwin｣               => {
+		｢title｣    => "class IO::Path::Cygwin",
+		｢subtitle｣ => "IO::Path pre-loaded with IO::Spec::Cygwin",
+		｢config｣   => {
+			｢category｣ => "domain-specific",
+			｢subkind｣  => "class",
+			｢kind｣     => "Type"
+		}
+	},
 	｢Type/Any｣                          => {
-		｢subtitle｣ => "Thing/object",
 		｢title｣    => "class Any",
 		｢config｣   => {
-			｢subkind｣  => "class",
 			｢kind｣     => "Type",
+			｢subkind｣  => "class",
 			｢category｣ => "basic"
-		}
+		},
+		｢subtitle｣ => "Thing/object"
 	},
-	｢Type/IO/Socket/INET｣               => {
+	｢Type/IO/Socket/Async/ListenSocket｣ => {
 		｢config｣   => {
 			｢kind｣     => "Type",
 			｢subkind｣  => "class",
 			｢category｣ => "domain-specific"
 		},
-		｢subtitle｣ => "TCP Socket",
-		｢title｣    => "class IO::Socket::INET"
+		｢subtitle｣ => "A tap for listening TCP sockets",
+		｢title｣    => "class IO::Socket::Async::ListenSocket"
 	},
-	｢Type/IO/Spec/Cygwin｣               => {
-		｢title｣    => "class IO::Spec::Cygwin",
+	｢Type/IO/ArgFiles｣                  => {
+		｢subtitle｣ => "Iterate over contents of files specified on command line",
+		｢title｣    => "class IO::ArgFiles",
 		｢config｣   => {
-			｢subkind｣  => "class",
-			｢category｣ => "domain-specific",
-			｢kind｣     => "Type"
-		},
-		｢subtitle｣ => "Platform specific operations on file and directory paths for Cygwin"
-	},
-	｢Type/IO/Notification｣              => {
-		｢title｣    => "class IO::Notification",
-		｢config｣   => {
-			｢category｣ => "domain-specific",
 			｢kind｣     => "Type",
+			｢category｣ => "domain-specific",
 			｢subkind｣  => "class"
-		},
-		｢subtitle｣ => "<p id=\"68227d5\">Asynchronous notification for file and directory changes <span class=\"indexed\" id=\"index-entry-\" data-index-text=\"⦃〚Types〛 〚FileChangeEvent (enum)〛⦄\"></span> <span class=\"indexed\" id=\"index-entry-_0\" data-index-text=\"⦃〚Types〛 〚FileChanged (FileChangeEvent)〛⦄\"></span> <span class=\"indexed\" id=\"index-entry-_0\" data-index-text=\"⦃〚Types〛 〚FileRenamed (FileChangeEvent)〛⦄\"></span> </p>"
-	},
-	｢Type/IO/Socket/Async｣              => {
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢category｣ => "domain-specific",
-			｢kind｣     => "Type"
-		},
-		｢subtitle｣ => "Asynchronous socket in TCP or UDP",
-		｢title｣    => "class IO::Socket::Async"
-	},
-	｢introduction｣                      => {
-		｢title｣    => "Raku language documentation",
-		｢subtitle｣ => "Introductory material, tutorials and migration guides for users familiar with other languages.",
-		｢config｣   => {
-			｢page-content-columns｣ => True,
-			｢no-glossary｣          => True
-		}
-	},
-	｢Type/RakuAST/Doc｣                  => {
-		｢title｣    => "package RakuAST::Doc",
-		｢subtitle｣ => "Namespace for holding RakuDoc related classes",
-		｢config｣   => {
-			｢subkind｣  => "package",
-			｢category｣ => "basic",
-			｢kind｣     => "Type"
-		}
-	},
-	｢Type/IO/Spec/Win32｣                => {
-		｢subtitle｣ => "Platform specific operations on file and directory paths for Windows",
-		｢title｣    => "class IO::Spec::Win32",
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific"
-		}
-	},
-	｢Type/RakuAST/Doc/Block｣            => {
-		｢subtitle｣ => "Contains the information of a RakuDoc block",
-		｢title｣    => "class RakuAST::Doc::Block",
-		｢config｣   => {
-			｢kind｣     => "Type",
-			｢subkind｣  => "class",
-			｢category｣ => "basic"
 		}
 	},
 	｢Type/IO/Path/Parts｣                => {
@@ -167,166 +356,22 @@
 		｢title｣    => "class IO::Path::Parts",
 		｢subtitle｣ => "IO::Path parts encapsulation"
 	},
-	｢Type/IO/Special｣                   => {
+	｢Language/math｣                     => {
 		｢config｣   => {
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific",
-			｢subkind｣  => "class"
-		},
-		｢title｣    => "class IO::Special",
-		｢subtitle｣ => "Path to special I/O device"
-	},
-	｢Type/IO/Spec/Unix｣                 => {
-		｢subtitle｣ => "Platform specific operations on file and directory paths for POSIX",
-		｢title｣    => "class IO::Spec::Unix",
-		｢config｣   => {
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific",
-			｢subkind｣  => "class"
-		}
-	},
-	｢Type/IO/Socket｣                    => {
-		｢config｣   => {
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific",
-			｢subkind｣  => "role"
-		},
-		｢title｣    => "role IO::Socket",
-		｢subtitle｣ => "Network socket"
-	},
-	｢Type/IO/Notification/Change｣       => {
-		｢title｣    => "class IO::Notification::Change",
-		｢subtitle｣ => "Changes in a file, produced by watch-file",
-		｢config｣   => {
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific",
-			｢subkind｣  => "class"
-		}
-	},
-	｢Type/IO/Path/Unix｣                 => {
-		｢config｣   => {
-			｢kind｣     => "Type",
-			｢subkind｣  => "class",
-			｢category｣ => "domain-specific"
-		},
-		｢title｣    => "class IO::Path::Unix",
-		｢subtitle｣ => "IO::Path pre-loaded with IO::Spec::Unix"
-	},
-	｢Type/IO/Handle｣                    => {
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific"
-		},
-		｢subtitle｣ => "Opened file or stream",
-		｢title｣    => "class IO::Handle"
-	},
-	｢Type/RakuAST/Doc/DeclaratorTarget｣ => {
-		｢subtitle｣ => "Provide leading/trailing doc functionality",
-		｢config｣   => {
-			｢subkind｣  => "role",
-			｢kind｣     => "Type",
-			｢category｣ => "basic"
-		},
-		｢title｣    => "class RakuAST::Doc::DeclaratorTarget"
-	},
-	｢Type/RakuAST/Doc/Declarator｣       => {
-		｢title｣    => "class RakuAST::Doc::Declarator",
-		｢subtitle｣ => "Contains the declarator docs of a RakuAST object",
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢kind｣     => "Type",
-			｢category｣ => "basic"
-		}
-	},
-	｢Type/IO/ArgFiles｣                  => {
-		｢title｣    => "class IO::ArgFiles",
-		｢subtitle｣ => "Iterate over contents of files specified on command line",
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific"
-		}
-	},
-	｢Type/IO/Spec｣                      => {
-		｢subtitle｣ => "Platform specific operations on file and directory paths",
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢category｣ => "domain-specific",
-			｢kind｣     => "Type"
-		},
-		｢title｣    => "class IO::Spec"
-	},
-	｢Type/IO/Path/Cygwin｣               => {
-		｢title｣    => "class IO::Path::Cygwin",
-		｢config｣   => {
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific",
-			｢subkind｣  => "class"
-		},
-		｢subtitle｣ => "IO::Path pre-loaded with IO::Spec::Cygwin"
-	},
-	｢Language/101-basics｣               => {
-		｢config｣   => {
-			｢category｣ => "beginning",
+			｢category｣ => "tutorial",
 			｢kind｣     => "Language",
 			｢subkind｣  => "Language"
 		},
-		｢title｣    => "Raku by example 101",
-		｢subtitle｣ => "A basic introductory example of a Raku program"
+		｢subtitle｣ => "Different mathematical paradigms and how they are implemented in this language",
+		｢title｣    => "Doing math with Raku"
 	},
-	｢Language/variables｣                => {
-		｢title｣    => "Variables",
+	｢miscellaneous｣                     => {
+		｢title｣    => "Raku language documentation",
 		｢config｣   => {
-			｢subkind｣  => "Language",
-			｢kind｣     => "Language",
-			｢category｣ => "fundamental"
+			｢page-content-one-col｣ => True,
+			｢no-toc｣               => True,
+			｢no-glossary｣          => True
 		},
-		｢subtitle｣ => "Variables in Raku"
-	},
-	｢Type/IO/Path/Win32｣                => {
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢kind｣     => "Type",
-			｢category｣ => "domain-specific"
-		},
-		｢title｣    => "class IO::Path::Win32",
-		｢subtitle｣ => "IO::Path pre-loaded with IO::Spec::Win32"
-	},
-	｢Type/IO/Socket/Async/ListenSocket｣ => {
-		｢title｣    => "class IO::Socket::Async::ListenSocket",
-		｢subtitle｣ => "A tap for listening TCP sockets",
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢category｣ => "domain-specific",
-			｢kind｣     => "Type"
-		}
-	},
-	｢Type/IO/CatHandle｣                 => {
-		｢title｣    => "class IO::CatHandle",
-		｢subtitle｣ => "Use multiple IO handles as if they were one",
-		｢config｣   => {
-			｢category｣ => "domain-specific",
-			｢kind｣     => "Type",
-			｢subkind｣  => "class"
-		}
-	},
-	｢Type/RakuAST/Doc/Markup｣           => {
-		｢subtitle｣ => "Contains the information about RakuDoc markup",
-		｢title｣    => "class RakuAST::Doc::Markup",
-		｢config｣   => {
-			｢category｣ => "basic",
-			｢subkind｣  => "class",
-			｢kind｣     => "Type"
-		}
-	},
-	｢Type/IO/Pipe｣                      => {
-		｢subtitle｣ => "Buffered inter-process string or binary stream",
-		｢config｣   => {
-			｢subkind｣  => "class",
-			｢category｣ => "domain-specific",
-			｢kind｣     => "Type"
-		},
-		｢title｣    => "class IO::Pipe"
+		｢subtitle｣ => "Miscellaneous categories"
 	}
 }

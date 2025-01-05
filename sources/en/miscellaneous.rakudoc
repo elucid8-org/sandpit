@@ -4,10 +4,10 @@
 
 =SUBTITLE Miscellaneous categories
 
-=for ListFiles :select<kind=Language, category=advanced>
+=for ListFiles :select<kind=Language, category=advanced> :caption<Advanced topics>
 Advanced topics
 
-=for ListFiles :select<kind=Programs>
+=for ListFiles :select<kind=Programs> :caption<Programs>
 Programs
 
 =end rakudoc
