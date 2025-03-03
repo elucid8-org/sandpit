@@ -2,7 +2,7 @@
 =TITLE English Index
 
 =begin Html :!toc
-<div id="wrapper">
+<div id="wrapper" class="raku-webs">
       <section class="hero is-medium is-primary">
         <div class="hero-body">
           <div class="container">
@@ -192,7 +192,7 @@
           </div>
         </div>
       </section>
-      <div class="raku links-block">
+      <div class="links-block">
           <div class="container px-4 py-5">
             <div class="columns is-vcentered">
              <div class="column is-one-third has-text-centered">
