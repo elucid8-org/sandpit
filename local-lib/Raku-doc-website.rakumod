@@ -332,6 +332,7 @@ method templates {
         'head-search' => -> %, $ { 'No search function' },
         'search-modal' => -> %, $ { '' },
         'notification-modal' => -> %, $ { '' },
+        'page-edit' => -> %,$ {''},
         #| the main section of body
         main-content => -> %prm, $tmpl {
             if %prm<source-data><rakudoc-config><direct-wrap>:exists && %prm<source-data><rakudoc-config><direct-wrap>
@@ -343,6 +344,7 @@ method templates {
                 qq:to/END/
                 { $tmpl<page-navigation> }
                 <div id="MainText" class="panel">
+                    { $tmpl<page-edit> }
                     { $tmpl<title-section> }
                     <div class="content px-4">
                     { %prm<body> }
@@ -357,6 +359,7 @@ method templates {
                 qq:to/END/
                 { $tmpl<page-navigation> }
                 <div class="columns">
+                    { $tmpl<page-edit> }
                     <div id="TOC" class="column is-one-quarter">
                         { $tmpl<sidebar> }
                     </div>

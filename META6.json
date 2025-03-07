@@ -23,7 +23,8 @@
         "Raku-Doc-Website::DataTable": "local-lib/DataTable.rakumod",
         "Raku-Doc-Website::Search": "local-lib/Search.rakumod",
         "Raku-Doc-Website::SiteData": "local-lib/SiteData.rakumod",
-        "Raku-Doc-Website::TypeGraphs": "local-lib/TypeGraphs.rakumod"
+        "Raku-Doc-Website::TypeGraphs": "local-lib/TypeGraphs.rakumod",
+        "Raku-Doc-Website::Edit-in-git": "local-lib/Edit-in-git.rakumod"
     },
     "resources": [
         "tg-list",

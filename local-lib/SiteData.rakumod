@@ -279,6 +279,7 @@ class Raku-Doc-Website::SiteData {
                     :$lang,
                     :modified(now),
                     home-page => "/$lang/{%config<landing-page>}",
+                    :type<composite>,
                 )));
                 CATCH {
                      default {

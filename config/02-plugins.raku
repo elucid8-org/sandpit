@@ -18,6 +18,7 @@
         Raku-Doc-Website::DataTable
         Raku-Doc-Website::Search
         Raku-Doc-Website::TypeGraphs
+        Raku-Doc-Website::Edit-in-git
     >,
     pre-file-render => (# sequence not hash because order can matter
         SiteData => 'initialise',
