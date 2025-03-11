@@ -1,12 +1,11 @@
 %(
     plugin-options => %(
-        cro-app => %(
-            :port( 5000 ),
-            :host<0.0.0.0>,
-            :url-map<assets/prettyurls assets/deprecated-urls>,
-        ),
         SiteMap => %(
-            :root-domain<https://docs.raku.org>,
+            :root-domain<https://new-raku.finanalyst.org>,
         ),
+        RakuREPL => %(
+            :websocket-port(8080),
+            :websocket-host('localhost'),
+        )
     ),
 )

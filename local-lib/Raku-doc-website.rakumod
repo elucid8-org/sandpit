@@ -83,7 +83,7 @@ method templates {
             my %g-data := $tmpl.globals.data;
             # handle css first
             qq:to/HEAD/
-            <title>{$tmpl.globals.escape.(%prm<title>)}</title>
+            <title>{$tmpl.globals.escape.(%prm<title>)} | Raku Documentation</title>
             { $tmpl<favicon> }
             {%g-data<css>:exists && %g-data<css>.elems ??
                 [~] %g-data<css>.map({ '<style>' ~ $_ ~ "</style>\n" })
@@ -142,10 +142,7 @@ method templates {
                  </div>
                 { $tmpl<site-navigation> }
             </nav>
-            <div id="modal-container">
-                { $tmpl<search-modal> # provided by a search plugin
-            }
-            </div>
+            { $tmpl<modal-container> }
             NAV
         },
         toc-opener => -> %prm, $ {
@@ -163,7 +160,7 @@ method templates {
         #| content when contents toggle is checked. Actual content
         #| is in a panel that floats on top of it
         sidebar => -> %prm, $tmpl {
-            qq:to/BLOCK/;
+            Q:c:to/BLOCK/;
                 <div id="siteNavigation">
                     <!-- the following panel appears at the top of the page when form format is small -->
                     <nav class="panel is-hidden-tablet" id="mobile-nav">
@@ -200,7 +197,7 @@ method templates {
            ( %prm<source-data><rakudoc-config><toc>:exists
             && %prm<source-data><rakudoc-config><toc>.not )
             ?? '' !!
-            qq:to/PAGENAV/;
+            Q:c:to/PAGENAV/;
             <nav class="raku-webs panel is-hidden-mobile" id="page-nav">
               <div class="panel-block">
                 <p class="control has-icons-left">
@@ -230,16 +227,13 @@ method templates {
             PAGENAV
         },
         'site-navigation' => -> %prm, $tmpl {
-            qq:to/BLOCK/
+            Q:c:to/BLOCK/
             <div id="navMenu" class="navbar-menu">
                 <div class="navbar-start navbar-item is-hidden-touch"></div> <!-- empty item so remainder are centered -->
                 <div class="navbar-start navbar-item is-hidden-desktop">{ $tmpl<head-search> }</div> <!-- move position of search with hamburger on -->
-            BLOCK
-            ~ q:to/BLOCK/
                 <a class="navbar-item tooltip" href="/introduction">
                     <span class="Elucid8-ui" data-UIToken="Intro">Intro</span>
                     <span class="tooltiptext Elucid8-ui" data-UIToken="IntroText">IntroText</span>
-                    </span>
                 </a>
                 <a class="navbar-item tooltip" href="/reference" >
 					<span class="Elucid8-ui" data-UIToken="Reference">Reference</span>
@@ -284,36 +278,10 @@ method templates {
                     <a class="navbar-link">
                         <span class="Elucid8-ui" data-UIToken="More">More</span>
                     </a>
-                    <div class="navbar-dropdown is-rounded">
-                        <div class="navbar-item">
-                            <button id="changeTheme" class="button">
-                                <span class="Elucid8-ui" data-UIToken="ChangeTheme">ChangeTheme</span>
-                            </button>
-                        </div>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item tooltip" href="/about">
-                            <span class="Elucid8-ui" data-UIToken="About">About</span>
-                            <span class="tooltiptext Elucid8-ui" data-UIToken="AboutText">AboutText</span>
-                        </a>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item tooltip" href="https://kiwiirc.com/client/irc.libera.chat/#raku" >
-                            <span class="Elucid8-ui" data-UIToken="Chat">Chat</span>
-                            <span class="tooltiptext Elucid8-ui" data-UIToken="ChatText">ChatText</span>
-                        </a>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item has-text-red tooltip" href="https://github.com/raku/doc-website/issues">
-                            <span class="Elucid8-ui" data-UIToken="SiteIssue">SiteIssue</span>
-                            <span class="tooltiptext Elucid8-ui" data-UIToken="SiteReport">SiteReport</span>
-                        </a>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item tooltip" href="https://github.com/raku/doc/issues">
-                            <span class="Elucid8-ui" data-UIToken="DocIssue">DocIssue</span>
-                            <span class="tooltiptext Elucid8-ui" data-UIToken="DocReport">DocReport</span>
-                        </a>
+                    <div id="More-Dropdown-List" class="navbar-dropdown is-rounded">
+                        { $tmpl<drop-down-list> }
                     </div>
                 </div>
-            BLOCK
-            ~ qq:to/BLOCK/
                 <div class="navbar-item has-dropdown is-hoverable" id="Elucid8_choice">
                     <a class="navbar-link"><span class="Elucid8-ui" data-UIToken="UI_Switch">UI_Switch</span></a>
                     { # this is provided by the UISwitcher plugin
@@ -328,10 +296,45 @@ method templates {
             </div>
             BLOCK
         },
+        drop-down-list => -> %prm, $tmpl {
+            q:to/BLOCK/;
+                    <div class="navbar-item">
+                        <button id="changeTheme" class="button">
+                            <span class="Elucid8-ui" data-UIToken="ChangeTheme">ChangeTheme</span>
+                        </button>
+                    </div>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item tooltip" href="/about">
+                        <span class="Elucid8-ui" data-UIToken="About">About</span>
+                        <span class="tooltiptext Elucid8-ui" data-UIToken="AboutText">AboutText</span>
+                    </a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item tooltip" href="https://kiwiirc.com/client/irc.libera.chat/#raku" >
+                        <span class="Elucid8-ui" data-UIToken="Chat">Chat</span>
+                        <span class="tooltiptext Elucid8-ui" data-UIToken="ChatText">ChatText</span>
+                    </a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item has-text-red tooltip" href="https://github.com/raku/doc-website/issues">
+                        <span class="Elucid8-ui" data-UIToken="SiteIssue">SiteIssue</span>
+                        <span class="tooltiptext Elucid8-ui" data-UIToken="SiteReport">SiteReport</span>
+                    </a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item tooltip" href="https://github.com/raku/doc/issues">
+                        <span class="Elucid8-ui" data-UIToken="DocIssue">DocIssue</span>
+                        <span class="tooltiptext Elucid8-ui" data-UIToken="DocReport">DocReport</span>
+                    </a>
+            BLOCK
+        },
         # place-holders
         'head-search' => -> %, $ { 'No search function' },
         'search-modal' => -> %, $ { '' },
-        'notification-modal' => -> %, $ { '' },
+        'modal-container' => -> %prm, $tmpl {
+            qq:to/MODAL/;
+            <div id="modal-container">
+                { $tmpl<search-modal> }
+            </div>
+            MODAL
+        },
         'page-edit' => -> %,$ {''},
         #| the main section of body
         main-content => -> %prm, $tmpl {

@@ -19,7 +19,11 @@
         Raku-Doc-Website::Search
         Raku-Doc-Website::TypeGraphs
         Raku-Doc-Website::Edit-in-git
+        Raku-Doc-Website::RakuREPL
     >,
+    setup => (# sequence not hash because order can matter
+        RakuREPL => 'set-host-port',
+    ),
     pre-file-render => (# sequence not hash because order can matter
         SiteData => 'initialise',
         TypeGraphs => 'add-typegraph',

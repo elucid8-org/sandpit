@@ -68,7 +68,7 @@ method templates {
                     </div>
                     BLOCK
                 }
-                default {'<div color="red">edit</div>'}
+                default {''}
             }
         },
     )
