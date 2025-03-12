@@ -4,8 +4,8 @@
             :root-domain<https://new-raku.finanalyst.org>,
         ),
         RakuREPL => %(
-            :websocket-port(8080),
-            :websocket-host('localhost'),
+            :websocket-port(40005),
+            :websocket-host('finanalyst.org'),
         )
     ),
 )

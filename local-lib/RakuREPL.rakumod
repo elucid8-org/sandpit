@@ -47,12 +47,11 @@ method repl-js {
         // Connect to the websocket
         let socket;
         // This will let us create a connection to our Server websocket.
-        // For this to work, your websocket needs to be running with node index.js
         const connect = function() {
             // Return a promise, which will wait for the socket to open
             return new Promise((resolve, reject) => {
                 // This calculates the link to the websocket.
-                const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:');
+                const socketProtocol = 'ws:';//(window.location.protocol === 'https:' ? 'wss:' : 'ws:');
                 const socketUrl = `${socketProtocol}//${websocketHost}:${websocketPort}/raku_repl`;
                 socket = new WebSocket(socketUrl);
 
@@ -80,7 +79,7 @@ method repl-js {
                     // Return an error if any occurs
                     console.log(e);
                     document.getElementById('repl-toggle').dataset.openchannel = 'off';
-                    document.getElementById('raku-toggle').click();
+                    document.getElementById('repl-toggle').click();
                     resolve();
                     // Try to connect again
                     connect();
@@ -361,7 +360,7 @@ method repl-scss {
         #repl-toggle {
             right: 1vw;
             position: fixed;
-            top: 25vh;
+            top: 28vh;
             .repl-button.tooltip {
                 background: var(--bulma-scheme-main);
                 border-color: var(--bulma-border);
