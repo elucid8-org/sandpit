@@ -16,6 +16,8 @@ has %.config =
     ui-tokens => %(
         :TOC<Table of Contents>,
         :NoTOC<No Table of contents for this page>,
+        :TOC-open<Open Table of contents for this page>,
+        :TOC-close<Close Table of contents for this page>,
         :ChangeTheme<Change Theme>,
         :Index<Index>,
         :NoIndex<No Index for this page>,
@@ -117,6 +119,12 @@ method templates {
             qq:to/NAV/
             <nav class="navbar is-fixed-top raku-webs" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
+                 <figure class="navbar-item">
+                    <a href="{%prm<source-data><home-page>}">
+                        <img id="Camelia" class="is-rounded" src="https://avatars.githubusercontent.com/u/58170775">
+                    </a>
+                    <span class="navbar-tm-logo">tm</span>
+                 </figure>
                 { # remove TOC opener if direct-wrap exists and is true, or :!toc
                   (
                   (%prm<source-data><rakudoc-config><direct-wrap>:exists && %prm<source-data><rakudoc-config><direct-wrap>)
@@ -127,12 +135,6 @@ method templates {
                     ''
                     !! $tmpl<toc-opener>
                 }
-                 <figure class="navbar-item">
-                    <a href="{%prm<source-data><home-page>}">
-                        <img id="Camelia" class="is-rounded" src="https://avatars.githubusercontent.com/u/58170775">
-                    </a>
-                    <span class="navbar-tm-logo">tm</span>
-                 </figure>
                  <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
                    <span aria-hidden="true"></span>
                    <span aria-hidden="true"></span>
@@ -148,10 +150,13 @@ method templates {
         toc-opener => -> %prm, $ {
             q:to/TOC/
                 <div class="navbar-start">
-                    <label class="chyronToggle">
-                      <input id="navbar-toc-toggle" type="checkbox" />
-                      <span class="checkmark"> </span>
-                    </label>
+                <label class="chyronToggle tooltip">
+                    <input id="navbar-toc-toggle" type="checkbox" />
+                    <span class="checkmark off"><i class="fas fa-eye"></i></span>
+                    <span class="checkmark on"><i class="fas fa-eye-slash"></i></span>
+                    <span class="tooltiptext Elucid8-ui on" data-UIToken="TOC-close">TOC-close</span>
+                    <span class="tooltiptext Elucid8-ui off" data-UIToken="TOC-open">TOC-open</span>
+                </label>
                 </div>
             TOC
         },
@@ -283,7 +288,10 @@ method templates {
                     </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable" id="Elucid8_choice">
-                    <a class="navbar-link"><span class="Elucid8-ui" data-UIToken="UI_Switch">UI_Switch</span></a>
+                    <a class="navbar-link tooltip">
+                        <span class="Elucid8-ui tooltiptext" data-UIToken="UI_Switch">UI_Switch</span>
+                        <i class="fas fa-language"></i>&nbsp;<i class="fas fa-user-cog"></i>
+                    </a>
                     { # this is provided by the UISwitcher plugin
                         $tmpl('ui-switch-contents', %(:classes<navbar-dropdown>))
                     }
@@ -763,6 +771,10 @@ method raku-webs-scss {
       visibility: visible;
       opacity: 1;
     }
+    #Elucid8_choice .tooltiptext {
+        right: 100%;
+        width:200%;
+    }
 
     .navbar.raku-webs {
         background: var(--bulma-background-active);
@@ -827,41 +839,68 @@ method raku-webs-scss {
 method chyron-scss {
     q:to/CHYRON/;
     // Chyron Toggle checkbox
-    label.chyronToggle input#navbar-toc-toggle {
-        opacity: 0;
-        height: 0;
-        width: 0;
-    }
-    label.chyronToggle span.checkmark {
-        top: 1rem;
-        position: relative;
-        cursor: pointer;
-    }
-    label.chyronToggle input[type="checkbox"]{
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-    }
-    label.chyronToggle span.checkmark::before {
-        content: '[\21e8';
-        color: grey;
-        font-weight: 800;
-        line-height: 0.5rem;
-        font-size: 1.75rem;
-        margin-right: 0.25rem;
-        width: 3rem;
-        display: inline-block;
-    }
-    label.chyronToggle:hover span.checkmark::before {
-        content: '[ \21e8';
-    }
-    label.chyronToggle input[type="checkbox"]:checked + .checkmark::before {
-        content: '[ \21e6';
-    }
-    label.chyronToggle:hover input[type="checkbox"]:checked + .checkmark::before {
-        content: '[\21e6';
+    label.chyronToggle {
+        top: 40%;
+        left: 0.5rem;
+        color: var(--bulma-info-40);
+        input#navbar-toc-toggle {
+            opacity: 0;
+            height: 0;
+            width: 0;
+            &~ .checkmark {
+                display: inline-block;
+                &.off {
+                    opacity: 1;
+                    visibility: visible;
+                    width: 1rem;
+                }
+                &.on {
+                    opacity:0;
+                    visibility: hidden;
+                    width: 0;
+                }
+            }
+            &:checked ~ .checkmark {
+                &.on {
+                    opacity: 1;
+                    visibility:visible;
+                    width: 1rem;
+                }
+                &.off {
+                    opacity:0;
+                    visibility: hidden;
+                    width: 0;
+                }
+            }
+            &:hover ~ .tooltiptext {
+                &.off {
+                    opacity: 1;
+                    visibility: visible;
+                    width: 10rem;
+                    left: 0;
+                    right: 0;
+                }
+                &.on {
+                    opacity:0;
+                    visibility: hidden;
+                    width: 0;
+                }
+            }
+        }
+        &:checked:hover ~ .tooltiptext {
+            &.on {
+                opacity: 1;
+                visibility: visible;
+                width: 10rem;
+                left: 0;
+                right: 0;
+            }
+            &.off {
+                opacity:0;
+                visibility: hidden;
+                width: 0;
+            }
+        }
     }
     CHYRON
 }
