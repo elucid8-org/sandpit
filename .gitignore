@@ -12,3 +12,6 @@ lib/.precomp
 /.idea/modules.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /Misc/file-data.rakuon
+/repos/
+/sources/en/language/
+/sources/en/type/
