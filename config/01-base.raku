@@ -5,11 +5,15 @@
                             #| for each source file that has been rendered. Intended to avoid
                             #| re-rendering every source when only some have been modified
     :canonical<en>,         #| sub-dir of sources with canonical content
-    :L10N<L10N>,            #| directory with translation information
+    :Misc<Misc>,            #| directory with translation & other information
     :ui-dictionary<ui-dictionary.rakuon>, #| name of dictionary with ui token and translations
     :extensions<rakudoc rakumod>, #| possible extension of rakudoc source
     :!quiet,                #| no output is required if True
-    :with-only(),           #| only render files in this list
+    :with-only<
+        language/operators language/REPL language/variables language/math language/101-basicstype/AST
+        type/Anytype/IO/Handle type/IO/CatHandle type/IO/Special type/IO/ArgFiles type/IO/Socket
+        type/IO/Notification type/IO/Pipe type/IO/Spec type/IO/Pathtype/RakuAST/Doc
+    >,           #| only render files in this list
     :ignore(),              #| ignore files in this list
     :destination<publication>, #| directory where rendered HTML files are placed
     :landing-page<index>,   #| name of file where the web-site starts

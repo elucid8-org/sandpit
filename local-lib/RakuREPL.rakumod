@@ -215,7 +215,6 @@ method repl-scss {
         bottom: 15vh;
         left: 1vw;
         width: 98vw;
-        padding: 0.5rem 1.5rem;
         z-index: 60;
         background: var(--bulma-light);
         opacity: 90%;
@@ -227,7 +226,7 @@ method repl-scss {
             }
         }
         #raku-panel {
-            margin: 10px;
+            margin: 0.5rem 1.5rem;
         }
         #repl-toggle {
             right: 1vw;

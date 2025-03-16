@@ -8,7 +8,7 @@ lib/.precomp
 /publication/
 /.raku-version
 /elucid8-sandpit.iml
-/file-data.rakuon
 /.idea/comma.xml
 /.idea/modules.xml
 /.idea/inspectionProfiles/Project_Default.xml
+/Misc/file-data.rakuon
