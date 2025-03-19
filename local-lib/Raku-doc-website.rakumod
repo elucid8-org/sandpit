@@ -149,11 +149,11 @@ method templates {
         },
         toc-opener => -> %prm, $ {
             q:to/TOC/
-                <div class="navbar-start">
+                <div class="navbar-start navbar-item">
                 <label class="chyronToggle tooltip">
                     <input id="navbar-toc-toggle" type="checkbox" />
-                    <span class="checkmark off"><i class="fas fa-eye"></i></span>
-                    <span class="checkmark on"><i class="fas fa-eye-slash"></i></span>
+                    <span class="checkmark banned"><i class="fa fa-ban fa-3x"></i></span>
+                    <span class="checkmark off"><i class="far fa-list-alt"></i></span>
                     <span class="tooltiptext Elucid8-ui on" data-UIToken="TOC-close">TOC-close</span>
                     <span class="tooltiptext Elucid8-ui off" data-UIToken="TOC-open">TOC-open</span>
                 </label>
@@ -840,36 +840,39 @@ method chyron-scss {
     q:to/CHYRON/;
     // Chyron Toggle checkbox
     label.chyronToggle {
-        top: 40%;
+        top: 0.5rem;
         left: 0.5rem;
-        color: var(--bulma-info-40);
         input#navbar-toc-toggle {
             opacity: 0;
             height: 0;
             width: 0;
             &~ .checkmark {
                 display: inline-block;
+                position: relative;
                 &.off {
                     opacity: 1;
                     visibility: visible;
                     width: 1rem;
+                    bottom:1.75px;
+                    &:hover { color: var(--bulma-warning-40); }
                 }
-                &.on {
+                &.banned {
                     opacity:0;
                     visibility: hidden;
                     width: 0;
                 }
             }
             &:checked ~ .checkmark {
-                &.on {
+                &.off {
                     opacity: 1;
                     visibility:visible;
                     width: 1rem;
                 }
-                &.off {
-                    opacity:0;
-                    visibility: hidden;
-                    width: 0;
+                &.banned {
+                    opacity:1;
+                    visibility: visible;
+                    color: var(--bulma-danger);
+                    left:-0.8rem;
                 }
             }
             &:hover ~ .tooltiptext {
@@ -879,6 +882,7 @@ method chyron-scss {
                     width: 10rem;
                     left: 0;
                     right: 0;
+                    padding: 0 1px;
                 }
                 &.on {
                     opacity:0;
@@ -886,19 +890,20 @@ method chyron-scss {
                     width: 0;
                 }
             }
-        }
-        &:checked:hover ~ .tooltiptext {
-            &.on {
-                opacity: 1;
-                visibility: visible;
-                width: 10rem;
-                left: 0;
-                right: 0;
-            }
-            &.off {
-                opacity:0;
-                visibility: hidden;
-                width: 0;
+            &:checked:hover ~ .tooltiptext {
+                &.on {
+                    opacity: 1;
+                    visibility: visible;
+                    width: 10rem;
+                    left: 0;
+                    right: 0;
+                    padding: 0 1px;
+                }
+                &.off {
+                    opacity:0;
+                    visibility: hidden;
+                    width: 0;
+                }
             }
         }
     }
