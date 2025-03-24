@@ -1,24 +1,36 @@
 %(
     :repository-store<repos>,
+    :repository-info-file<repo-info.rakuon>,
     repositories => %(
-        raku-docs-en => %(
+        raku-docs => %(
             repo-name => 'Raku/doc',
-            source-entry => 'doc/',
-            destination => 'en',
             description => 'documentation of the Raku language',
+            languages => %(
+                en => %(
+                    source-entry => 'doc',
+                    destination-modify => '*.subst(/ ^\w /, *.lc)',
+                ),
+            ),
         ),
-        rakudoc-en => %(
+        rakudoc => %(
             repo-name => 'Raku/RakuDoc-GAMMA',
-            source-entry => '/',
-            destination => 'en/language',
             description => 'Rakudoc specification document',
-            :ignore<README compliance-document/rakudociem-ipsum compliance-files/bootiful-disclaimer>,
+            languages => %(
+                en => %(
+                    source-entry => '',
+                    destination => 'language/',
+                    :select('rakudoc_v2',),
+                ),
+            ),
         ),
-        doc-website => %(
-            destination => 'en',
+        'self' => %( # meaning this repository
+            repo-name => 'elucid8-org/sandpit',
             description => 'website sources',
-            repo-name => '',
-            source-entry => 'sources/en',
-        )
+            languages => %(
+                en => %(
+                    source-entry => 'site-sources/en',
+                ),
+            ),
+        ),
     ),
 )

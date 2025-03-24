@@ -9,7 +9,7 @@ has %.config =
 	:license<Artistic-2.0>,
 	:credit<finanalyst, "https://https://bulma.io , MIT License">,
 	:authors<finanalyst>,
-	:css-link(['href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css"',1],),
+    :css-link(['href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css"',1],),
 	:js-link(['src="https://rawgit.com/farzher/fuzzysort/master/fuzzysort.js"',1],),
     :js([self.js-text,9],), # make sure its called last
     :scss([self.chyron-scss,1], [ self.toc-scss, 1], [ self.bulma-additions-scss, 1], [ self.raku-webs-scss, 1]),
@@ -455,7 +455,7 @@ method templates {
                             <span class="Elucid8-ui" data-UIToken="Time">Time</span>
                         </div>
                         <div class="level-item">
-                            <span class="Elucid8-ui" data-UIToken="SourceModified">SourceModified</span><br>{(sprintf( " %02d:%02d UTC, %s", .hour, .minute, .yyyy-mm-dd) with %prm<source-data><modified>.DateTime)}
+                            <span class="Elucid8-ui" data-UIToken="SourceModified">SourceModified</span><br>{(sprintf( " %02d:%02d UTC, %s", .hour, .minute, .yyyy-mm-dd) with %prm<source-data><modified>)}
                         </div>
                         <div class="level-right">
                             <div class="level-item">

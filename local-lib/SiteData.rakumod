@@ -77,7 +77,6 @@ class Raku-Doc-Website::SiteData {
     method initialise( $rdp, $lang, $fn, $ast ) {
         $rdp.file-data{$lang} = %() unless $rdp.file-data{$lang}:exists;
         $rdp.file-data{$lang}{$fn} = %() unless $rdp.file-data{$lang}{$fn}:exists;
-        $rdp.file-data{$lang}{$fn}<xtrk-targs> = SetHash.new;
         $rdp.file-data{$lang}{$fn}<defns> = %();
         $rdp.file-data<current> := $rdp.file-data{$lang}{$fn};
         %!fd := $rdp.file-data{ $lang }{ $fn };
@@ -223,6 +222,7 @@ class Raku-Doc-Website::SiteData {
             for %defns.kv -> $dn, @dn-data {
                 # Only generate Composite if more than one item per name
                 next unless @dn-data.elems > 1;
+                say "Rendering composite for ｢$lang/$kind/$dn｣";
                 my $mapped-name = $prefix ~ nqp::sha1( "$lang/$kind/$dn" );
                 my $fn-new = "/{ $kind.Str.lc }/$dn";
                 my $esc-dn = $dn.subst(/ <-[ a .. z A .. Z 0 .. 9 _ \- \. ~ ]> /,
@@ -277,9 +277,10 @@ class Raku-Doc-Website::SiteData {
                     :name('&#x1F916;'),
                     :path($url),
                     :$lang,
-                    :modified(now),
+                    :modified(now.DateTime),
                     home-page => "/$lang/{%config<landing-page>}",
                     :type<composite>,
+                    repo-prefix => '',
                 )));
                 CATCH {
                      default {
@@ -297,7 +298,7 @@ class Raku-Doc-Website::SiteData {
                     title => 'The <b>' ~ $dn.trans(qw｢ &lt; &gt; &amp; &quot; ｣ => qw｢ <    >    &   " ｣) ~ "</b> $kind",
                     subtitle => 'From: ' ~ @sources.join(', ') ~ '.',
                     config => %( :$kind, :!index ),
-                    :modified(now),
+                    :modified(now.DateTime),
                     :type<composite>,
                 ).pairs;
             }

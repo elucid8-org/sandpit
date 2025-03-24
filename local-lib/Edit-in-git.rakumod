@@ -26,21 +26,23 @@ method enable( RakuDoc::Processor:D $rdp ) {
 method templates {
     %(
         page-edit => -> %prm, $tmpl {
-            my $commit = '<i class="fa fa-ban"></i>';
             my %sd := %prm<source-data>;
-            $commit = %sd<modified>.DateTime.yyyy-mm-dd if %sd<modified>:exists;
-            my $home-path = $tmpl.globals.escape.( %sd<path>);
             given %sd<type> {
                 when <primary glue info>.any {
+                    my $commit-time = '<i class="fa fa-ban"></i>';
+                    $commit-time = %sd<modified>.yyyy-mm-dd if %sd<modified>:exists;
+                    my $repo-path = %sd<path>;
+                    $repo-path = $_ with %sd<repo-path>;
+                    $repo-path = $tmpl.globals.escape.( $repo-path );
                     qq:to/BLOCK/
                     <div class="page-edit">
-                        <a class="button page-edit-button tooltip" href="$home-path">
+                        <a class="button page-edit-button tooltip" href="$repo-path">
                             <span class="icon">
                                 <i class="fas fa-pen-alt is-medium"></i>
                             </span>
                             <p class="tooltiptext">
                                 <span class="Elucid8-ui" data-UIToken="EditButtonTip">EditButtonTip</span>
-                                $commit
+                                $commit-time
                             </p>
                         </a>
                       </div>
