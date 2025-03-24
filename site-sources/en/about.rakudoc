@@ -1,5 +1,5 @@
 =begin pod :type<info>
-=TITLE About the new-raku.finanalyst.org website
+=TITLE About the website
 
 This website is a testing location for new PRs to the docs.raku.org website.
 
@@ -32,10 +32,5 @@ heavily, was designed and maintained by many people, though we mention
 Moritz Lenz L<@moritz | https://github.com/Moritz > and JJ Merelo L<@JJ | https://github.com/JJ> in
 particular. The many other people who have contributed to writing the documentation and tooling
 can be found in this L<Credits file | https://raw.githubusercontent.com/Raku/doc/master/CREDITS>.
-
-=for Generated  :headlevel(0)
-The web site was generated as follows:
-
-Link errors in the documentation suite can be found at L<Error report|error-report>.
 
 =end pod
