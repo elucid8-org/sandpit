@@ -6,6 +6,9 @@
         RakuREPL => %(
             :websocket-port(40005),
             :websocket-host('finanalyst.org'),
-        )
+        ),
+        Edit-In-Browser => %(
+            :websocket-host('finanalyst.org'),
+        ),
     ),
 )

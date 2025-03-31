@@ -1,7 +1,7 @@
 {
     "name": "Elucid8::Doc-Website",
     "description": "Renders Raku documentation sources to web site",
-    "version": "0.3.1",
+    "version": "0.4.0",
     "raku": "6.d",
     "authors": [
         "Richard Hainsworth"
@@ -25,6 +25,7 @@
         "Raku-Doc-Website::SiteData": "local-lib/SiteData.rakumod",
         "Raku-Doc-Website::TypeGraphs": "local-lib/TypeGraphs.rakumod",
         "Raku-Doc-Website::Edit-in-git": "local-lib/Edit-in-git.rakumod",
+        "Raku-Doc-Website::Edit-In-Browser": "local-lib/Edit-In-Browser.rakumod",
         "Raku-Doc-Website::RakuREPL": "local-lib/RakuREPL.rakumod"
     },
     "resources": [

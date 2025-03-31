@@ -33,7 +33,7 @@ method enable( RakuDoc::Processor:D $rdp ) {
 }
 method set-host-port( %final-config ) {
     my $js = qq:to/VARS/;
-    var websocketHost =  '{ %final-config<RakuREPL><websocket-host> // %!config<websocket-host> }';
+    var websocketHost =  '{ %final-config<plugin-options><RakuREPL><websocket-host> // %!config<websocket-host> }';
     VARS
     %!config<js>.push: [  $js, 1 ] ; # the script with host/port has to be before the repl-js script
 }
