@@ -13,4 +13,5 @@ Migration guides
 =for ListFiles :select<kind=Language, category=tutorial> :caption<Tutorials>
 Tutorials
 
+some testing 
 =end rakudoc
