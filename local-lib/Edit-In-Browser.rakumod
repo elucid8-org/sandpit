@@ -8,18 +8,39 @@ has %.config =
         :license<Artistic-2.0>,
         :credit<finanalyst>,
         :authors<finanalyst>,
-        :scss([self.edit-scss,1],[self.modal-scss,1]),
+        :scss([self.edit-scss,1],),
         :js-link(
         ['src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.39.1/ace.js" integrity="sha512-tGc7XQXpQYGpFGmdQCEaYhGdJ8B64vyI9c8zdEO4vjYaWRCKYnLy+HkudtawJS3ttk/Pd7xrkRjK8ijcMMyauw==" crossorigin="anonymous" referrerpolicy="no-referrer"', 1],
+        ['src="https://unpkg.com/diff"',1],
         ),
         :js( [[self.browser-js,2], ] ),
         set-host-port => -> %final-config { self.set-host-port( %final-config ) },
         ui-tokens => %(
             :EditButtonTip('Edit this page. Modified&#13; '),
+            :EditButtonTipUnable('Cannot edit this page.'),
             :EditButtonModalOff('Exit this popup by pressing &lt;Escape&gt;, or clicking on X or on the background.'),
             :EditorPanel('Editor panel'),
-            :RefreshPreview('Refresh preview'),
-            :RevertOriginal('Revert to Original'),
+            :EditTabRendered('Rendered'),
+            :EditTabDifferences('Differences'),
+            :EditTabPatch('Patch'),
+            :Edit-editor-tip('Click on Render to refresh'),
+            :EditTabSubmit('Suggest'),
+            :EditFormSubmit('Submit suggestion'),
+            :EditFormName('Name'),
+            :EditFormName-tip('How you wish to be cited (default is anon)'),
+            :EditFormComment('Comment attached to suggestion'),
+            :EditFormComment-tip('Why the suggestion is made (optional)'),
+            :EditFormThanks('Thank you'),
+            :EditFormTimeStamp('At: '),
+            :EditFormError('There is an error: '),
+            :EditFormQueuedOK(' your suggestion was queued'),
+            :EditFormErrorUnknown('error unknown'),
+            :EditFormTooManyChanges('too many changes. Patch is too big (see first line of Patch tab)'),
+            :EditFormQueuedTooManyChanges('your suggestion was rejected: too many changes. Patch is too big (see first line of Patch tab)'),
+            :EditFormQueuedTooLittleTimeOnToken('your suggestion was rejected: not enough time left on authorisation token'),
+            :EditFormQueuedNoAuthorisation('your suggestion was rejected: no editor authorisation'),
+            :EditFormInvalidEditorName('Editor must have form 3 > name.length < 39 and only have alphanumerics or -, no blank'),
+            :EditFormErrorPatchZero('no changes have been made (see first line of Patch tab, zero changed chars)'),
         );
 
 method enable( RakuDoc::Processor:D $rdp ) {
@@ -28,7 +49,9 @@ method enable( RakuDoc::Processor:D $rdp ) {
 }
 method set-host-port( %final-config ) {
     my $js = qq:to/VARS/;
-    var renderWebsocketHost =  '{ %final-config<plugin-options><Edit-In-Browser><websocket-host> }';
+    var renderWebsocket =  '{ %final-config<plugin-options><Edit-In-Browser><render-websocket> }';
+    var suggestionWebsocket =  '{ %final-config<plugin-options><Edit-In-Browser><suggestion-websocket> }';
+    var suggestionPatchLimit = '{ %final-config<plugin-options><Edit-In-Browser><patch-limit> }';
     VARS
     %!config<js>.push: [  $js, 1 ] ; # the script with host/port has to be before the repl-js script
 }
@@ -40,47 +63,111 @@ method templates {
                 when <primary glue info>.any {
                     my $commit-time = '<i class="fa fa-ban"></i>';
                     $commit-time = %sd<modified>.yyyy-mm-dd if %sd<modified>:exists;
-                    my $repo-path = %sd<path>;
-                    $repo-path = $_ with %sd<repo-raw-content-path>;
-                    $repo-path = $tmpl.globals.escape.( $repo-path );
-                    qq:to/BLOCK/
-                      <div class="page-edit">
-                        <a id="Edit-browser-activate" class="button page-edit-button js-modal-trigger tooltip"
-                            data-editurl="$repo-path"
-                            data-target="page-browser-editor">
-                            <span class="icon">
-                                <i class="fas fa-pen-alt is-medium"></i>
-                            </span>
-                            <p class="tooltiptext">
-                                <span class="Elucid8-ui" data-UIToken="EditButtonTip">EditButtonTip</span>
-                                $commit-time
-                            </p>
-                        </a>
-                      </div>
-                    <div id="page-browser-editor" class="modal">
-                        <div class="modal-background"></div>
-                        <div class="modal-content">
-                            <div class="box">
-                                <div class="edit-preview-box">
-                                    <div id="editor-panel">
-                                        <div class="Elucid8-ui" data-UIToken="EditorPanel">Editor panel</div>
-                                        <div class="buttonPanel">
-                                            <button id="getHTML" class="button Elucid8-ui" data-UIToken="RefreshPreview">Refresh preview</button>
-                                            <button id="revertToContent" class="button Elucid8-ui" data-UIToken="RevertOriginal">Revert to Original</button>
-                                        </div>
-                                        <div id="editor"></div>
-                                    </div>
-                                    <div id="preview-panel">
-                                        <div id="socketIndicator" data-openchannel="off">Preview</div>
-                                    <iframe id="preview"></iframe>
-                                    </div>
-                                </div>
-                                <p><span class="Elucid8-ui" data-UIToken="EditButtonModalOff">EditButtonModalOff</span></p>
-                            </div>
+                    if %sd<repo-name>:exists and %sd<repo-path>:exists {
+                        qq:to/BLOCK/
+                        <div class="page-edit">
+                            <a id="Edit-browser-activate" class="button page-edit-button js-modal-trigger tooltip"
+                                data-reponame="{%sd<repo-name>}"
+                                data-repopath="{%sd<repo-path>}"
+                                data-target="page-browser-editor">
+                                <span class="icon">
+                                    <i class="fas fa-pen-alt is-medium"></i>
+                                </span>
+                                <p class="tooltiptext">
+                                    <span class="Elucid8-ui" data-UIToken="EditButtonTip">EditButtonTip</span>
+                                    $commit-time
+                                </p>
+                            </a>
                         </div>
-                        <button class="modal-close is-large" aria-label="close"></button>
-                    </div>
-                    BLOCK
+                        <div id="page-browser-editor" class="modal">
+                            <div class="modal-background"></div>
+                            <div class="modal-content">
+                                <div class="box">
+                                    <div class="edit-preview-box">
+                                        <div id="editor-panel">
+                                            <div>
+                                                <span class="Elucid8-ui" data-UIToken="EditorPanel">Editor panel</span>&nbsp;
+                                                <span id="editor-tip" class="tooltip has-text-info">
+                                                    <span class="icon">
+                                                        <i class="fas fa-question"></i>
+                                                    </span>
+                                                    <span class="Elucid8-ui tooltiptext" data-UIToken="Edit-editor-tip">Edit-editor-tip</span>
+                                                </span>
+                                            </div>
+                                            <div id="editor"></div>
+                                        </div>
+                                        <div id="preview-panel" class="panel">
+                                            <div class="panel-tabs">
+                                                <a id="showRendered" data-openchannel="off" class="showEditTab Elucid8-ui is-active" data-UIToken="EditTabRendered">Rendered</a>
+                                                <a id="showDifference" class="showEditTab Elucid8-ui" data-UIToken="EditTabDifferences">Differences</a>
+                                                <a id="showPatch" class="showEditTab Elucid8-ui" data-UIToken="EditTabPatch">Patch</a>
+                                                <a id="showSubmit" class="showEditTab Elucid8-ui" data-UIToken="EditTabSubmit">Submit</a>
+                                            </div>
+                                            <iframe id="renderPanel" class="panel-block edit-panel-border"></iframe>
+                                            <div id="differencePanel" class="panel-block is-hidden edit-panel-border"></div>
+                                            <div id="patchPanel" class="panel-block is-hidden edit-panel-border"></div>
+                                            <div id="submitPanel" class="panel-block is-hidden edit-panel-border">
+                                                <div class="field tooltip">
+                                                    <label class="label Elucid8-ui" data-UIToken="EditFormName">Name</label>
+                                                    <span class="Elucid8-ui tooltiptext" data-UIToken="EditFormName-tip">EditFormName-tip</span>
+                                                    <div class="control">
+                                                        <input id="EditFormEditor" class="input" type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="field tooltip">
+                                                    <span class="Elucid8-ui tooltiptext" data-UIToken="EditFormComment-tip">EditFormComment-tip</span>
+                                                    <label class="label Elucid8-ui" data-UIToken="EditFormComment">Comment</label>
+                                                    <div class="control">
+                                                        <textarea id="EditFormComment" class="textarea"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <div class="control">
+                                                        <button id="EditFormSubmit" disabled="true" class="button is-link Elucid8-ui" data-UIToken="EditFormSubmit">Submit</button>
+                                                    </div>
+                                                </div>
+                                                <div id="EditFormQueued" class="field is-hidden">
+                                                    <label class="label Elucid8-ui" data-UIToken="EditFormThanks">Thanks</label>
+                                                    <div class="control">
+                                                        <span class="Elucid8-ui" data-UIToken="EditFormTimeStamp">EditFormTimeStamp</span>
+                                                        <span id="EditFormQueuedResp"></span>
+                                                        <span id="EditFormQueuedOK" class="is-hidden Elucid8-ui" data-UIToken="EditFormQueuedOK"></span>
+                                                    </div>
+                                                </div>
+                                                <div id="EditFormError" class="is-hidden control">
+                                                    <span class="Elucid8-ui" data-UIToken="EditFormError"></span>
+                                                    <span id="EditFormErrorUnknown" class="is-hidden Elucid8-ui editFormError" data-UIToken="EditFormErrorUnknown"></span>
+                                                    <span id="EditFormTooManyChanges" class="is-hidden Elucid8-ui editFormError" data-UIToken="EditFormTooManyChanges"></span>
+                                                    <span id="EditFormInvalidEditorName" class="is-hidden Elucid8-ui editFormError" data-UIToken="EditFormInvalidEditorName"></span>
+                                                    <span id="EditFormQueuedTooManyChanges" class="is-hidden Elucid8-ui editFormError" data-UIToken="EditFormQueuedTooManyChanges"></span>
+                                                    <span id="EditFormErrorPatchZero" class="is-hidden Elucid8-ui editFormError" data-UIToken="EditFormErrorPatchZero"></span>
+                                                    <span id="EditFormQueuedNoAuthorisation" class="is-hidden Elucid8-ui editFormError" data-UIToken="EditFormNoAuthorisation"></span>
+                                                    <span id="EditFormQueuedTooLittleTimeOnToken" class="is-hidden Elucid8-ui editFormError" data-UIToken="EditFormTooLittleTimeOnToken"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p><span class="Elucid8-ui" data-UIToken="EditButtonModalOff">EditButtonModalOff</span></p>
+                                </div>
+                            </div>
+                            <button class="modal-close is-large" aria-label="close"></button>
+                        </div>
+                        BLOCK
+                    }
+                    else  {
+                        q:to/NOEDIT/
+                        <div class="page-edit">
+                            <a class="button page-edit-button tooltip">
+                                <span class="icon">
+                                    <i class="fas fa-pen-alt is-medium"></i>
+                                </span>
+                                <p class="tooltiptext">
+                                    <span class="Elucid8-ui" data-UIToken="EditButtonTipUnable">EditButtonTipUnable</span>
+                                </p>
+                            </a>
+                        </div>
+                        NOEDIT
+                    }
                 }
                 when 'composite'  {
                     qq:to/BLOCK/
@@ -137,10 +224,6 @@ method edit-scss {
                 }
             }
         }
-    SCSS
-}
-method modal-scss {
-    q:to/SCSS/;
         #page-browser-editor .modal-content {
             width: 80vw;
             .box { height: 80vh; }
@@ -151,12 +234,24 @@ method modal-scss {
             #editor-panel, #preview-panel {
                 display: flex;
                 flex-direction: column;
-                div:first-child { align-self: center; }
+                div:first-child {
+                    align-self: center;
+                    gap: 10px;
+                }
+                #patchPanel { overflow: auto; white-space: nowrap; }
+                #submitPanel {
+                    display: flex;
+                    flex-direction: column;
+                    #EditFormSubmit:disabled {
+                        background-color: var(--bulma-warning);
+                        cursor: not-allowed;
+                    }
+                    .field { width: 100% }
+                }
             }
-            #editor, #preview {
+            .edit-panel-border {
                 border: gray solid 1px;
                 border-radius: 5px;
-                margin-bottom: 1.5em;
             }
         }
         @media screen and (min-width: 1024px){
@@ -165,9 +260,14 @@ method modal-scss {
                 flex-direction: row;
                 padding-bottom: 10px;
                 gap: 5px;
-                #editor-panel, #preview-panel { flex-grow: 1; }
-                #editor { height: 60vh; }
-                #preview { height: 90%; width: 100%; }
+                #editor-panel, #preview-panel { width: 38vw; }
+                #editor { height: calc(60vh + 3.3em + 10px); }
+                #renderPanel, #differencePanel, #patchPanel, #submitPanel {
+                    height: 90%;
+                    width: 100%;
+                    display: block;
+                    overflow: auto;
+                }
             }
         }
         @media screen and (max-width: 1023px){
@@ -175,42 +275,71 @@ method modal-scss {
                 display: flex;
                 flex-direction: column;
                 #editor { height: 30vh; }
-                #preview { width: 100%; }
+                #renderPanel, #differencePanel, #patchPanel, #submitPanel {
+                    width: 100%;
+                    display: block;
+                    overflow: auto;
+                    height: 26vh;
+                }
             }
         }
-        .buttonPanel {
-            display: flex;
-            flex-direction: row;
-            margin-bottom: 10px;
-            justify-content: space-around;
-            .button {
-                width: fit-content;
-            }
-        }
-        #socketIndicator {
+        #editor-tip .tooltiptext { width: 25rem; right: -12.5rem; }
+        .panel-tabs a.showEditTab {
             padding:0 3px;
             margin-bottom: 10px;
             border: double 2px;
             border-radius: 5px;
             width:fit-content;
-            padding:10px;
+            padding: 0.4rem 0.75rem;
+            border-color: var(--bulma-info);
             &[data-openchannel="off"] {
-                border-color: red;
+                border-color: var(--bulma-danger);
             }
             &[data-openchannel="on"] {
-                border-color: green;
+                border-color: var(--bulma-primary);
+            }
+            &.is-active {
+                box-shadow: var(--bulma-border-active) 3px 3px 3px;
             }
         }
     SCSS
 }
 method browser-js {
     q:to/JS/;
-        var url;
+        var reponame;
+        var repopath;
+        var sha;
         var editor;
-        var preview;
-        var socketIndicator;
+        var taintedRender = true;
+        var taintedDiffs = true;
+        var showRendered;
+        var renderPanel;
+        var showDifference;
+        var differencePanel;
+        var showPatch;
+        var patchPanel;
+        var showSubmit;
+        var submitPanel;
+        var initialContent;
+        var patch;
+        var patchLen;
         var renderSocket;
-        // check if a websocket is open
+        var suggestionSocket;
+        var suggestionSocketOpened = false; // only open socket once
+        const toggle8 = ( p1, p2 ) => {
+            // first make all inactive, then activate givens
+            showRendered.classList.remove('is-active');
+            showDifference.classList.remove('is-active');
+            showPatch.classList.remove('is-active');
+            showSubmit.classList.remove('is-active');
+            renderPanel.classList.add('is-hidden');
+            differencePanel.classList.add('is-hidden');
+            patchPanel.classList.add('is-hidden');
+            submitPanel.classList.add('is-hidden');
+            p1.classList.add('is-active');
+            p2.classList.remove('is-hidden');
+        }
+        // check if websocket is open (works for both)
         const renderIsOpen = function(ws) {
             return ws.readyState === ws.OPEN
         }
@@ -222,32 +351,84 @@ method browser-js {
                 }))
             }
         }
-        function fetchText(url) {
+        function fetchFile() {
+            url = `https://api.github.com/repos/${reponame}/contents/${repopath}`;
             fetch(url)
-                .then( (response) => response.text() )
-                .then( (text) => {
+                .then( (response) => response.json() )
+                .then( (json) => {
+                    sha = json.sha;
+                    text = decodeURIComponent(escape(atob(json.content)));
                     editor.session.setValue( text );
                     sendSource();
+                    initialContent = text;
                 });
         }
-        document.addEventListener('DOMContentLoaded', function () {
-            preview = document.getElementById('preview');
-            renderContent = document.getElementById('getHTML');
-            revert = document.getElementById('revertToContent');
-            socketIndicator = document.getElementById('socketIndicator');
+        var blobUrl;
+        const blobify = ( bUrl, data ) => {
+            if ( bUrl !== null ) { URL.revokeObjectURL( bUrl ) }
+            const blob = new Blob([ data ], { type: "text/html" } );
+            bUrl = URL.createObjectURL( blob );
+            return bUrl
+        };
+        function newDiffs() {
+            if (taintedDiffs) {
+                patch = Diff.createPatch(repopath, initialContent, editor.session.getValue() );
+                patchLen = 0;
+                diff = Diff.diffChars(initialContent, editor.session.getValue() );
+                fragment = document.createDocumentFragment();
+                diff.forEach((part) => {
+                  const color = part.added ? 'var(--bulma-info)' :
+                    part.removed ? 'var(--bulma-danger)' : 'var(--bulma-text)';
+                  span = document.createElement('span');
+                  span.style.color = color;
+                  span.innerHTML = part.value
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/\n/g, '<br>');
+                  fragment.appendChild(span);
+                  if (part.added || part.removed) { patchLen = patchLen + part.count }
+                });
+                while (differencePanel.firstChild) {
+                  differencePanel.removeChild(differencePanel.firstChild);
+                }
+                differencePanel.appendChild(fragment);
+                patchPanel.innerText = patch.length + ' (' + patchLen + ') / ' + suggestionPatchLimit + '\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n' + patch;
+                taintedDiffs = false;
+            }
+        }
+        window.addEventListener('load', function () {
+            renderPanel = document.getElementById('renderPanel');
+            showDifference = document.getElementById('showDifference');
+            differencePanel = document.getElementById('differencePanel');
+            showPatch = document.getElementById('showPatch');
+            patchPanel = document.getElementById('patchPanel');
+            showSubmit = document.getElementById('showSubmit');
+            submitPanel = document.getElementById('submitPanel');
+            EditFormEditor = document.getElementById('EditFormEditor');
+            EditFormComment = document.getElementById('EditFormComment');
+            EditFormSubmit = document.getElementById('EditFormSubmit');
+            EditFormQueued = document.getElementById('EditFormQueued');
+            EditFormQueuedResp = document.getElementById('EditFormQueuedResp');
+            showRendered = document.getElementById('showRendered');
             editActivate = document.getElementById('Edit-browser-activate');
             editActivate.addEventListener('click', (activated) => {
-                url = activated.currentTarget.dataset.editurl;
+                // edit activation should happen once a page refresh
+                // remove any data from page refresh
+                EditFormEditor.value = '';
+                EditFormComment.value = '';
+                reponame = activated.currentTarget.dataset.reponame;
+                repopath = activated.currentTarget.dataset.repopath;
                 // credit: This javascript file is adapted from
                 // https://fjolt.com/article/javascript-websockets
                 // Connect to the websocket
                 // This will let us create a connection to our Server websocket.
-                const connect = function() {
+                const connectRender = function() {
                     // Return a promise, which will wait for the socket to open
                     return new Promise((resolve, reject) => {
-                        // This calculates the link to the websocket.
-                        const socketUrl = `wss://${renderWebsocketHost}/rakudoc_render`;
-                        renderSocket = new WebSocket(socketUrl);
+                        renderSocket = new WebSocket(renderWebsocket);
 
                         // This will fire once the socket opens
                         renderSocket.onopen = (e) => {
@@ -261,17 +442,17 @@ method browser-js {
                         renderSocket.onmessage = (data) => {
                             let parsedData = JSON.parse(data.data);
                             if (parsedData.connection == 'Confirmed') {
-                                socketIndicator.dataset.openchannel = 'on';
+                                showRendered.dataset.openchannel = 'on';
                             }
                             else {
-                                preview.srcdoc = parsedData.html;
+                                renderPanel.src = blobify(blobUrl, parsedData.html);
                             }
                         }
                         // This will fire on error
                         renderSocket.onerror = (e) => {
                             // Return an error if any occurs
                             console.log(e);
-                            socketIndicator.dataset.openchannel = 'off';
+                            showRendered.dataset.openchannel = 'off';
                             resolve();
                             // Try to connect again
                             connect();
@@ -280,19 +461,160 @@ method browser-js {
                 }
                 editor = ace.edit("editor");
                 editor.setOptions({
-                   fontSize: "100%",
                    behavioursEnabled: true,
                    autoScrollEditorIntoView: true
                 });
-                fetchText(url);
-                connect();
+                editor.session.on('change', function() {
+                    taintedRender = true;
+                    taintedDiffs = true;
+                });
+                fetchFile();
+                if (renderSocket == null ) { connectRender() }
+                const connectSuggest = function() {
+                    // Return a promise, which will wait for the socket to open
+                    return new Promise((resolve, reject) => {
+                        suggestionSocket = new WebSocket(suggestionWebsocket);
+                        // This will fire once the socket opens
+                        suggestionSocket.onopen = (e) => {
+                            suggestionSocketOpened = true;
+                            // Send a little test data, which we can use on the server if we want
+                            suggestionSocket.send(JSON.stringify({ "loaded" : true }));
+                            // Resolve the promise - we are connected
+                            resolve();
+                        }
+                        // This will fire when the server sends the user a message
+                        suggestionSocket.onmessage = (data) => {
+                            let parsedData = JSON.parse(data.data);
+                            if (parsedData.connection == 'Confirmed') {
+                                EditFormSubmit.removeAttribute('disabled');
+                            }
+                            else {
+                                EditFormQueuedResp.innerText = parsedData.timestamp;
+                                if (parsedData.response == 'OK') {
+                                    document.getElementById('EditFormError').classList.add('is-hidden');
+                                    document.getElementById('EditFormQueuedOK').classList.remove('is-hidden');
+                                    EditFormSubmit.setAttribute('disabled','true');
+                                    suggestionSocket.close();
+                                    EditFormQueued.classList.remove('is-hidden');
+                                    localStorage.setItem('editor', JSON.stringify(
+                                        { editor: parsedData.editor,
+                                          expiration: parsedData.expiration } ) )
+                                }
+                                else {
+                                    EditFormSubmit.setAttribute('disabled','true');
+                                    showError('QUEUED' + parsedData.response)
+                                }
+                            }
+                        }
+                        // This will fire on error
+                        suggestionSocket.onerror = (e) => {
+                            // Return an error if any occurs
+                            console.log(e);
+                            EditFormSubmit.setAttribute('disabled','true');
+                            resolve();
+                            if ( suggestionSocketOpened ) return; // do not try to reopen
+                            // Try to connect again
+                            connectSuggest();
+                        }
+                    });
+                }
+                if ( suggestionSocket == null ) { connectSuggest() }
             });
-            renderContent.addEventListener('click', () => {
-                sendSource();
+            showRendered.addEventListener('click', () => {
+                if (taintedRender) {
+                    sendSource();
+                    taintedRender = false;
+                }
+                toggle8(showRendered, renderPanel);
             });
-            revert.addEventListener('click', () => {
-                fetchText(url);
+            showDifference.addEventListener('click', () => {
+                toggle8(showDifference, differencePanel);
+                newDiffs()
             });
+            showPatch.addEventListener('click', () => {
+                toggle8(showPatch, patchPanel);
+                newDiffs()
+            });
+            showSubmit.addEventListener('click', () => {
+                toggle8(showSubmit, submitPanel);
+                newDiffs();
+                if ( patchLen == 0 ) {
+                    showError('ErrorPatchZero');
+                    return
+                }
+                if ( patch.length > suggestionPatchLimit ) {
+                    showError('TooManyChanges');
+                    return
+                }
+                showError('None');
+            });
+            EditFormSubmit.addEventListener('click', () => {
+                newDiffs();
+                if ( patchLen == 0 ) {
+                    showError('ErrorPatchZero');
+                    return
+                }
+                if ( patch.length > suggestionPatchLimit ) {
+                    showError('TooManyChanges');
+                    return
+                }
+                edtr = EditFormEditor.value;
+                if ( !/^[\w-]{3,39}$/.test(edtr) ) {
+                    showError('InvalidEditorName');
+                    return
+                }
+                showError('None');
+                loginNeeded = true;
+                // check to see if the editor already has a token, if yes send to Github login
+                edtrData = localStorage.getItem('editorData');
+                if ( edtrData !== null ) {
+                    edtrData = JSON.parse( edtrData );
+                    limit = new Date(Date.now() + (10 * 60 * 1000));
+                    expiration = new Date(edtrData.expiration);
+                    if (edtrData.name == edtr &&
+                        expiration >= limit ) {
+                        loginNeeded = false;
+                    }
+                }
+                if(renderIsOpen(suggestionSocket)) {
+                    cmt = EditFormComment.value;
+                    cmt = cmt ? cmt : 'No comment'; // set a non-blank default
+                    suggestionSocket.send(JSON.stringify({
+                        "editor"  : edtr,
+                        "comment" : cmt,
+                        "content" : btoa(unescape(encodeURIComponent(editor.session.getValue()))),
+                        "repo"    : reponame,
+                        "sha"     : sha,
+                        "patch"   : patch,
+                        "path"    : repopath
+                    }));
+                    if ( loginNeeded ) {
+                        client_id = '?client_id=Iv23liljgJ1Koi6bIfaa';
+                        stObject = { editor: edtr, path: repopath };
+                        state = '&state=' + btoa(unescape(encodeURIComponent( JSON.stringify(stObject) )));
+                        other = '&allow_signup=true&prompt=select_account'
+                        window.open('https://github.com/login/oauth/authorize'
+                            + client_id + state + other, '_blank').focus
+                    }
+                }
+
+            });
+            function showError( type ) {
+                (document.querySelectorAll('.editFormError') || []).forEach(($errPanel) => {
+                    $errPanel.classList.add('is-hidden');
+                });
+                if ( type == 'None' ) {
+                    document.getElementById('EditFormError').classList.add('is-hidden');
+                    return
+                };
+                document.getElementById('EditFormError').classList.remove('is-hidden');
+                if ( document.getElementById('EditForm' + type ) !== null ) {
+                    document.getElementById('EditForm' + type ).classList.remove('is-hidden')
+                }
+                else {
+                    document.getElementById('EditFormErrorUnknown').classList.remove('is-hidden')
+                }
+            }
         });
     JS
 }

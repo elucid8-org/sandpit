@@ -554,7 +554,7 @@ method js-text {
             document.getElementById("navbar-toc-toggle").checked = true;
         }
     };
-    document.addEventListener('DOMContentLoaded', function () {
+    window.addEventListener('load', function () {
         // initialise if localStorage is set
         let theme = persisted_theme();
         if ( theme ) {

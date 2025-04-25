@@ -269,7 +269,7 @@ method options-search {
     };
     var searchProcess = false;
     var searchBox;
-    document.addEventListener('DOMContentLoaded', function () {
+    window.addEventListener('load', function () {
         searchBox = document.getElementById('Elucid8_search_wrapper');
         searchOptions = persisted_searchOptions();
         // searchOptions will always be null until an option is changed from default and stored
@@ -424,18 +424,19 @@ method options-search {
                     }
                     el.querySelector('input').checked = searchProcess;
                 }
+                // add change listener
+                for ( const prop in searchOptions ) {
+                    let opt = document.getElementById('options-search-' + prop );
+                    opt.checked = searchOptions[ prop ];
+                    opt.addEventListener('change', function() {
+                        searchOptions[ prop ] = opt.checked;
+                        persist_searchOptions( searchOptions );
+                        autoCompleteJS.start();
+                    });
+                };
             });
         });
-        // add change listener
-        for ( const prop in searchOptions ) {
-            let opt = document.getElementById('options-search-' + prop );
-            opt.checked = searchOptions[ prop ];
-            opt.addEventListener('change', function() {
-                searchOptions[ prop ] = opt.checked;
-                persist_searchOptions( searchOptions );
-                autoCompleteJS.start();
-            });
-        };
+
         // Functions to open and close a modal
         function openModal($el) {
             $el.classList.add('is-active');
