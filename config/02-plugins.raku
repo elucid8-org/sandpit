@@ -24,6 +24,7 @@
     setup => (# sequence not hash because order can matter
         RakuREPL => 'set-host-port',
         Edit-In-Browser => 'set-host-port',
+#        CreditTable => 'get-repo-data',
     ),
     pre-file-render => (# sequence not hash because order can matter
         SiteData => 'initialise',
