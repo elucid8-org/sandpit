@@ -2,7 +2,6 @@ use v6.d;
 use RakuDoc::Render;
 use Git::Log;
 use JSON::Fast::Hyper;
-use RakuConfig;
 
 unit class Raku-Doc-Website::CreditObject;
 has %.config =
@@ -46,7 +45,6 @@ method get-repo-data( %final-config ) {
             $y -= $start-year;
             $per = $per div $n-months;
             @periods[ $y ][ $per ]{ $name }++;
-            'dumpdata'.IO.spurt: "\nname {.<Name>} date {.<Date>} y $y per $per val of item:" ~ @periods[$y][$per].raku, :append;
         }
     }
     my @objects;
