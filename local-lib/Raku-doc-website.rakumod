@@ -12,7 +12,7 @@ has %.config =
     :css-link(['href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css"',1],),
 	:js-link(['src="https://rawgit.com/farzher/fuzzysort/master/fuzzysort.js"',1],),
     :js([self.js-text,9],), # make sure its called last
-    :scss([self.chyron-scss,1], [ self.toc-scss, 1],
+    :scss([self.chevron-scss,1], [ self.toc-scss, 1],
           [ self.bulma-additions-scss, 1], [ self.raku-webs-scss, 1],
           [ self.html-vanilla, 1 ]),
     ui-tokens => %(
@@ -156,9 +156,9 @@ method templates {
         toc-opener => -> %prm, $ {
             q:to/TOC/
                 <div class="navbar-start navbar-item">
-                <label class="chyronToggle tooltip">
+                <label class="chevronToggle tooltip">
                     <input id="navbar-toc-toggle" type="checkbox" />
-                    <span class="checkmark banned"><i class="fa fa-ban fa-3x"></i></span>
+                    <span class="checkmark on"><i class="fa fa-ban fa-3x"></i></span>
                     <span class="checkmark off"><i class="far fa-list-alt"></i></span>
                     <span class="tooltiptext Elucid8-ui on" data-UIToken="TOC-close">TOC-close</span>
                     <span class="tooltiptext Elucid8-ui off" data-UIToken="TOC-open">TOC-open</span>
@@ -360,7 +360,7 @@ method templates {
             {
                 qq:to/END/
                 { $tmpl<page-navigation> }
-                <div id="MainText" class="panel">
+                <div id="MainText" class="panel section container">
                     { $tmpl<page-edit> }
                     { $tmpl<title-section> }
                     <div class="content px-4">
@@ -380,9 +380,11 @@ method templates {
                     <div id="TOC" class="column is-one-quarter">
                         { $tmpl<sidebar> }
                     </div>
-                    <div id="MainText" class="column">
+                    <div id="MainText" class="column section container">
                         { $tmpl<title-section> }
-                        <div class="content px-4">
+                        <div class="content px-4 {
+                            %prm<source-data><rakudoc-config><page-content-two-columns> ?? 'listing' !! ''
+                        }">
                         { %prm<body> }
                         </div>
                         <div class="content px-4">
@@ -1038,7 +1040,16 @@ method raku-webs-scss {
             color: var(--bulma-background);
         }
     }
-
+    @media screen and (min-width: 1024px) {
+        #MainText .content.listing {
+            column-count:2;
+        }
+    }
+    @media screen and (max-width: 1023px){
+        #MainText .content.listing {
+            column-count:1;
+        }
+    }
     #Camelia { max-height: 2.75em; }
     .navbar-tm-logo {
         position: absolute;
@@ -1087,10 +1098,10 @@ method raku-webs-scss {
     }
     SCSS
 }
-method chyron-scss {
-    q:to/CHYRON/;
-    // Chyron Toggle checkbox
-    label.chyronToggle {
+method chevron-scss {
+    q:to/CHEVRON/;
+    // chevron Toggle checkbox
+    label.chevronToggle {
         top: 0.5rem;
         left: 0.5rem;
         input#navbar-toc-toggle {
@@ -1107,7 +1118,7 @@ method chyron-scss {
                     bottom:1.75px;
                     &:hover { color: var(--bulma-warning-40); }
                 }
-                &.banned {
+                &.on {
                     opacity:0;
                     visibility: hidden;
                     width: 0;
@@ -1119,7 +1130,7 @@ method chyron-scss {
                     visibility:visible;
                     width: 1rem;
                 }
-                &.banned {
+                &.on {
                     opacity:1;
                     visibility: visible;
                     color: var(--bulma-danger);
@@ -1158,7 +1169,7 @@ method chyron-scss {
             }
         }
     }
-    CHYRON
+    CHEVRON
 }
 method toc-scss {
     q:to/TOC/;

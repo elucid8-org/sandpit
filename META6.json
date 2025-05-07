@@ -1,7 +1,7 @@
 {
     "name": "Elucid8::Doc-Website",
     "description": "Renders Raku documentation sources to web site",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "raku": "6.d",
     "authors": [
         "Richard Hainsworth"

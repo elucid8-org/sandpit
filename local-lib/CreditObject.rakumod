@@ -11,7 +11,6 @@ has %.config =
     :credit<finanalyst>,
     :authors<finanalyst>,
     :commit-data( [] ),
-    :others-limit(150),
     :top(10),
     :scss([self.credit-scss,1],),
     get-repo-data => -> %final-config { self.get-repo-data( %final-config ) },
@@ -74,7 +73,7 @@ method get-repo-data( %final-config ) {
     @objects.map({ %auth-coms{$_<name>} += $_<commits> });
     # sift out authors with < others-limit total commits, and merge them into 'others' for the graph
     $auths .= new; # repurpose auths for others
-    %auth-coms.map({ $auths{ .key }++ if .value < %!config<others-limit> });
+    %auth-coms.map({ $auths{ .key }++ if .value < $limit });
     $auths<Others>--; #remove Others as a name with less than $limit commits
     %!config<top> = %auth-coms.elems - $auths.keys.elems;
     my $others = 0;
@@ -160,29 +159,31 @@ method get-repo-data( %final-config ) {
     // Group the points by series.
     const groups = d3.rollup(points, v => Object.assign(v, {z: v[0][2]}), d => d[2]);
 
+    // Create a color scale to identify series.
+    const col = d3.scaleOrdinal(d3.schemeCategory10).domain(points.map(d => d.name));
+
     // Draw the lines.
     const line = d3.line();
     const path = svg.append("g")
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
     .selectAll("path")
     .data(groups.values())
     .join("path")
-        .attr("d", line);
+        .attr("d", line)
+        .attr("stroke", ({z}) => col(z));
 
     // Add an invisible layer for the interactive tip.
     const dot = svg.append("g")
         .attr("display", "none");
-
     dot.append("circle")
         .attr("r", 2.5);
-
     dot.append("text")
         .attr("text-anchor", "middle")
-        .attr("y", -8);
+        .attr("y", -8)
+        .attr("font-size", "14px");
 
     svg
         .on("pointerenter", pointerentered)
@@ -196,17 +197,16 @@ method get-repo-data( %final-config ) {
         const [xm, ym] = d3.pointer(event);
         const i = d3.leastIndex(points, ([x, y]) => Math.hypot(x - xm, y - ym));
         const [x, y, k, c] = points[i];
-        path.style("stroke", ({z}) => z === k ? null : "#ddd").filter(({z}) => z === k).raise();
+        path.style("stroke-width", ({z}) => z === k ? 4 : null).filter(({z}) => z === k).raise();
         dot.attr("transform", `translate(${x},${y})`);
         dot.select("text").text(k+', '+c);
         svg.property("value", commits[i]).dispatch("input", {bubbles: true});
     }
     function pointerentered() {
-        path.style("stroke", "#ddd");
         dot.attr("display", null);
     }
     function pointerleft() {
-        path.style("stroke", null);
+        path.style("stroke-width", null);
         dot.attr("display", "none");
         svg.node().value = null;
         svg.dispatch("input", {bubbles: true});
@@ -217,10 +217,10 @@ method get-repo-data( %final-config ) {
         creditContainer.querySelectorAll('.d3-hilite').forEach( (elem) => {
             elem.addEventListener("mouseenter", (event) => {
                 var series = event.currentTarget.innerText;
-                path.style("stroke", ({z}) => z === series ? "red" : "lightgrey" ).filter(({z}) => z === series).raise();
+                path.style("stroke-width", ({z}) => z === series ? "4" : "1.5" ).filter(({z}) => z === series).raise();
             });
             elem.addEventListener("mouseleave", (event) => {
-                path.style("stroke", null);
+                path.style("stroke-width", 1.5);
             })
         })
     });
@@ -238,7 +238,7 @@ method credit-templates { %(
                 [~] @auths[^$top].map({ qq[<button class="d3-hilite button is-info is-light is-small" title="{ .value }">{ .key }</button>] })
             }</div>
             <div id="creditGraph" class="container">\</div>
-            <p class="Elucid8-ui" data-UIToken="CreditObjectOthers">CreditObjectOthers</p>
+            <h2 class="Elucid8-ui" data-UIToken="CreditObjectOthers">CreditObjectOthers</h2>
             <div id="creditRemaining" class="buttons">{
                 [~] @auths[$top..*].map({ qq[<button class="button is-info is-light is-small" title="{ .value }">{ .key }</button>] })
             }</div>
