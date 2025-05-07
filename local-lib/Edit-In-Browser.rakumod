@@ -27,9 +27,7 @@ has %.config =
             :EditTabSubmit('Suggest'),
             :EditFormSubmit('Submit suggestion'),
             :EditFormName('Name'),
-            :EditFormName-tip('How you wish to be cited (default is anon)'),
             :EditFormComment('Comment attached to suggestion'),
-            :EditFormComment-tip('Why the suggestion is made (optional)'),
             :EditFormThanks('Thank you'),
             :EditFormTimeStamp('At: '),
             :EditFormError('There is an error: '),
@@ -109,13 +107,11 @@ method templates {
                                             <div id="submitPanel" class="panel-block is-hidden edit-panel-border">
                                                 <div class="field tooltip">
                                                     <label class="label Elucid8-ui" data-UIToken="EditFormName">Name</label>
-                                                    <span class="Elucid8-ui tooltiptext" data-UIToken="EditFormName-tip">EditFormName-tip</span>
                                                     <div class="control">
                                                         <input id="EditFormEditor" class="input" type="text">
                                                     </div>
                                                 </div>
                                                 <div class="field tooltip">
-                                                    <span class="Elucid8-ui tooltiptext" data-UIToken="EditFormComment-tip">EditFormComment-tip</span>
                                                     <label class="label Elucid8-ui" data-UIToken="EditFormComment">Comment</label>
                                                     <div class="control">
                                                         <textarea id="EditFormComment" class="textarea"></textarea>

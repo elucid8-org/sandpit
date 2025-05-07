@@ -11,17 +11,24 @@ has %.config =
     :credit<finanalyst>,
     :authors<finanalyst>,
     :commit-data( [] ),
+    :others-limit(150),
+    :top(10),
     :scss([self.credit-scss,1],),
     get-repo-data => -> %final-config { self.get-repo-data( %final-config ) },
     js-module => [],
     :js-link( ['src="https://unpkg.com/dygraphs@2.2.1/dist/dygraph.min.js"',2], ),
     :css-link( ['href="https://unpkg.com/dygraphs@2.2.1/dist/dygraph.min.css"',1],),
+    ui-tokens => %(
+        :CreditObjectOthers("Authors in 'Others' category:"),
+    ),
 ;
 method enable( RakuDoc::Processor:D $rdp ) {
     $rdp.add-data( %!config<name-space>, %!config );
     $rdp.add-templates($.credit-templates, :source<CreditObject plugin>)
 }
 method get-repo-data( %final-config ) {
+    my $limit = %final-config<plugin-options><CreditObject><top-committer-threshold> // 250;
+    my $per-year = 1;
     my %filter := %final-config<plugin-options><CreditObject><filter>;
     my @change = %filter.keys;
     my @repos = %final-config<repositories>.keys;
@@ -29,7 +36,6 @@ method get-repo-data( %final-config ) {
     my $repo-dir := %final-config<repository-store>;
     my @fields = [:Name<%an>, :Date<%as>];
     my @periods;
-    my $per-year = 2;
     my $n-months = (12 div $per-year) + 1;
     my $start-year = 2009;
     for ^(now.DateTime.year - $start-year + 1) -> $y {
@@ -66,10 +72,11 @@ method get-repo-data( %final-config ) {
     #consolidate accross periods
     my %auth-coms;
     @objects.map({ %auth-coms{$_<name>} += $_<commits> });
-    # sift out authors with < 10 total commits, and merge them into 'others' for the graph
+    # sift out authors with < others-limit total commits, and merge them into 'others' for the graph
     $auths .= new; # repurpose auths for others
-    %auth-coms.map({ $auths{ .key }++ if .value < 10 });
-    $auths<Others>--; #remove Others as a name with less than 10 commits
+    %auth-coms.map({ $auths{ .key }++ if .value < %!config<others-limit> });
+    $auths<Others>--; #remove Others as a name with less than $limit commits
+    %!config<top> = %auth-coms.elems - $auths.keys.elems;
     my $others = 0;
     # @objects is in order of periods, with 'Others' as last in each period
     @objects = gather for @objects {
@@ -94,10 +101,11 @@ method get-repo-data( %final-config ) {
             .list;
     my $js-obj = to-json(@objects, :sorted-keys)
             .subst(/ ('"date":') '"' (.+?) '"'/,{ "$0 new Date('$1')" },:g);
-    my $js = q:to/JSOBJ/ ~ $js-obj ~ ';' ~ q:to/JSOBJ2/;
+    my $js = qq:to/JSOBJ/ ~ q:to/JSOBJ2/;
     /*----- Generated svg using d3 -----*/
     import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-    var commits =
+    const commits = {$js-obj};
+    const months = { $n-months - 1};
     JSOBJ
     // Specify the chart’s dimensions.
     const width = 928;
@@ -126,23 +134,25 @@ method get-repo-data( %final-config ) {
     // Add the horizontal axis.
     svg.append("g")
         .attr("transform", `translate(0,${height - marginBottom})`)
-        .call(d3.axisBottom(x).ticks(d3.utcMonth.every(6)));
+        .call(d3.axisBottom(x).ticks(d3.utcMonth.every( `${months}` )));
 
     // Add the vertical axis.
     svg.append("g")
-      .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y).tickValues([0, 1, 3, 10, 30, 100, 300, 1000, 2200]))
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").clone()
-          .attr("x2", width - marginLeft - marginRight)
-          .attr("stroke-opacity", 0.1))
-      .call(g => g.append("text")
-          .attr("x", -marginLeft)
-          .attr("y", 10)
-          .attr("fill", "currentColor")
-          .attr("text-anchor", "start")
-          .attr("font-size", "20px")
-          .text("Author commits per period"));
+        .attr("transform", `translate(${marginLeft},0)`)
+        .call(d3.axisLeft(y)
+            .tickValues([0, 1, 3, 10, 30, 100, 300, 1000, 2200])
+        )
+        .call(g => g.select(".domain").remove())
+        .call(g => g.selectAll(".tick line").clone()
+            .attr("x2", width - marginLeft - marginRight)
+            .attr("stroke-opacity", 0.1))
+        .call(g => g.append("text")
+            .attr("x", -marginLeft)
+            .attr("y", 10)
+            .attr("fill", "currentColor")
+            .attr("text-anchor", "start")
+            .attr("font-size", "20px")
+            .text("Author commits per period"));
 
     // Compute the points in pixel space as [x, y, z], where z is the name of the series.
     const points = commits.map((d) => [x(d.date), y(d.commits), d.name, d.commits]);
@@ -219,15 +229,18 @@ method get-repo-data( %final-config ) {
 }
 method credit-templates { %(
     CreditObject => -> %prm, $tmpl {
-        my @auths := $tmpl.globals.data<CreditObject><commit-data>;
+        my %d := $tmpl.globals.data<CreditObject>.hash;
+        my @auths := %d<commit-data>;
+        my $top := %d<top>.Int;
         qq:to/CRDPG/
         <div id="creditContainer" class="section">
             <div id="creditTop" class="buttons">{
-                [~] @auths[^10].map({ qq[<button class="d3-hilite button is-info is-light is-small" title="{ .value }">{ .key }</button>] })
+                [~] @auths[^$top].map({ qq[<button class="d3-hilite button is-info is-light is-small" title="{ .value }">{ .key }</button>] })
             }</div>
             <div id="creditGraph" class="container">\</div>
+            <p class="Elucid8-ui" data-UIToken="CreditObjectOthers">CreditObjectOthers</p>
             <div id="creditRemaining" class="buttons">{
-                [~] @auths[10..*].map({ qq[<button class="d3-hilite button is-info is-light is-small" title="{ .value }">{ .key }</button>] })
+                [~] @auths[$top..*].map({ qq[<button class="button is-info is-light is-small" title="{ .value }">{ .key }</button>] })
             }</div>
         </div>
         CRDPG
