@@ -158,8 +158,10 @@ method templates {
                 <div class="navbar-start navbar-item">
                 <label class="chevronToggle tooltip">
                     <input id="navbar-toc-toggle" type="checkbox" />
-                    <span class="checkmark on"><i class="fa fa-ban fa-3x"></i></span>
-                    <span class="checkmark off"><i class="far fa-list-alt"></i></span>
+                    <span class="checkmark on is-hidden-mobile"><i class="fa fa-chevron-left fa-2x"></i></span>
+                    <span class="checkmark off is-hidden-mobile"><i class="fa fa-chevron-right fa-2x"></i></span>
+                    <span class="checkmark on is-hidden-tablet"><i class="fa fa-chevron-down fa-2x"></i></span>
+                    <span class="checkmark off is-hidden-tablet"><i class="fa fa-chevron-up fa-2x"></i></span>
                     <span class="tooltiptext Elucid8-ui on" data-UIToken="TOC-close">TOC-close</span>
                     <span class="tooltiptext Elucid8-ui off" data-UIToken="TOC-open">TOC-open</span>
                 </label>
@@ -312,11 +314,9 @@ method templates {
         },
         drop-down-list => -> %prm, $tmpl {
             q:to/BLOCK/;
-                    <div class="navbar-item">
-                        <button id="changeTheme" class="button">
-                            <span class="Elucid8-ui" data-UIToken="ChangeTheme">ChangeTheme</span>
-                        </button>
-                    </div>
+                    <a id="changeTheme" class="navbar-item">
+                        <span class="Elucid8-ui" data-UIToken="ChangeTheme">ChangeTheme</span>
+                    </a>
                     <hr class="navbar-divider">
                     <a class="navbar-item tooltip" href="/about">
                         <span class="Elucid8-ui" data-UIToken="About">About</span>
@@ -346,9 +346,11 @@ method templates {
             qq:to/MODAL/;
             <div id="modal-container">
                 { $tmpl<search-modal> }
+                { $tmpl<modal-container-inner> }
             </div>
             MODAL
         },
+        'modal-container-inner' => -> %,$ {''},
         'page-edit' => -> %,$ {''},
         #| the main section of body
         main-content => -> %prm, $tmpl {
@@ -1102,8 +1104,9 @@ method chevron-scss {
     q:to/CHEVRON/;
     // chevron Toggle checkbox
     label.chevronToggle {
-        top: 0.5rem;
-        left: 0.5rem;
+        top: 5rem;
+        color: var(--bulma-info);
+        &:hover { color: var(--bulma-warning-40); }
         input#navbar-toc-toggle {
             opacity: 0;
             height: 0;
@@ -1115,10 +1118,8 @@ method chevron-scss {
                     opacity: 1;
                     visibility: visible;
                     width: 1rem;
-                    bottom:1.75px;
-                    &:hover { color: var(--bulma-warning-40); }
                 }
-                &.on {
+                &.on, &.on.overlap {
                     opacity:0;
                     visibility: hidden;
                     width: 0;
@@ -1126,15 +1127,18 @@ method chevron-scss {
             }
             &:checked ~ .checkmark {
                 &.off {
-                    opacity: 1;
-                    visibility:visible;
-                    width: 1rem;
+                    opacity: 0;
+                    visibility: hidden;
+                    width: 0;
                 }
-                &.on {
+                &.on, &.on.overlap {
                     opacity:1;
                     visibility: visible;
+                    width: 1rem;
+                }
+                &.on.overlap {
                     color: var(--bulma-danger);
-                    left:-0.8rem;
+                    bottom:-1.75px;
                 }
             }
             &:hover ~ .tooltiptext {
@@ -1169,6 +1173,22 @@ method chevron-scss {
             }
         }
     }
+    @media screen and (min-width: 769px) {
+        label.chevronToggle .on {
+            top: 0.5rem;
+            left: calc(25vw - 3.5rem);
+        }
+        label.chevronToggle .off {
+            top: 0.5rem;
+            left: -3.5rem;
+        }
+    }
+    @media screen and (max-width: 768px) {
+        label.chevronToggle .on, .off {
+            top: -1.5rem;
+            left: -3.5rem;
+        }
+    }
     CHEVRON
 }
 method toc-scss {
@@ -1184,6 +1204,9 @@ method toc-scss {
     #page-nav .panel-block .index {
         overflow-y:scroll;
         height:65vh;
+    }
+    #mobile-nav {
+        margin-top: 1.75rem;
     }
     .main-footer {
         z-index: 1;
