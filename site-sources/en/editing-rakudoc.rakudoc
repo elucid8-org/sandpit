@@ -1,4 +1,4 @@
-=begin pod :type<info> :!toc
+=begin rakudoc :type<info> :!toc
 =TITLE Editing the website
 
 The primary website pages, including this one, are written in L<RakuDoc v2|language/rakudocv2.*>.

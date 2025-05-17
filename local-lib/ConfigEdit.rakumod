@@ -22,9 +22,9 @@ has %.config =
             :ConfigEditGitPage('Open Github editor page'),
             :ConfigEditInBrowserBot('In browser editor with HTML rendering. Suggested edits are submitted by Edit Bot'),
             :ConfigEditInBrowserWithLogin('In browser editor with HTML rendering. Github authorisation is requested and PR is labelled with Github user name'),
-            :ConfigEditConfigEditLinkText-01('Open documentation '),
-            :ConfigEditConfigEditLinkText-02('page about website editing'),
-            :ConfigEditConfigEditLinkText-03(' for more information.'),
+            :ConfigEditLinkText_01('Open documentation '),
+            :ConfigEditLinkText_02('page about website editing'),
+            :ConfigEditLinkText_03(' for more information.'),
             :EditButtonTip('Edit this page. Modified&#13; '),
             :EditButtonTipUnable('Cannot edit this page.'),
             :EditButtonModalOff('Exit this popup by pressing &lt;Escape&gt;, or clicking on X or on the background.'),
@@ -129,15 +129,15 @@ method templates {
                 BLOCK
         },
         modal-container-inner => -> %prm, $tmpl {
-            $tmpl.prev ~ Q:to/BLOCK/ ~ qq[<a href="{%prm<lang>}/browser-editing">] ~ Q:to/BLOCK/;
+            $tmpl.prev ~ Q:to/BLOCK/ ~ qq[<a href="/{%prm<source-data><language>}/editing-rakudoc">] ~ Q:to/BLOCK/;
             <div id="EditConfigModal" class="modal">
                 <div class="modal-background"></div>
                 <div class="modal-content">
                     <div class="box">
-                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditLinkText-01">ConfigEditLinkText-01<span>
+                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditLinkText_01">ConfigEditLinkText_01</span>
             BLOCK
-                        <span class="Elucid8-ui" data-UIToken="ConfigEditLinkText-02">ConfigEditLinkText-02<span></a>
-                        <span class="Elucid8-ui" data-UIToken="ConfigEditLinkText-03">ConfigEditLinkText-03<span></p>
+                        <span class="Elucid8-ui" data-UIToken="ConfigEditLinkText_02">ConfigEditLinkText_02</span></a>
+                        <span class="Elucid8-ui" data-UIToken="ConfigEditLinkText_03">ConfigEditLinkText_03</span></p>
                         <label class="checkbox">
                             <input type="checkbox" id="ConfigEditEnable" />
                             <span class="Elucid8-ui" data-UIToken="ConfigEditEnable">ConfigEditEnable</span>
