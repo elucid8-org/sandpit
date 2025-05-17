@@ -1,7 +1,7 @@
 =begin rakudoc :type<info> :!toc
 =TITLE Editing the website
 
-The primary website pages, including this one, are written in L<RakuDoc v2|language/rakudocv2.*>.
+The primary website pages, including this one, are written in L<RakuDoc v2|language/rakudoc_v2>.
 Some website pages are generated automatically to gather information into a single page; these are
 called Composite pages.
 
@@ -9,7 +9,7 @@ It is possible to edit Primary sources.
 
 =head Configuration
 
-A user must first click on C<More->edit configuration>. In the modal screen, enable website editing.
+A user must first click on B<I«More->edit configuration»>. In the modal screen, enable website editing.
 Then select one of the three options:
 =numitem B<Github page editor> By selecting this hub, a browser tab is opened in I<Github> and Github's editor
 can be used. A user who does not have C<commit> permissions within the C<Raku/doc> repository will be
