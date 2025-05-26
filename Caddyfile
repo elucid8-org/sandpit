@@ -5,11 +5,11 @@
                 output stdout
         }
 
-        root * /usr/share/caddy
+        root * /website
 
         map {path} {npath} {
-                import /usr/share/caddy/assets/deprecated-urls
-                import /usr/share/caddy/assets/prettyurls
+                import /website/assets/deprecated-urls
+                import /website/assets/prettyurls
         }
 
         route {

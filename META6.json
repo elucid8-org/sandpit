@@ -13,7 +13,8 @@
         "PrettyDump",
         "File::Directory::Tree",
         "Elucid8::Build",
-        "Git::Log"
+        "Git::Log",
+        "JSON::Fast::Hyper"
     ],
     "test-depends": [
         "Test",

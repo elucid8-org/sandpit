@@ -25,9 +25,15 @@ has %.config =
             :ConfigEditLinkText_01('Open documentation '),
             :ConfigEditLinkText_02('page about website editing'),
             :ConfigEditLinkText_03(' for more information.'),
-            :EditButtonTip('Edit this page. Modified&#13; '),
-            :EditButtonTipUnable('Cannot edit this page.'),
-            :EditButtonModalOff('Exit this popup by pressing &lt;Escape&gt;, or clicking on X or on the background.'),
+            :ConfigEditButtonTip('Edit this page. Modified&#13; '),
+            :ConfigEditButtonTipUnable('Cannot edit this page.'),
+            :ConfigEditRepeat('Suggestion accepted, thank you. Only one GitBot edit per session is accepted.'),
+            :ConfigEditComposite(q:to/MOD/),
+                This is an automatically generated page and cannot be edited directly. Text in Composite
+                pages, (URLs starting with 'routine' or 'syntax') can be edited by clicking on the
+                link labeled 'in context', and editing the text there.
+                MOD
+            :ConfigEditModalOff('Exit this popup by pressing &lt;Escape&gt;, or clicking on X or on the background.'),
             :EditorPanel('Editor panel'),
             :EditTabRendered('Rendered'),
             :EditTabDifferences('Differences'),
@@ -80,7 +86,7 @@ method templates {
                                     <i class="fas fa-pen-alt is-medium"></i>
                                 </span>
                                 <p class="tooltiptext">
-                                    <span class="Elucid8-ui" data-UIToken="EditButtonTip">EditButtonTip</span>
+                                    <span class="Elucid8-ui" data-UIToken="ConfigEditButtonTip">ConfigEditButtonTip</span>
                                     $commit-time
                                 </p>
                             </a>
@@ -95,7 +101,7 @@ method templates {
                                     <i class="fas fa-pen-alt is-medium"></i>
                                 </span>
                                 <p class="tooltiptext">
-                                    <span class="Elucid8-ui" data-UIToken="EditButtonTipUnable">EditButtonTipUnable</span>
+                                    <span class="Elucid8-ui" data-UIToken="ConfigEditButtonTipUnable">ConfigEditButtonTipUnable</span>
                                 </p>
                             </a>
                         </div>
@@ -157,7 +163,7 @@ method templates {
                                 <span class="Elucid8-ui" data-UIToken="ConfigEditInBrowserWithLogin">ConfigEditInBrowserWithLogin</span>
                             </label>
                         </div>
-                        <p><span class="Elucid8-ui" data-UIToken="EditButtonModalOff">EditButtonModalOff</span></p>
+                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditModalOff">ConfigEditModalOff</span></p>
                     </div>
                 </div>
                 <button class="modal-close is-large" aria-label="close"></button>
@@ -228,7 +234,7 @@ method templates {
                                 </div>
                             </div>
                         </div>
-                        <p><span class="Elucid8-ui" data-UIToken="EditButtonModalOff">EditButtonModalOff</span></p>
+                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditModalOff">ConfigEditModalOff</span></p>
                     </div>
                 </div>
                 <button class="modal-close is-large" aria-label="close"></button>
@@ -237,8 +243,28 @@ method templates {
                 <div class="modal-background"></div>
                 <div class="modal-content">
                     <div class="box">
-                        <p><span class="Elucid8-ui" data-UIToken="EditButtonModal">EditButtonModal</span></p>
-                        <p><span class="Elucid8-ui" data-UIToken="EditButtonModalOff">EditButtonModalOff</span></p>
+                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditComposite">ConfigEditComposite</span></p>
+                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditModalOff">ConfigEditModalOff</span></p>
+                    </div>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+            <div id="configEditRepeat" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                    <div class="box">
+                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditRepeat">ConfigEditRepeat</span></p>
+                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditModalOff">ConfigEditModalOff</span></p>
+                    </div>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+            <div id="githubConfirm" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                    <div class="box">
+                        <iframe id="githubFrame"></iframe>
+                        <p><span class="Elucid8-ui" data-UIToken="ConfigEditModalOff">ConfigEditModalOff</span></p>
                     </div>
                 </div>
                 <button class="modal-close is-large" aria-label="close"></button>
@@ -509,6 +535,7 @@ method browser-js {
         }
         window.addEventListener('load', function () {
             editorModal = document.getElementById('PageEditor');
+            repeatModal = document.getElementById('configEditRepeat');
             renderPanel = document.getElementById('renderPanel');
             showDifference = document.getElementById('showDifference');
             differencePanel = document.getElementById('differencePanel');
@@ -524,6 +551,10 @@ method browser-js {
             showRendered = document.getElementById('showRendered');
             editActivate = document.getElementById('editActivate');
             editActivate.addEventListener('click', (activated) => {
+                if (!firstSuggestion) {
+                    repeatModal.classList.add('is-active');
+                    return
+                }
                 editorModal.classList.add('is-active');
                 reponame = activated.currentTarget.dataset.reponame;
                 repopath = activated.currentTarget.dataset.repopath;
@@ -565,18 +596,20 @@ method browser-js {
                             }
                             else {
                                 EditFormQueuedResp.innerText = parsedData.timestamp;
-                                if (parsedData.response == 'OK') {
-                                    document.getElementById('EditFormError').classList.add('is-hidden');
-                                    document.getElementById('EditFormQueuedOK').classList.remove('is-hidden');
-                                    EditFormSubmit.setAttribute('disabled','true');
+                                if (parsedData.response == 'OK' && editState.InBrowserWithLogin ) {
+                                    editorModal.classList.remove('is-active');
+                                    repeatModal.classList.add('is-active');
                                     firstSuggestion = false;
-                                    EditFormQueued.classList.remove('is-hidden');
                                     localStorage.setItem('editor', JSON.stringify(
                                         { editor: parsedData.editor,
                                           expiration: parsedData.expiration } ) )
                                 }
+                                else if (parsedData.response == 'OK' && editState.InBrowserBot ) {
+                                    editorModal.classList.remove('is-active');
+                                    repeatModal.classList.add('is-active');
+                                    firstSuggestion = false;
+                                }
                                 else {
-                                    EditFormSubmit.setAttribute('disabled','true');
                                     showError('Queued' + parsedData.response)
                                 }
                             }
