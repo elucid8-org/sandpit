@@ -1,7 +1,7 @@
 use v6.d;
 use RakuDoc::Render;
 
-unit class Raku-Doc-Website::ConfigEdit;
+unit class Doc-Website::Plugin::ConfigEdit;
 has %.config =
         :name-space<ConfigEdit>,
         :version<0.1.0>,

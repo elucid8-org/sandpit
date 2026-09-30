@@ -2,17 +2,17 @@
     :repository-store<repos>,
     :repository-info-file<repo-info.rakuon>,
     repositories => %(
-        for-testing => %(
-            repo-name => 'finanalyst/tmp-test',
-            description => 'testing file',
-            languages => %(
-                en => %(
-                    source-entry => '',
-                    destination => 'language',
-                    :select('TestFile',),
-                ),
-            ),
-        ),
+#        for-testing => %(
+#            repo-name => 'finanalyst/tmp-test',
+#            description => 'testing file',
+#            languages => %(
+#                en => %(
+#                    source-entry => '',
+#                    destination => 'language',
+#                    :select('TestFile',),
+#                ),
+#            ),
+#        ),
         raku-docs => %(
             repo-name => 'Raku/doc',
             description => 'documentation of the Raku language',

@@ -3,7 +3,7 @@ use RakuDoc::Render;
 use Git::Log;
 use JSON::Fast::Hyper;
 
-unit class Raku-Doc-Website::CreditObject;
+unit class Doc-Website::Plugin::CreditObject;
 has %.config =
     :name-space<CreditObject>,
     :version<0.1.0>,
@@ -21,11 +21,13 @@ has %.config =
         :CreditObjectOthers("Authors in 'Others' category:"),
     ),
 ;
+has $!trace;
 method enable( RakuDoc::Processor:D $rdp ) {
     $rdp.add-data( %!config<name-space>, %!config );
-    $rdp.add-templates($.credit-templates, :source<CreditObject plugin>)
+    $rdp.add-templates($.credit-templates, :source<CreditObject plugin>);
 }
 method get-repo-data( %final-config ) {
+    say "Creating credit table" unless %final-config<quiet>;
     my $limit = %final-config<plugin-options><CreditObject><top-committer-threshold> // 250;
     my $per-year = 1;
     my %filter := %final-config<plugin-options><CreditObject><filter>;

@@ -1,7 +1,7 @@
 use v6.d;
 use RakuDoc::Render;
 
-unit class Raku-Doc-Website::Edit-In-Browser;
+unit class Doc-Website::Plugin::Edit-In-Browser;
 has %.config =
         :name-space<Edit-In-Browser>,
         :version<0.1.0>,

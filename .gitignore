@@ -12,7 +12,7 @@ lib/.precomp
 /.idea/modules.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /misc/file-data.rakuon
-/repos/
+/xrepos/
 /sources/en/language/
 /sources/en/type/
 /misc/repo-info.rakuon
